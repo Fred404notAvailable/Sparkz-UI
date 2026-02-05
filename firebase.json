@@ -1,7 +1,7 @@
 {
   "hosting": {
     "public": "dist",
-  
+    "site": "sparkz",
     "ignore": [
       "firebase.json",
       "**/.*",
