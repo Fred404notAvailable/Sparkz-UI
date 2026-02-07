@@ -6,7 +6,7 @@
     "category": "dance",
     "day": "1",
     "date": "Feb 27",
-    "time": "11:00 AM",
+    "time": "10:00 AM - 11:30 AM",
     "venue": "Indoor stadium",
     "eventMode": "Offline",
     "posterColor": "from-blue-600/90 via-purple-600/80 to-blue-900/90",
@@ -17,7 +17,7 @@
     "participants": "50+ Teams",
     "description": "Witness the clash of musical titans in this epic battle of bands. Rock, metal, and indie bands compete for the ultimate title.",
     "club": "Fine Arts Club",
-    "whatsapp" : "",
+    "whatsapp" : "https://chat.whatsapp.com/HnRFjeC06wCFTS9UaymPKt?mode=gi_t",
     "eventCoordinators" : ["Thamarai Selvan - 8870804719", "Pavithra - 8438657804"],
     "rules": [
       "Each team must consist of 5-10 members.",
@@ -33,7 +33,7 @@
   "tagline": "Online Tactical Esports Tournament",
   "category": "Gaming",
   "day": "Day 1",
-  "date": "Day 1",
+  "date": "Feb 27",
   "time": "Online",
   "venue": "Online",
   "eventMode": "Online",
@@ -45,6 +45,7 @@
   "participants": "5 Players per Team",
   "description": "A competitive online VALORANT event where teamwork, strategy, and skill decide the winner. Teams compete in elimination matches using standard competitive settings.",
   "club": "FAC",
+  "whatsapp":"https://chat.whatsapp.com/EN5GSCC1yp6JrTHOoYgnxW?mode=gi_t",
   "eventCoordinators": [
     "Ashika - 7358942335",
     "Surya - 9182342796"
@@ -70,8 +71,8 @@
   "tagline": "Rhythm, Unity & Expression",
   "category": "dance",
   "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
+  "date": "Feb 27",
+  "time": "2:00 PM - 4:00 PM",
   "venue": "Dr. K.S. Krishnan Auditorium",
   "eventMode": "Offline",
   "posterColor": "from-pink-600/90 via-purple-600/80 to-indigo-900/90",
@@ -82,9 +83,10 @@
   "participants": "5–20 Members per Team",
   "description": "Group Dance is a vibrant offline event where teams showcase coordination, creativity, and expression through dance. Participants are free to explore any genre, language, or theme while delivering a synchronized and energetic performance.",
   "club": "Fine Arts Club",
+  "whatsapp":"https://chat.whatsapp.com/KMkeigAjObeD0dMppQVDK1?mode=gi_t",
   "eventCoordinators": [
     "Devavarshini - 6369121619",
-    "Indraja"
+    "Indraja - 6369101623"
   ],
   "rules": [
     "Each team must have a minimum of 5 and a maximum of 20 members.",
@@ -106,8 +108,8 @@
   "tagline": "Innovation Without Fire",
   "category": "Fun Events",
   "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
+  "date": "Feb 27",
+  "time": "10:00 AM - 11:30 AM",
   "venue": "7th Block Classroom (7204)",
   "eventMode": "Offline",
   "posterColor": "from-green-600/90 via-lime-500/80 to-emerald-900/90",
@@ -118,6 +120,7 @@
   "participants": "2 to 3 Participants per Team",
   "description": "This event is a collaboration between Yuva Tourism Club and Green Army Club. It is a spicy challenge where participants work as a team to prepare a dish without the assistance of fire. The event focuses on innovation, presentation, and taste to reward the best team.",
   "club": "Yuva Tourism Club & Green Army Club",
+  "whatsapp":"https://chat.whatsapp.com/EDv9SCbs1oFGeoqXSFbFyj?mode=gi_t",
   "eventCoordinators": [
     "Kishore Kumar - 7603811623",
     "Rishitha - 6300988145",
@@ -140,11 +143,11 @@
   "title": "Travel Itinerary",
   "tagline": "Plan the Perfect Journey",
   "category": "tourism",
-  "day": "Day 1",
-  "date": "Day 1",
-  "time": "Online",
+  "day": "Day 2",
+  "date": "Feb 28",
+  "time": "2:00 PM - 3:30 PM",
   "venue": "7th Block Conference Hall (7201)",
-  "eventMode": "Online",
+  "eventMode": "Offline",
   "posterColor": "from-sky-600/90 via-cyan-500/80 to-blue-900/90",
   "gradient": "linear-gradient(135deg, rgba(2, 132, 199, 0.9), rgba(6, 182, 212, 0.8), rgba(30, 58, 138, 0.9))",
   "image": "https://i.postimg.cc/85gxrMBM/5.jpg",
@@ -153,9 +156,11 @@
   "participants": "Individual Participants",
   "description": "In this exciting online contest, participants will be challenged to design the ultimate travel itinerary to one or more famous destinations around the world. Whether it’s a weekend getaway or an adventurous backpacking trip, the task is to create an itinerary that blends excitement, relaxation, and cultural exploration.",
   "club": "Yuva Tourism Club",
+  "whatsapp":"https://chat.whatsapp.com/IsdIxxwgLIM2mqnz4Irih2?mode=gi_t",
   "eventCoordinators": [
     "Kesavan - 8778342266",
-    "Hema - 8179872006"
+    "Hema - 8179872006",
+    "Sabari - 9345864424"
   ],
   "rules": [
     "Open to individual participants.",
@@ -173,8 +178,8 @@
   "tagline": "When Art Meets Eyes",
   "category": "art",
   "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
+  "date": "Feb 27",
+  "time": "10:00 AM - 11:30 AM",
   "venue": "TIFAC Architecture Studio (6103)",
   "eventMode": "Offline",
   "posterColor": "from-amber-500/90 via-rose-500/80 to-purple-900/90",
@@ -185,6 +190,7 @@
   "participants": "Individual Participants",
   "description": "Paint Gallery (When Art Meets Eyes) is an offline art event organized by the Pyros Arts Team. Participants showcase their creativity through original artworks based on a theme announced before the event, using any painting medium of their choice.",
   "club": "Pyros Arts Team",
+  "whatsapp":"https://chat.whatsapp.com/Hh8aljxfTD2Dgk9RwCQuPZ?mode=gi_t",
   "eventCoordinators": [
     "Hema Latha - 9342719805",
     "Santhiya - 8838445765"
@@ -207,9 +213,9 @@
   "title": "As You Like It",
   "tagline": "A Celebration of Theatrical Arts",
   "category": "theatre",
-  "day": "Day 2",
-  "date": "Day 2",
-  "time": "Offline",
+  "day": "Day 1",
+  "date": "Feb 27",
+  "time": "3:30 PM - 5:00 PM",
   "venue": "8th Block Seminar Hall",
   "eventMode": "Offline",
   "posterColor": "from-fuchsia-600/90 via-indigo-600/80 to-slate-900/90",
@@ -220,6 +226,7 @@
   "participants": "Solo or Group (Up to 4 Members)",
   "description": "Unleash your inner thespian in this celebration of theatrical arts. From gripping dramas to silent mimes, express emotions and stories like never before. Let the stage be your canvas and your talent the masterpiece. A theatrical showdown awaits.",
   "club": "Pyros (FAC)",
+  "whatsapp":"https://chat.whatsapp.com/GNYvKXUC61qGL6DUagk2qy?mode=gi_t",
   "eventCoordinators": [
     "Surya - 9384166252",
     "Jenita Angelin - 9442957777"
@@ -238,9 +245,9 @@
   "tagline": "Lights, Camera, Quiz!",
   "category": "quiz",
   "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
-  "venue": "8th Block Seminar Hall",
+  "date": "Feb 27",
+  "time": "10:00 AM - 11:30 AM",
+  "venue": "9th Block Seminar Hall",
   "eventMode": "Offline",
   "posterColor": "from-yellow-500/90 via-red-600/80 to-slate-900/90",
   "gradient": "linear-gradient(135deg, rgba(234, 179, 8, 0.9), rgba(220, 38, 38, 0.8), rgba(15, 23, 42, 0.9))",
@@ -250,6 +257,7 @@
   "participants": "3 Members per Team",
   "description": "Lights, camera, quiz! Put your cinematic knowledge to the test in this thrilling Cinema Quiz showdown. From iconic scenes to legendary filmmakers, battle it out and prove you’re the ultimate movie buff.",
   "club": "Pyros (FAC)",
+  "whatsapp":"https://chat.whatsapp.com/EGvNQ4MVUvv4M9rTth9HRB?mode=gi_t",
   "eventCoordinators": [
     "Kabilesh Kumar - 8838063578",
     "Kavya - 9344113529"
@@ -268,10 +276,10 @@
   "title": "Solo Singing",
   "tagline": "Let Your Voice Leave a Lasting Echo",
   "category": "music",
-  "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
-  "venue": "K S Auditorium",
+  "day": "Day 2",
+  "date": "Feb 28",
+  "time": "10:00 AM - 11:30 AM",
+  "venue": "Open Stage",
   "eventMode": "Offline",
   "posterColor": "from-rose-600/90 via-red-500/80 to-slate-900/90",
   "gradient": "linear-gradient(135deg, rgba(225, 29, 72, 0.9), rgba(239, 68, 68, 0.8), rgba(15, 23, 42, 0.9))",
@@ -281,6 +289,7 @@
   "participants": "Solo Participants",
   "description": "Step forward and let your voice speak where words fall short. This solo singing event invites participants to pour emotion into melody, own the spotlight, and turn silence into applause. A musical face-off awaits.",
   "club": "FAC PYROS",
+  "whatsapp":"https://chat.whatsapp.com/CXXHiUSWySZG7jaxd4zV1a?mode=gi_t",
   "eventCoordinators": [
     "Sakthi Sanjay S - 8825968592",
     "Vedha Varshini S M - 9345687450"
@@ -309,8 +318,8 @@
   "tagline": "Test Your Observation & Recall",
   "category": "Fun Events",
   "day": "Day 2",
-  "date": "Day 2",
-  "time": "Offline",
+  "date": "Feb 28",
+  "time": "11:30 AM - 1:00 PM",
   "venue": "9th Block Seminar Hall",
   "eventMode": "Offline",
   "posterColor": "from-teal-600/90 via-cyan-600/80 to-slate-900/90",
@@ -321,6 +330,7 @@
   "participants": "Individual Participants",
   "description": "Sharpen your observation and concentration skills in this engaging Memory Challenge Game. Participants will be shown a set of random objects for a short duration and must memorize them carefully. After the display, participants will be asked to recall the objects accurately.",
   "club": "VISHAKA CLUB",
+  "whatsapp":"https://chat.whatsapp.com/CH8Q3K5NH2yKhiR7HcqBV2?mode=gi_t",
   "eventCoordinators": [
     "B L Pavan Sai - 7997618599",
     "Rahul - 7989501605"
@@ -345,9 +355,9 @@
   "title": "Blind Drawing",
   "tagline": "Communicate Without Words",
   "category": "Fun Events",
-  "day": "Day 2",
-  "date": "Day 2",
-  "time": "Offline",
+  "day": "Day 1",
+  "date": "Feb 27",
+  "time": "11:30 AM - 1:00 PM",
   "venue": "8th Block Seminar Hall / TIFAC CORE",
   "eventMode": "Offline",
   "posterColor": "from-indigo-600/90 via-blue-600/80 to-slate-900/90",
@@ -358,6 +368,7 @@
   "participants": "Two Players per Team",
   "description": "Blind Drawing is a two-player team event where participants communicate silently through touch. The 'Artist' draws an object on their partner's back using fingertips, and the 'Decoder' visualizes and guesses it. This game tests synchronization, intuition, and focus.",
   "club": "VISHAKA",
+  "whatsapp":"https://chat.whatsapp.com/DZFuMOktJ4YA0jj50LsSY9?mode=gi_t",
   "eventCoordinators": [
     "K. Shiva - 8639390273",
     "B. Charan - 8247348788"
@@ -381,9 +392,9 @@
   "tagline": "Bring Icons to Life Without Words",
   "category": "Fun Events",
   "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
-  "venue": "Admin Block Seminar Hall",
+  "date": "Feb 27",
+  "time": "10:00 AM - 11:30 AM",
+  "venue": "TIFAC Core (6012)",
   "eventMode": "Offline",
   "posterColor": "from-purple-600/90 via-pink-500/80 to-slate-900/90",
   "gradient": "linear-gradient(135deg, rgba(126, 34, 206, 0.9), rgba(236, 72, 153, 0.8), rgba(15, 23, 42, 0.9))",
@@ -393,6 +404,7 @@
   "participants": "2 Members per Team",
   "description": "Step into the world of cinema and test your movie knowledge in this interactive guessing game. 'Name the Character' challenges participants to bring iconic movie characters to life through expressions, actions, and mannerisms—without speaking. Quick thinking, teamwork, and creativity are key to victory.",
   "club": "VISHAKA",
+  "whatsapp":"https://chat.whatsapp.com/IGPRYgN0oyh5w8OxjKMJa1?mode=gi_t",
   "eventCoordinators": [
     "NETTI Satwik - 8885679776",
     "P.V.S. Tejeswar Reddy - 9063727290"
@@ -418,9 +430,9 @@
   "tagline": "Create Art With Just Your Hands",
   "category": "art",
   "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
-  "venue": "8th Block Seminar Hall",
+  "date": "Feb 27",
+  "time": "10:00 AM - 11:30 AM",
+  "venue": "TIFAC Core (6103)",
   "eventMode": "Offline",
   "posterColor": "from-orange-500/90 via-red-500/80 to-purple-900/90",
   "gradient": "linear-gradient(135deg, rgba(249, 115, 22, 0.9), rgba(239, 68, 68, 0.8), rgba(88, 28, 135, 0.9))",
@@ -430,6 +442,7 @@
   "participants": "Individual Participants",
   "description": "Hand Paint is an offline art event where participants create artwork using only their hands. The challenge focuses on creativity, originality, and adherence to the theme within a limited time, using only water-based, non-toxic paints.",
   "club": "VISHAKA",
+  "whatsapp":"https://chat.whatsapp.com/CB2YFHphivPExKhTbEvBqD?mode=gi_t",
   "eventCoordinators": [
     "C. Bhavyasree Royal - 8125300933",
     "G. Charitha - 9063238153"
@@ -457,9 +470,9 @@
   "tagline": "Sing the Lyrics, Hit the Right Notes",
   "category": "music",
   "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
-  "venue": "TIFAC Core - Front Ground",
+  "date": "Feb 27",
+  "time": "11:30 AM - 1:00 PM",
+  "venue": "Open Stage",
   "eventMode": "Offline",
   "posterColor": "from-pink-600/90 via-red-500/80 to-purple-900/90",
   "gradient": "linear-gradient(135deg, rgba(236, 72, 153, 0.9), rgba(239, 68, 68, 0.8), rgba(88, 28, 135, 0.9))",
@@ -469,6 +482,7 @@
   "participants": "Solo Participants",
   "description": "Open Mic – Music Lyrics Challenge is an offline event where participants listen to the background music (BGM) of a popular song and must sing the lyrics correctly. The winner is determined by the maximum number of songs correctly sung across 10 trials.",
   "club": "VISHAKA",
+  "whatsapp":"https://chat.whatsapp.com/BAltgVXo9Rw09e3VofcV8E?mode=gi_t",
   "eventCoordinators": [
     "Sarvesh - 7993578025",
     "R Sravani - 9014896383"
@@ -493,9 +507,9 @@
   "tagline": "Test Your Mind, Solve the Mystery",
   "category": "literary",
   "day": "Day 2",
-  "date": "Day 2",
-  "time": "Offline",
-  "venue": "Admin Block Seminar Hall",
+  "date": "Feb 28",
+  "time": "2:00 PM - 4:00 PM",
+  "venue": "TIFAC Core (6012)",
   "eventMode": "Offline",
   "posterColor": "from-green-600/90 via-lime-500/80 to-slate-900/90",
   "gradient": "linear-gradient(135deg, rgba(5, 150, 105, 0.9), rgba(163, 230, 53, 0.8), rgba(15, 23, 42, 0.9))",
@@ -505,6 +519,7 @@
   "participants": "Individual or Team (1–3 members)",
   "description": "The Riddles Game is an engaging and intellectually stimulating competition designed to test participants’ logical reasoning, creativity, and problem-solving abilities. Solve riddles under time constraints to score points and progress through multiple rounds.",
   "club": "VISHAKA",
+  "whatsapp":"https://chat.whatsapp.com/HrgYfrjTWKV1PAgRag2M3F?mode=gi_t",
   "eventCoordinators": [
     "Setu Sai Ram - 7674043125",
     "Mohan Vamsi - 6281605767"
@@ -533,9 +548,9 @@
   "tagline": "Unfold Creativity, One Fold at a Time",
   "category": "art",
   "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
-  "venue": "KS Krishna Auditorium",
+  "date": "Feb 27",
+  "time": "10:00 AM - 11:30 AM",
+  "venue": "8th Block Seminar Hall",
   "eventMode": "Offline",
   "posterColor": "from-cyan-600/90 via-blue-500/80 to-slate-900/90",
   "gradient": "linear-gradient(135deg, rgba(6, 182, 212, 0.9), rgba(59, 130, 246, 0.8), rgba(15, 23, 42, 0.9))",
@@ -545,6 +560,7 @@
   "participants": "Individual Participants",
   "description": "Origami is a paper folding art event that challenges participants to transform simple sheets of paper into imaginative and elegant creations, showcasing skill, patience, creativity, and attention to detail.",
   "club": "VISHAKA",
+  "whatsapp":"https://chat.whatsapp.com/KUBUX2bgKO74h1MhWxKrWp?mode=gi_t",
   "eventCoordinators": [
     "V. Rohitha - 9391522316",
     "U. BhanuPrasad - 9652442961"
@@ -570,10 +586,10 @@
   "title": "Chess",
   "tagline": "Strategize, Checkmate, Conquer",
   "category": "Gaming",
-  "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
-  "venue": "Admin Block Seminar Hall",
+  "day": "Day 2",
+  "date": "Feb 28",
+  "time": "10:00 AM - 11:30 AM",
+  "venue": "Indoor stadium",
   "eventMode": "Offline",
   "posterColor": "from-gray-600/90 via-slate-500/80 to-black/90",
   "gradient": "linear-gradient(135deg, rgba(75, 85, 99, 0.9), rgba(100, 116, 139, 0.8), rgba(0, 0, 0, 0.9))",
@@ -583,6 +599,7 @@
   "participants": "Individual Participants",
   "description": "An exciting Chess Tournament filled with sharp strategies and thrilling battles of the mind. Compete one-on-one, make calculated moves, and demonstrate mastery to emerge victorious.",
   "club": "VISHAKA",
+  "whatsapp":"https://chat.whatsapp.com/Fe5Z4sIUbaj0uvMxMgWiTC?mode=gi_t",
   "eventCoordinators": [
     "Y.M.V. Vardhan - 8622886655",
     "Geethika - 8754004025"
@@ -605,8 +622,8 @@
   "tagline": "Grace, Heritage, and Elegance on Stage",
   "category": "fashion",
   "day": "Day 2",
-  "date": "Day 2",
-  "time": "Offline",
+  "date": "Feb 28",
+  "time": "3:30 PM - 5:00 PM",
   "venue": "Krishnan Auditorium",
   "eventMode": "Offline",
   "posterColor": "from-yellow-500/90 via-orange-500/80 to-red-700/90",
@@ -617,6 +634,7 @@
   "participants": "Individual Participants",
   "description": "Traditional Walk is a cultural stage event where participants showcase traditional attire with grace, elegance, and cultural values. The focus is on heritage, posture, expressions, and confidence.",
   "club": "VISHAKA",
+  "whatsapp":"https://chat.whatsapp.com/F6oyvb0cZZCIcMLp6fNly7?mode=gi_t",
   "eventCoordinators": [
     "B SrujanaReddy - 9618400843",
     "V Thanu Sri Sai - 9963284090"
@@ -637,10 +655,10 @@
   "tagline": "Capture the Soul of Sparkz in One Collage",
   "category": "photography",
   "day": "Day 2",
-  "date": "Day 2",
-  "time": "Online",
-  "venue": "KS Krishnan Auditorium / Online (Discord/Event Portal)",
-  "eventMode": "Online",
+  "date": "Feb 28",
+  "time": "10:00 AM - 11:30 AM",
+  "venue": "9th Block Classroom(9404)",
+  "eventMode": "Offline",
   "posterColor": "from-indigo-500/90 via-purple-500/80 to-pink-600/90",
   "gradient": "linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(139, 92, 246, 0.8), rgba(236, 72, 153, 0.9))",
   "image": "https://i.postimg.cc/DZQHQ0BC/19.jpg",
@@ -649,6 +667,7 @@
   "participants": "Individual or Team (Max 1 member)",
   "description": "The Sparkz Lens: Event Collage Challenge invites participants to capture the essence of Sparkz through a digital collage. Showcase behind-the-scenes moments, high-energy highlights, and candid emotions in a single, breathtaking image.",
   "club": "VISHAKA",
+  "whatsapp":"https://chat.whatsapp.com/BlWzCjXnWtU7i7M9RMOMMC?mode=gi_t",
   "eventCoordinators": [
     "Geetheshwar G - 7702436278",
     "Shaik Thaha - 7893340788"
@@ -671,9 +690,9 @@
   "tagline": "Decode the Visual Clues, Name the Song",
   "category": "music",
   "day": "Day 1",
-  "date": "Day 1",
+  "date": "Feb 27",
   "time": "Offline",
-  "venue": "K S Krishnan Auditorium Front / 8th Block Seminar Hall / TIFAC Core",
+  "venue": "TIFAC Core (6012)",
   "eventMode": "Offline",
   "posterColor": "from-purple-600/90 via-indigo-500/80 to-blue-700/90",
   "gradient": "linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(99, 102, 241, 0.8), rgba(29, 78, 216, 0.9))",
@@ -683,6 +702,7 @@
   "participants": "Individual Participants",
   "description": "Join the Riddles is an engaging challenge where participants analyze visual clues to identify song titles. Test your observation skills, musical knowledge, and quick thinking as you decode images to uncover hidden songs.",
   "club": "VISHAKA",
+  "whatsapp":"https://chat.whatsapp.com/Hj2v1BcH8QSApNbraGa9vC?mode=gi_t",
   "eventCoordinators": [
     "Surya - 7995318852",
     "A. Sri Ram Chandu - 9182913465"
@@ -703,7 +723,7 @@
   "tagline": "Drop Smart, Play Fair, Survive the Battle",
   "category": "Gaming",
   "day": "Day 1",
-  "date": "Day 1",
+  "date": "Feb 27",
   "time": "Online",
   "venue": "Online",
   "eventMode": "Online",
@@ -715,6 +735,7 @@
   "participants": "Squads (max 4 players per squad)",
   "description": "Free Fire Battle Royale (Squad Mode) is a high-intensity multiplayer survival competition testing shooting skills, strategy, teamwork, and decision-making. The last squad standing wins.",
   "club": "VISHAKA",
+  "whatsapp":"https://chat.whatsapp.com/DFYuq8C4R9A0rm5nuy3nto?mode=gi_t",
   "eventCoordinators": [
     "K. Aryan - 7995155683",
     "Tagoor - 8978924630"
@@ -737,9 +758,9 @@
   "title": "Short Drama / Skit",
   "tagline": "Bring Stories to Life on Stage",
   "category": "theatre",
-  "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
+  "day": "Day 2",
+  "date": "Feb 28",
+  "time": "10:00 AM - 11:30 AM",
   "venue": "K S Krishna Auditorium",
   "eventMode": "Offline",
   "posterColor": "from-red-500/90 via-orange-500/80 to-yellow-400/90",
@@ -750,6 +771,7 @@
   "participants": "Teams of 4–6 members",
   "description": "Short Drama / Skit is a theatrical event where teams perform an engaging drama or skit. Participants showcase creativity, storytelling, and acting skills within a limited time.",
   "club": "VISHAKA",
+  "whatsapp":"https://chat.whatsapp.com/FlnASgUrdx02iFR7xbVCeM?mode=gi_t",
   "eventCoordinators": [
     "Ch. Vinod – 9542093781",
     "P. Sandeep – 9701647574"
@@ -772,8 +794,8 @@
   "tagline": "Bring the Magic of BookTok to Life",
   "category": "literary",
   "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
+  "date": "Feb 27",
+  "time": "10:00 AM - 11:30 AM",
   "venue": "9th Block Seminar Hall",
   "eventMode": "Offline",
   "posterColor": "from-green-600/90 via-teal-500/80 to-blue-500/90",
@@ -784,6 +806,7 @@
   "participants": "Individual or Teams (max 4 members)",
   "description": "BookTok IRL is a cozy celebration of books, storytelling, and creativity. Participants engage in reading, annotations, content creation, reels, and discussions while embracing the BookTok aesthetic.",
   "club": "Fine Arts Club",
+  "whatsapp":"https://chat.whatsapp.com/Bkbl5jhTvZt9BCeR0dU1hN?mode=gi_t",
   "eventCoordinators": [
     "Ranjani S - 8695217005",
     "Bavatharani - 9488133606"
@@ -805,8 +828,8 @@
   "tagline": "Showcase Creativity Through Tamil Handwriting",
   "category": "literary",
   "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
+  "date": "Feb 27",
+  "time": "10:00 AM - 11:30 AM",
   "venue": "9th Block Classroom",
   "eventMode": "Offline",
   "posterColor": "from-orange-600/90 via-red-500/80 to-yellow-500/90",
@@ -817,6 +840,7 @@
   "participants": "Individual participation only",
   "description": "TAMIL SIGNATURE allows participants to express creativity and personal identity through artistic Tamil signature design. Participants create unique and visually appealing signatures using basic stationery.",
   "club": "Tamil Mandram",
+  "whatsapp":"https://chat.whatsapp.com/DguBLZfEsiF3AfCViob9U6?mode=gi_t",
   "eventCoordinators": [
     "S.K Siva Sankari - 8925166022",
     "R. Varshini - 8248780922"
@@ -836,9 +860,9 @@
   "title": "Video Jockey",
   "tagline": "Spontaneity and Stage Presence in Tamil VJ Style",
   "category": "literary & performance",
-  "day": "Day 2",
-  "date": "Day 2",
-  "time": "Offline",
+  "day": "Day 1",
+  "date": "Feb 27",
+  "time": "2:00 PM - 3:30 PM",
   "venue": "9th Block Seminar Hall",
   "eventMode": "Offline",
   "posterColor": "from-purple-600/90 via-pink-500/80 to-indigo-500/90",
@@ -849,6 +873,7 @@
   "participants": "Individual participation only",
   "description": "Video Jockey (Tamil) tests participants' spontaneity, communication skills, and stage presence. Participants will speak engagingly on a topic given on the spot, simulating a VJ role.",
   "club": "Tamil Mandram",
+  "whatsapp":"https://chat.whatsapp.com/HqLu6mKUzXk8OARMtBJV23?mode=gi_t",
   "eventCoordinators": [
     "J Nilesh - 7395829890",
     "S Swetha - 6385347334"
@@ -870,8 +895,8 @@
   "tagline": "Test Your Knowledge of Thirukkural",
   "category": "literary",
   "day": "Day 2",
-  "date": "Day 2",
-  "time": "Offline",
+  "date": "Feb 28",
+  "time": "10:00 AM - 11:30 AM",
   "venue": "9th Block Classroom",
   "eventMode": "Offline",
   "posterColor": "from-red-600/90 via-orange-500/80 to-yellow-500/90",
@@ -882,6 +907,7 @@
   "participants": "Individual participation only",
   "description": "A Tamil Mandram quiz competition focusing exclusively on Thirukkural. Participants will be tested on meanings, values, and relevance of Thirukkural in Tamil language, culture, and ethics.",
   "club": "Tamil Mandram",
+  "whatsapp":"https://chat.whatsapp.com/KuQ7kRRRQ8D0V6kenG8xdv?mode=gi_t",
   "eventCoordinators": [
     "R.B. Soobinthra - 8667898259",
     "M Nishani - 9629565298"
@@ -903,8 +929,8 @@
   "tagline": "Express Without Words – Gesture, Act, Impress!",
   "category": "Fun Events",
   "day": "Day 2",
-  "date": "Day 2",
-  "time": "Offline",
+  "date": "Feb 28",
+  "time": "3:00 PM - 4:30 PM",
   "venue": "9th Block Classroom",
   "eventMode": "Offline",
   "posterColor": "from-green-600/90 via-lime-500/80 to-emerald-500/90",
@@ -915,6 +941,7 @@
   "participants": "Team of 2–4 members",
   "description": "Word Acting challenges teams to act out words or phrases using only gestures and expressions. Teammates must guess correctly within the time limit. This event tests non-verbal communication, quick thinking, and teamwork.",
   "club": "Tamil Mandram",
+  "whatsapp":"https://chat.whatsapp.com/IzuC5lW8ayC9iND0zsouup?mode=gi_t",
   "eventCoordinators": [
     "J P Shenbaga Devi - 9843569783",
     "M Mohammad Akram - 9342520800"
@@ -935,8 +962,8 @@
   "tagline": "Express Your Soul in Tamil Verses",
   "category": "literary",
   "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
+  "date": "Feb 27",
+  "time": "11:30 AM - 1:00 PM",
   "venue": "9th Block Classroom",
   "eventMode": "Offline",
   "posterColor": "from-purple-600/90 via-pink-500/80 to-rose-500/90",
@@ -947,6 +974,7 @@
   "participants": "Individual participation only",
   "description": "Poetry Writing encourages participants to express creativity and enhance literary skills through original Tamil poetry. Participants will compose a poem on a given theme within the allotted time.",
   "club": "Tamil Mandram",
+  "whatsapp":"https://chat.whatsapp.com/C1d2ZByiFPIElltrC6wmfb?mode=gi_t",
   "eventCoordinators": [
     "J Abinesh - 9943894491",
     "R Karthick - 7604926171"
@@ -967,8 +995,8 @@
   "tagline": "Sharpen Your Tamil Eloquence",
   "category": "literary",
   "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
+  "date": "Feb 27",
+  "time": "2:00 PM - 3:30 PM",
   "venue": "9th Block Seminar Hall",
   "eventMode": "Offline",
   "posterColor": "from-red-600/90 via-orange-500/80 to-yellow-500/90",
@@ -979,6 +1007,7 @@
   "participants": "2 members per team / Individual",
   "description": "Debate (Tamil) develops critical thinking, public speaking, and persuasive communication. Participants present arguments on a given topic, followed by rebuttals, evaluated for clarity, confidence, and content strength.",
   "club": "Tamil Mandram",
+  "whatsapp":"https://chat.whatsapp.com/F2s9QNAjQVU5ohnFKPVL7I?mode=gi_t",
   "eventCoordinators": [
     "R Anbu Selvan - 9674404038",
     "G Ishwarya Lakshmi - 8124076255"
@@ -999,9 +1028,9 @@
   "title": "Open Dance Floor",
   "tagline": "Show Your Moves, Own the Stage",
   "category": "dance",
-  "day": "Day 1",
-  "date": "Day 1",
-  "time": "Offline",
+  "day": "Day 2",
+  "date": "Feb 28",
+  "time": "11:30 AM - 1:00 PM",
   "venue": "K S Krishna Auditorium",
   "eventMode": "Offline",
   "posterColor": "from-pink-600/90 via-purple-500/80 to-indigo-500/90",
@@ -1012,6 +1041,7 @@
   "participants": "Solo / Duo / Group",
   "description": "Open Dance Floor lets participants showcase their dance skills in Solo, Duo, or Group performances. On-the-spot themes, songs, and hook steps challenge creativity, coordination, and energy. The Final Battle Round tests spontaneity with surprise songs.",
   "club": "VISHAKA",
+  "whatsapp":"https://chat.whatsapp.com/CjWuQFmQn1y3cxK4QKO4Jy?mode=gi_t",
   "eventCoordinators": [
     "Sai Siva - 9713356789",
     "Bhargav - 9515318985"
@@ -1036,8 +1066,8 @@
   "tagline": "Transform Waste into Art and Innovation",
   "category": "craft",
   "day": "Day 2",
-  "date": "Feb 28, 2026",
-  "time": "3 Hours",
+  "date": "Feb 28",
+  "time": "3:30 PM - 5:00 PM",
   "venue": "7th Block Classroom",
   "eventMode": "Offline",
   "posterColor": "from-green-600/90 via-yellow-500/80 to-orange-500/90",
@@ -1048,6 +1078,7 @@
   "participants": "Teams of 2–3 members",
   "description": "Participants will conceptualize and create useful or decorative craft items using only recyclable or waste materials. Emphasis is on creativity, environmental responsibility, and originality. A 2–3 minute presentation explaining the concept, materials, and message is required.",
   "club": "Yuva Tourism",
+  "whatsapp":"https://chat.whatsapp.com/DiSqdpkEOBkJbZrGFb7Jxv?mode=gi_t",
   "eventCoordinators": [
     "Yashika - 8610517172",
     "Karthika - 7418857927"
@@ -1071,8 +1102,8 @@
   "tagline": "Untangle the Chaos, Strengthen the Team",
   "category": "Fun Events",
   "day": "Day 1",
-  "date": "Feb 28, 2026",
-  "time": "Flexible / On Spot",
+  "date": "Feb 27",
+  "time": "10:00 AM - 11:30 AM",
   "venue": "Basketball Ground",
   "eventMode": "Offline",
   "posterColor": "from-red-600/90 via-pink-500/80 to-yellow-500/90",
@@ -1083,6 +1114,7 @@
   "participants": "Teams of exactly 5 members",
   "description": "Test teamwork, coordination, and problem-solving in this interactive challenge. Teams must untangle themselves from a human knot without breaking the hand-holding chain. Speed, communication, and strategy determine the winner.",
   "club": "Youth Red Cross",
+  "whatsapp":"https://chat.whatsapp.com/E8qDZKDHfLtDiey9cvXvkL?mode=gi_t",
   "eventCoordinators": [
     "M. Barathsuriya - 8248296749",
     "S. Akash - 7358924921"
@@ -1105,8 +1137,8 @@
   "tagline": "Race, Identify, and Prove Your YRC Spirit",
   "category": "Fun Events",
   "day": "Day 2",
-  "date": "Feb 28, 2026",
-  "time": "Flexible / On Spot",
+  "date": "Feb 28",
+  "time": "12:30 PM - 1:30 PM",
   "venue": "Seminar Hall",
   "eventMode": "Offline",
   "posterColor": "from-red-500/90 via-orange-500/80 to-yellow-400/90",
@@ -1117,6 +1149,7 @@
   "participants": "Teams of 4 participants",
   "description": "Experience speed, strategy, and service in this high-energy YRC game. Teams race across the field, identify correct Youth Red Cross service words among decoys, and demonstrate awareness, teamwork, and humanitarian spirit.",
   "club": "YRC",
+  "whatsapp":"https://chat.whatsapp.com/HeClCvcpyiGEWe7ZLqUeks?mode=gi_t",
   "eventCoordinators": [
     "Samyuktha C – 9342054248",
     "Sanjai V – 9042706071"
@@ -1140,8 +1173,8 @@
   "tagline": "Race, Solve, and Serve with Speed",
   "category": "Fun Events",
   "day": "Day 1",
-  "date": "Feb 27, 2026",
-  "time": "Flexible / On Spot",
+  "date": "Feb 27",
+  "time": "3:00 PM - 4:30 PM",
   "venue": "Any Classroom",
   "eventMode": "Offline",
   "posterColor": "from-green-600/90 via-blue-500/80 to-cyan-400/90",
@@ -1152,6 +1185,7 @@
   "participants": "Teams of 3–5 participants",
   "description": "A fast-paced, fun Humanitarian challenge where teams solve riddles and find everyday objects using clever clues across two exciting rounds. Focus on teamwork, strategy, and speed.",
   "club": "Youth Red Cross",
+  "whatsapp":"https://chat.whatsapp.com/HTGjh6hZyPVAWkVqs5Ggr0?mode=gi_t",
   "eventCoordinators": [
     "Meganaa G – 6369953115",
     "Srinivasan S R – 7418754354"
@@ -1172,9 +1206,9 @@
   "title": "One Truth One Lie",
   "tagline": "Spot the Truth, Uncover the Fun",
   "category": "team-building",
-  "day": "Day 1",
-  "date": "Feb 27, 2026",
-  "time": "Flexible / On Spot",
+  "day": "Day 2",
+  "date": "Feb 28",
+  "time": "10:00 AM - 11:30 AM",
   "venue": "8th Block Seminar Hall",
   "eventMode": "Offline",
   "posterColor": "from-red-600/90 via-yellow-500/80 to-orange-400/90",
@@ -1185,6 +1219,7 @@
   "participants": "Teams of 2–5 participants",
   "description": "An interactive activity where participants share one truth and one lie related to facts about Youth Red Cross. Promotes awareness, critical thinking, creativity, and effective communication.",
   "club": "YRC",
+  "whatsapp":"https://chat.whatsapp.com/EjTX8F0tD02F94t7IJAvpF?mode=gi_t",
   "eventCoordinators": [
     "Karen Morisha – 7418853918",
     "Pooja – 8438058210"
@@ -1205,8 +1240,8 @@
   "tagline": "Design the Future of Sustainability",
   "category": "art",
   "day": "Day 1",
-  "date": "Feb 27, 2026",
-  "time": "50 minutes",
+  "date": "Feb 27",
+  "time": "2:00 PM - 3:30 PM",
   "venue": "9410",
   "eventMode": "Offline",
   "posterColor": "from-green-600/90 via-lime-500/80 to-emerald-400/90",
@@ -1217,6 +1252,7 @@
   "participants": "Individual or Teams (Max 4)",
   "description": "A creative challenge where participants design an original logo based on green energy. Promotes innovation, sustainability awareness, and teamwork.",
   "club": "Green Army",
+  "whatsapp":"https://chat.whatsapp.com/FOOi9aoAGuu71wk9Z02rZJ?mode=gi_t",
   "eventCoordinators": [
     "Santhosh Kumar – 70108 99732",
     "Ragul Kudiyarasu – 6382712030"
@@ -1237,9 +1273,9 @@
   "title": "Nature Warriors",
   "tagline": "Unleash Your Environmental Creativity",
   "category": "art",
-  "day": "Day 1",
-  "date": "Feb 27, 2026",
-  "time": "10–20 minutes",
+  "day": "Day 2",
+  "date": "Feb 28",
+  "time": "11:30 AM - 1:00 PM",
   "venue": "9410",
   "eventMode": "Offline",
   "posterColor": "from-green-700/90 via-emerald-500/80 to-lime-400/90",
@@ -1250,6 +1286,7 @@
   "participants": "Individual only",
   "description": "An on-the-spot drawing challenge where participants express ideas of nature, sustainability, and environmental heroes through original art.",
   "club": "Green Army",
+  "whatsapp":"https://chat.whatsapp.com/EerRJFxS64yAjbtVBFUcPi?mode=gi_t",
   "eventCoordinators": [
     "Dhanraj – 63795 68562",
     "Arjun – 8838517553"
@@ -1272,7 +1309,7 @@
   "tagline": "Express Creativity, Promote Environmental Awareness",
   "category": "creative",
   "day": "Day 2",
-  "date": "Feb 28, 2026",
+  "date": "Feb 28",
   "time": "Flexible (Online Submission)",
   "venue": "Online",
   "eventMode": "Online",
@@ -1284,6 +1321,7 @@
   "participants": "1–3 per team",
   "description": "An online short film contest encouraging participants to creatively spread awareness on environment, sustainability, climate action, biodiversity, and eco-friendly living.",
   "club": "Nature Club - KARE",
+  "whatsapp":"https://chat.whatsapp.com/IsuPYIdcz4AB4mJ1hw3P3c?mode=gi_t",
   "eventCoordinators": [
     "V. Vasuki – 6374479072",
     "Dhanish S – 9150874079"
@@ -1309,8 +1347,8 @@
   "tagline": "Express Nature, Sustainability, and Conservation through Art, Craft, and Clay",
   "category": "art",
   "day": "Day 1",
-  "date": "Feb 27, 2026",
-  "time": "Flexible (3 Rounds)",
+  "date": "Feb 27",
+  "time": "10:00 AM - 11:30 AM",
   "venue": "9th Block Any Classrooms",
   "eventMode": "Offline",
   "posterColor": "from-green-700/90 via-emerald-500/80 to-lime-400/90",
@@ -1321,6 +1359,7 @@
   "participants": "1–2 per team",
   "description": "A multi-round offline event encouraging students to showcase creativity and environmental responsibility using art, craft, and clay sculpting based on nature, sustainability, and conservation themes.",
   "club": "Nature Club - KARE",
+  "whatsapp":"https://chat.whatsapp.com/JONNg5gJ5sJGRFEx0HAgtg?mode=gi_t",
   "eventCoordinators": [
     "Ms. Santhiya S - 8524987242",
     "Ms. Vijaya Srii - 8870446891"
@@ -1344,9 +1383,9 @@
   "title": "Plants Not Found",
   "tagline": "A Botanical Hunt to Explore Campus Biodiversity",
   "category": "Fun Events",
-  "day": "Day 1",
-  "date": "Feb 27, 2026",
-  "time": "45–60 minutes",
+  "day": "Day 2",
+  "date": "Feb 28",
+  "time": "11:00 AM - 12:30 PM",
   "venue": "7th Block (Any Classroom)",
   "eventMode": "Offline",
   "posterColor": "from-green-600/90 via-lime-400/80 to-emerald-500/90",
@@ -1357,6 +1396,7 @@
   "participants": "2–4 per team",
   "description": "An interactive botanical hunt designed to enhance students’ knowledge of plant diversity, scientific names, and campus biodiversity through problem-solving, teamwork, and exploration.",
   "club": "Nature Club - KARE",
+  "whatsapp":"https://chat.whatsapp.com/J3WeynTmXSsKhgqvdzz0GF?mode=gi_t",
   "eventCoordinators": [
     "Nishant Venkat - 89252 29003"
   ],
@@ -1382,8 +1422,8 @@
   "tagline": "Survival Challenge Inspired by the Squid Game Concept",
   "category": "Fun Events",
   "day": "Day 2",
-  "date": "Feb 28, 2026",
-  "time": "Varies per round",
+  "date": "Feb 28",
+  "time": "11:30 AM - 1:00 PM",
   "venue": "Basket Ball Ground",
   "eventMode": "Offline",
   "posterColor": "from-red-600/90 via-orange-500/80 to-yellow-400/90",
@@ -1394,6 +1434,7 @@
   "participants": "3 per team",
   "description": "A high-intensity team-based physical challenge inspired by survival games. Teams navigate three elimination rounds testing observation, coordination, discipline, trust, and communication.",
   "club": "Nature Club - KARE",
+  "whatsapp":"https://chat.whatsapp.com/Lf3CLcdck8z94kNrmybjRQ?mode=gi_t",
   "eventCoordinators": [
     "Mr. Rahul - +91 80152 84808",
     "Ms. B S Renuka - +91 83000 42846"
@@ -1423,9 +1464,9 @@
   "title": "Mr. and Ms. Sparks",
   "tagline": "A Dazzling Fashion Showdown of Style and Chemistry",
   "category": "fashion",
-  "day": "Day 1",
-  "date": "Feb 27, 2026",
-  "time": "Varies per performance",
+  "day": "Day 2",
+  "date": "Feb 28",
+  "time": "10:00 AM - 12:00 PM",
   "venue": "K.S. Auditorium",
   "eventMode": "Offline",
   "posterColor": "from-pink-600/90 via-red-500/80 to-yellow-400/90",
@@ -1436,6 +1477,7 @@
   "participants": "2 per team",
   "description": "A coordinated fashion and stage performance event celebrating style, synergy, and confidence. Teams showcase themed costumes and stage presence in a creative runway challenge.",
   "club": "Pyros Fine Arts",
+  "whatsapp":"https://chat.whatsapp.com/Cg2SsiLbqjPLultqwDoHP4?mode=gi_t",
   "eventCoordinators": [
     "Abhishek - +91 80159 84369",
     "Sakshi - +91 62991 28031"
@@ -1463,8 +1505,8 @@
   "tagline": "Turn the Runway into a Cinematic Spectacle",
   "category": "fashion",
   "day": "Day 1",
-  "date": "Feb 27, 2026",
-  "time": "Varies per performance",
+  "date": "Feb 27",
+  "time": "11:30 AM - 1:00 PM",
   "venue": "K.S. Auditorium",
   "eventMode": "Offline",
   "posterColor": "from-purple-600/90 via-pink-500/80 to-orange-400/90",
@@ -1475,6 +1517,7 @@
   "participants": "6–10 per team",
   "description": "A team fashion event where participants showcase cinema-inspired costumes, iconic characters, and legendary scenes. Teams perform on stage with props and background music to bring movie magic to life.",
   "club": "Pyros Fine Arts",
+  "whatsapp":"https://chat.whatsapp.com/HMCAG00JGxbI6mXtwLzYnv?mode=gi_t",
   "eventCoordinators": [
     "Nakshatra Ganesh - +91 83007 01376",
     "Moksha Soroopa B - +91 80725 15299"
@@ -1501,9 +1544,9 @@
   "title": "Paper Dressing",
   "tagline": "Fashion Meets Sustainability",
   "category": "fashion",
-  "day": "Day 2",
-  "date": "Feb 28, 2026",
-  "time": "2 hours (exact schedule as per organizers)",
+  "day": "Day 1",
+  "date": "Feb 27",
+  "time": "10:00 AM - 11:30 AM",
   "venue": "K.S. Auditorium",
   "eventMode": "Offline",
   "posterColor": "from-green-400/90 via-yellow-300/80 to-orange-400/90",
@@ -1514,6 +1557,7 @@
   "participants": "Maximum 3 per team",
   "description": "A creative fashion event where participants design and showcase costumes made entirely from paper, emphasizing imagination, innovation, and sustainability.",
   "club": "Pyros Fine Arts",
+  "whatsapp":"https://chat.whatsapp.com/CdGKgob5jrh4jqeZoJWxhc?mode=gi_t",
   "eventCoordinators": [
     "Akhil C - +91 90636 17718",
     "Deepak Kumaran - +91 79040 46651"
@@ -1540,7 +1584,7 @@
   "tagline": "Reflections of Sparkz",
   "category": "photography",
   "day": "Day 2",
-  "date": "Feb 28, 2026",
+  "date": "Feb 28",
   "time": "During Sparkz (27th–28th February), submission by 11:00 AM",
   "venue": "Online",
   "eventMode": "Online",
@@ -1552,6 +1596,7 @@
   "participants": "Individual entry only, one photograph per participant",
   "description": "Participants capture reflections that represent the spirit and energy of Sparkz using original photos taken during the event.",
   "club": "Photography Club",
+  "whatsapp":"https://chat.whatsapp.com/KD2G28d1OreCAzWVkgkazy?mode=gi_t",
   "eventCoordinators": [
     "B. Veera Sai Vineeth Kumar Reddy - 7981881695",
     "Prem - 88854 62451"
@@ -1574,8 +1619,8 @@
   "tagline": "Cinema-Inspired Fashion Showcase",
   "category": "fashion",
   "day": "Day 2",
-  "date": "Feb 28, 2026",
-  "time": "5–10 minutes",
+  "date": "Feb 28",
+  "time": "2:00 PM - 3:30 PM",
   "venue": "Online",
   "eventMode": "Online",
   "posterColor": "from-pink-600/90 via-purple-500/80 to-indigo-500/90",
@@ -1608,9 +1653,9 @@
   "title": "BATTLE OF THE BANDS",
   "tagline": "Electrifying Musical Showdown for Bands",
   "category": "music",
-  "day": "Day 1",
-  "date": "Feb 27, 2026",
-  "time": "15 minutes (5 min setup + 10 min performance)",
+  "day": "Day 2",
+  "date": "Feb 28",
+  "time": "12:30 PM - 3:00 PM",
   "venue": "K S Auditorium",
   "eventMode": "Offline",
   "posterColor": "from-red-600/90 via-orange-500/80 to-yellow-400/90",
@@ -1621,6 +1666,7 @@
   "participants": "4–8 members per band (at least 1 vocalist)",
   "description": "Unleash raw energy, tight rhythms, and powerful vocals as bands clash in an electrifying musical showdown! From thunderous drums to soaring melodies, this is your chance to own the stage, ignite the crowd, and prove your band’s musical might.",
   "club": "Fine Arts Club - Pyros",
+  "whatsapp":"https://chat.whatsapp.com/CTUUWWBcNWGDWB2DMiKoCj?mode=gi_t",
   "eventCoordinators": [
     "Iniyan - 7305611588",
     "Joy - 9597385964"
@@ -1649,8 +1695,8 @@
   "tagline": "Instagram Reels Challenge – Capture Sparkz Moments",
   "category": "photography",
   "day": "Day 2",
-  "date": "Feb 28, 2026",
-  "time": "15–60 seconds",
+  "date": "Feb 28",
+  "time": "Online",
   "venue": "Online",
   "eventMode": "Online",
   "posterColor": "from-pink-600/90 via-fuchsia-500/80 to-purple-500/90",
@@ -1661,6 +1707,7 @@
   "participants": "Individual",
   "description": "The Instagram Reels Challenge invites participants to creatively capture the essence of Sparkz through engaging short videos that showcase its moments, people, and campus atmosphere. Participants must visually narrate their experience of Sparkz using original content created only during the event.",
   "club": "Photography Club",
+  "whatsapp":"https://chat.whatsapp.com/CeaHctIvHpz0o3OJxaSa0o?mode=gi_t",
   "eventCoordinators": [
     "Kanthi Kumar - 9502206035",
     "Janarthanan - 9344239514"
@@ -1685,8 +1732,8 @@
   "tagline": "Creative and Eco-Friendly Art with Tissue Paper",
   "category": "art",
   "day": "Day 2",
-  "date": "Feb 28, 2026",
-  "time": "Flexible / Onspot",
+  "date": "Feb 28",
+  "time": "2:00 PM - 3:30 PM",
   "venue": "Tiffac Core",
   "eventMode": "Offline",
   "posterColor": "from-pink-500/90 via-rose-400/80 to-fuchsia-500/90",
@@ -1697,6 +1744,7 @@
   "participants": "Individual / Team",
   "description": "Tissue art is a creative and expressive art form using tissue paper as the primary medium to create decorative and meaningful artworks. Participants will use folding, layering, crumpling, twisting, and tearing techniques to transform simple tissue paper into visually rich compositions. This activity promotes creativity, patience, fine motor skills, and sustainable art practices.",
   "club": "Pyros",
+  "whatsapp":"https://chat.whatsapp.com/CtguI0TdsLX8QSD7upDdRs?mode=gi_t",
   "eventCoordinators": [
     "Harini P - 7639106263",
     "Vishaka - 8778660705"
@@ -1720,8 +1768,8 @@
   "tagline": "Rewrite Stories with Unexpected, Humorous, or Ironic Endings",
   "category": "literary",
   "day": "Day 2",
-  "date": "Feb 28, 2026",
-  "time": "60 seconds per team",
+  "date": "Feb 28",
+  "time": "2:00 PM - 3:30 PM",
   "venue": "9th Block Seminar Hall",
   "eventMode": "Offline",
   "posterColor": "from-red-600/90 via-orange-400/80 to-yellow-500/90",
@@ -1732,6 +1780,7 @@
   "participants": "2–4 per team",
   "description": "This fun-filled event invites participants to rewrite the endings of popular movies, stories, series, or myths in the most unexpected, humorous, or ironic way possible. Participants must showcase creativity, spontaneity, and imagination by breaking the rules of storytelling, with no prior preparation allowed.",
   "club": "Fine Arts",
+  "whatsapp":"https://chat.whatsapp.com/DBMuAKVo2BBDhgKJGCXHOW?mode=gi_t",
   "eventCoordinators": [
     "T Naga Shreyasa - 7337480700",
     "P Vedha - 9150759379"
@@ -1755,9 +1804,9 @@
   "title": "Dialogue Quiz",
   "tagline": "Guess Iconic Movie Dialogues from Scenes and Partial Lines",
   "category": "VISHAKA",
-  "day": "Day 1",
-  "date": "Feb 27, 2026",
-  "time": "1 hr 30 min",
+  "day": "Day 2",
+  "date": "Feb 28",
+  "time": "2:00 PM - 3:30 PM",
   "venue": "9th Block Seminar Hall",
   "eventMode": "Offline",
   "posterColor": "from-blue-600/90 via-indigo-400/80 to-purple-500/90",
@@ -1768,6 +1817,7 @@
   "participants": "Solo or Team of 2",
   "description": "Participants are given a movie scene description or partial dialogue and must guess the correct iconic dialogue. Those with the highest number of correct answers will be declared winners.",
   "club": "VISHAKA",
+  "whatsapp":"https://chat.whatsapp.com/BXSStfgQx0H7knflVQiRku?mode=gi_t",
   "eventCoordinators": [
     "Harsha Pavan - 9347218829",
     "Phaneendra - 8121322344"
@@ -1792,7 +1842,7 @@
   "tagline": "Online BGMI Tournament – Test Your Gaming Skills",
   "category": "Gaming",
   "day": "Day 1",
-  "date": "Feb 27, 2026",
+  "date": "Feb 27",
   "time": "Online Tournament Duration as per rounds",
   "venue": "Online",
   "eventMode": "Online",
@@ -1804,6 +1854,7 @@
   "participants": "Teams as per tournament rules",
   "description": "An online BGMI tournament where participants compete in Classic and TDM matches following official rules, testing strategy, coordination, and reflexes.",
   "club": "FAC",
+  "whatsapp":"https://chat.whatsapp.com/CwygwQ02sUu7I4bVQEQjvp?mode=gi_t",
   "eventCoordinators": [
     "Aadithya - 7812852841",
     "Laksan - 9626285763"
