@@ -21,12 +21,16 @@ const Hero = () => {
   const [mobileImageIndex, setMobileImageIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [introComplete, setIntroComplete] = useState(false);
+  const [showLogoIntro, setShowLogoIntro] = useState(false);
   
   const isInView = useInView(containerRef, { once: true, amount: 0.3 });
 
   // Logo intro refs
   const logoContainerRef = useRef(null);
   const logoRef = useRef(null);
+  const logoGlowRef = useRef(null);
+  const logoFrameRef = useRef(null);
+  const logoShineRef = useRef(null);
 
   // Detect mobile view
   useEffect(() => {
@@ -40,8 +44,33 @@ const Hero = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Logo intro animation - plays on every page load/refresh
+  // Check if we should show logo intro (only on first visit/refresh)
+  useEffect(() => {
+    // Check sessionStorage to see if user has seen intro before
+    const hasSeenIntro = sessionStorage.getItem('hasSeenLogoIntro');
+    
+    if (!hasSeenIntro) {
+      // First visit - show logo intro
+      setShowLogoIntro(true);
+      // Mark that user has seen intro for this session
+      sessionStorage.setItem('hasSeenLogoIntro', 'true');
+    } else {
+      // User has seen intro before - skip it
+      setIntroComplete(true);
+    }
+  }, []);
+
+  // Logo intro animation - only plays on first visit/refresh
   useLayoutEffect(() => {
+    // Don't run if we're not showing logo intro
+    if (!showLogoIntro) {
+      // Set hero content to be immediately visible
+      gsap.set([directorsCutRef.current, caseFileRef.current, titleTextRef.current, 
+                harryRef.current, professorRef.current, uniRef.current], 
+        { opacity: 1, visibility: "visible" });
+      return;
+    }
+
     const ctx = gsap.context(() => {
       // Initial setup - hide hero content initially
       gsap.set([directorsCutRef.current, caseFileRef.current, titleTextRef.current, 
@@ -53,6 +82,8 @@ const Hero = () => {
         defaults: { ease: "power3.inOut" },
         onComplete: () => {
           setIntroComplete(true);
+          setShowLogoIntro(false);
+          
           // Completely hide logo container after animation
           gsap.set(logoContainerRef.current, { 
             display: "none",
@@ -67,46 +98,132 @@ const Hero = () => {
         }
       });
 
-      // Logo intro sequence
+      // Get viewport dimensions for responsive positioning
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      
+      // Calculate logo dimensions based on viewport
+      const logoWidth = Math.min(viewportWidth * 0.8, 600); // Max 600px, 80% of viewport width
+      const logoHeight = logoWidth * 0.35; // Maintain aspect ratio (approx)
+      
+      // Initial state - logo hidden and compressed
+      gsap.set(logoRef.current, {
+        scaleX: 0,
+        scaleY: 0.1,
+        opacity: 0,
+        clipPath: "inset(0 50% 0 50%)" // Start as a thin line in the center
+      });
+      
+      gsap.set(logoGlowRef.current, {
+        scaleX: 0,
+        scaleY: 0.1,
+        opacity: 0
+      });
+      
+      gsap.set(logoFrameRef.current, {
+        scale: 0,
+        opacity: 0,
+        borderWidth: "4px"
+      });
+      
+      gsap.set(logoShineRef.current, {
+        xPercent: -100,
+        opacity: 0
+      });
+
+      // Logo intro sequence - Rectangular animation
       introTl
-        // Logo appears in center
-        .fromTo(logoRef.current,
+        // Step 1: Logo expands horizontally from center line
+        .to(logoRef.current, {
+          scaleX: 1,
+          scaleY: 0.1,
+          opacity: 0.8,
+          clipPath: "inset(0 0% 0 0%)",
+          duration: 0.8,
+          ease: "power2.out"
+        })
+        // Step 2: Logo expands vertically to full height
+        .to(logoRef.current, {
+          scaleY: 1,
+          opacity: 1,
+          duration: 0.6,
+          ease: "back.out(1.5)",
+          onStart: () => {
+            // Remove clipPath after horizontal expansion
+            gsap.set(logoRef.current, { clipPath: "inset(0 0% 0 0%)" });
+          }
+        }, "-=0.1")
+        
+        // Step 3: Golden frame appears around logo
+        .fromTo(logoFrameRef.current,
           {
-            scale: 0,
-            rotation: -180,
-            opacity: 0
+            scale: 0.8,
+            opacity: 0,
+            borderWidth: "0px"
           },
           {
             scale: 1,
-            rotation: 0,
             opacity: 1,
-            duration: 1.2,
-            ease: "back.out(1.7)"
-          }
+            borderWidth: "4px",
+            duration: 0.5,
+            ease: "power2.out"
+          },
+          "-=0.3"
         )
-        // Logo pulse effect
+        
+        // Step 4: Glow effect emerges
+        .fromTo(logoGlowRef.current,
+          {
+            scaleX: 0,
+            scaleY: 0.1,
+            opacity: 0
+          },
+          {
+            scaleX: 1,
+            scaleY: 1,
+            opacity: 0.7,
+            duration: 0.7,
+            ease: "power2.out"
+          },
+          "-=0.4"
+        )
+        
+        // Step 5: Logo pulse effect
         .to(logoRef.current, {
-          scale: 1.1,
-          duration: 0.4,
-          repeat: 2,
+          scaleX: 1.05,
+          scaleY: 1.05,
+          duration: 0.3,
+          repeat: 1,
           yoyo: true,
           ease: "sine.inOut"
         })
         .to(logoRef.current, {
-          scale: 1,
-          duration: 0.3
+          scaleX: 1,
+          scaleY: 1,
+          duration: 0.2
         })
-        // Hold for a moment
+        
+        // Step 6: Shine effect across the logo
+        .to(logoShineRef.current, {
+          xPercent: 100,
+          opacity: 0.4,
+          duration: 0.8,
+          ease: "power2.inOut"
+        }, "-=0.2")
+        
+        // Step 7: Hold for a moment
         .to(logoRef.current, {
           duration: 0.8
         })
-        // Fade out logo container completely
-        .to(logoContainerRef.current, {
+        
+        // Step 8: Fade out everything
+        .to([logoRef.current, logoGlowRef.current, logoFrameRef.current, logoShineRef.current], {
           opacity: 0,
-          duration: 0.8,
+          duration: 0.6,
           ease: "power2.inOut"
         })
-        // Fade in hero content
+        
+        // Step 9: Fade in hero content
         .to([directorsCutRef.current, caseFileRef.current, titleTextRef.current, 
              harryRef.current, professorRef.current, uniRef.current], 
           {
@@ -114,12 +231,12 @@ const Hero = () => {
             visibility: "visible",
             duration: 0.8,
             stagger: 0.1
-          }, "-=0.5");
+          }, "-=0.3");
 
     }, containerRef);
 
     return () => ctx.revert();
-  }, [isMobile]);
+  }, [isMobile, showLogoIntro]);
 
   // Mobile image switching
   useEffect(() => {
@@ -357,23 +474,59 @@ const Hero = () => {
       ref={containerRef} 
       className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#1a0a0a] via-[#2c1810] to-[#1a0a0a]"
     >
-      {/* Logo Intro Animation Container - Plays on every page load */}
-      <div
-        ref={logoContainerRef}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-[#1a0a0a] via-[#2c1810] to-[#1a0a0a] pointer-events-none"
-      >
-        <img
-          ref={logoRef}
-          src="/kare.png"
-          alt="KARE Logo"
-          className="absolute w-40 h-40 md:w-48 md:h-48 object-contain z-50"
-          style={{
-            filter: 'drop-shadow(0 0 20px rgba(251, 191, 36, 0.5))'
-          }}
-        />
-        {/* Glow effect behind logo */}
-        <div className="logo-glow absolute w-60 h-60 md:w-72 md:h-72 bg-gradient-to-r from-amber-400/10 to-red-500/10 rounded-full blur-xl"></div>
-      </div>
+      {/* Logo Intro Animation Container - Only shows on first visit/refresh */}
+      {showLogoIntro && (
+        <div
+          ref={logoContainerRef}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-[#1a0a0a] via-[#2c1810] to-[#1a0a0a] pointer-events-none"
+        >
+          {/* Golden Frame around logo */}
+          <div
+            ref={logoFrameRef}
+            className="absolute w-[80vw] max-w-[600px] h-[28vw] max-h-[210px] border-4 border-amber-500/70 rounded-xl shadow-2xl"
+            style={{
+              boxShadow: '0 0 40px rgba(251, 191, 36, 0.3), inset 0 0 20px rgba(251, 191, 36, 0.1)'
+            }}
+          ></div>
+          
+          {/* Glow effect behind logo */}
+          <div
+            ref={logoGlowRef}
+            className="logo-glow absolute w-[82vw] max-w-[620px] h-[30vw] max-h-[230px] bg-gradient-to-r from-amber-400/30 via-amber-500/20 to-red-500/30 rounded-xl blur-2xl"
+          ></div>
+          
+          {/* Logo Image */}
+          <div className="relative w-[80vw] max-w-[600px] h-[28vw] max-h-[210px] flex items-center justify-center overflow-hidden rounded-lg">
+            <img
+              ref={logoRef}
+              src="https://www.kalasalingam.ac.in/wp-content/uploads/2022/02/Logo.png"
+              alt="KARE Logo"
+              className="relative w-full h-full object-contain z-40 p-4"
+              style={{
+                filter: 'drop-shadow(0 0 15px rgba(251, 191, 36, 0.5)) brightness(1.1)'
+              }}
+            />
+            
+            {/* Shine effect overlay */}
+            <div
+              ref={logoShineRef}
+              className="absolute inset-0 z-50 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+              style={{
+                transform: 'skewX(-20deg)'
+              }}
+            ></div>
+          </div>
+          
+          {/* Subtle background pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-red-500/5"></div>
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.05) 1px, transparent 1px)',
+              backgroundSize: '20px 20px'
+            }}></div>
+          </div>
+        </div>
+      )}
 
       {/* Simple Particles */}
       {[...Array(15)].map((_, i) => (

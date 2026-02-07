@@ -7,6 +7,7 @@ import EventsPage from './pages/EventsPage';
 import ProShowPage from './pages/ProShowPage';
 import SponsorsPage from './pages/SponsorsPage';
 import HospitalityPage from './pages/HospitalityPage';
+import TeamPage from './pages/TeamPage';
 
 // Layout wrapper for AppLayout routes
 const AppLayoutWrapper = () => {
@@ -28,6 +29,7 @@ function App() {
           <Route path="/proshow" element={<ProShowPage />} />
           <Route path="/sponsors" element={<SponsorsPage />} />
           <Route path="/hospitality" element={<HospitalityPage />} />
+          <Route path="/teams" element={<TeamPage />} />
         </Route>
         
         {/* Auth routes with their own layout */}

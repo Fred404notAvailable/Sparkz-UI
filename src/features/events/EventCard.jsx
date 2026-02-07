@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Calendar, Clock, MapPin, Ticket, Sparkles, 
   Users, Award, Crown, Heart, Share2, Bookmark,
   Zap, Music, Palette, Camera, Video, Theater, 
-  BookOpen, Film, Trophy, UserCheck, Globe
+  BookOpen, Film, Trophy, UserCheck, Globe,
+  ChevronRight, ExternalLink
 } from 'lucide-react';
 
 // Import icons for different categories
@@ -17,7 +18,7 @@ const categoryIcons = {
   'video': Video,
   'film': Film,
   'sports': Trophy,
-  'dance': Zap, // Added dance category
+  'dance': Zap,
   'gaming': Zap,
   'default': Sparkles
 };
@@ -34,6 +35,7 @@ const EventCard = ({
   const isFeatured = event.featured;
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [showClickHint, setShowClickHint] = useState(false);
 
   // Color schemes based on category
   const getCategoryColor = (category) => {
@@ -46,7 +48,7 @@ const EventCard = ({
       'video': { gradient: 'from-pink-600 to-rose-600', bg: 'bg-pink-500/10', text: 'text-pink-400', border: 'border-pink-500/30' },
       'film': { gradient: 'from-amber-600 to-orange-600', bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/30' },
       'sports': { gradient: 'from-orange-600 to-red-600', bg: 'bg-orange-500/10', text: 'text-orange-400', border: 'border-orange-500/30' },
-      'dance': { gradient: 'from-blue-600 via-purple-600 to-blue-900', bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/30' }, // Added dance
+      'dance': { gradient: 'from-blue-600 via-purple-600 to-blue-900', bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/30' },
       'default': { gradient: 'from-amber-600 to-red-600', bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/30' }
     };
     return colors[category?.toLowerCase()] || colors.default;
@@ -89,32 +91,40 @@ const EventCard = ({
   };
 
   // Handle card click to open modal
-  const handleCardClick = () => {
+  const handleCardClick = useCallback(() => {
     setSelectedEvent(event);
-  };
+  }, [event, setSelectedEvent]);
 
-  // Handle button clicks with stopPropagation
-  const handleButtonClick = (e, action) => {
-    e.stopPropagation();
+  // Handle button clicks - these will also trigger card click, but we can add additional logic
+  const handleButtonClick = useCallback((e, action) => {
+    // First trigger the card click to open modal
+    handleCardClick();
+    
+    // Then handle the specific button action
     switch(action) {
       case 'like':
         setIsLiked(!isLiked);
+        // You can add API call or state update here
         break;
       case 'bookmark':
         setIsBookmarked(!isBookmarked);
+        // You can add API call or state update here
         break;
       case 'register':
-        // Handle registration logic
+        // Handle registration logic - this might open a form in the modal
         console.log('Register for event:', event.title);
         break;
       default:
         break;
     }
-  };
+  }, [event.title, handleCardClick, isLiked, isBookmarked]);
 
-  // Handle share
-  const handleShare = (e) => {
-    e.stopPropagation();
+  // Handle share with modal opening
+  const handleShare = useCallback((e) => {
+    // First open the modal
+    handleCardClick();
+    
+    // Then handle share
     if (navigator.share) {
       navigator.share({
         title: event.title,
@@ -126,7 +136,26 @@ const EventCard = ({
       navigator.clipboard.writeText(`${event.title} - ${event.tagline}`);
       alert('Event link copied to clipboard!');
     }
-  };
+  }, [event.title, event.tagline, handleCardClick]);
+
+  // Handle direct registration (without opening modal if you want)
+  const handleDirectRegister = useCallback((e) => {
+    e.stopPropagation(); // Prevent card click
+    console.log('Direct register for event:', event.title);
+    // You can trigger registration form or redirect
+  }, [event.title]);
+
+  // Handle direct like/bookmark (without opening modal)
+  const handleDirectAction = useCallback((e, action) => {
+    e.stopPropagation(); // Prevent card click
+    if (action === 'like') {
+      setIsLiked(!isLiked);
+      // Add API call
+    } else if (action === 'bookmark') {
+      setIsBookmarked(!isBookmarked);
+      // Add API call
+    }
+  }, [isLiked, isBookmarked]);
 
   return (
     <>
@@ -137,13 +166,25 @@ const EventCard = ({
         animate="visible"
         exit="exit"
         whileHover="hover"
-        onMouseEnter={() => !isMobile && setHoveredCard(event.id)}
-        onMouseLeave={() => !isMobile && setHoveredCard(null)}
-        className={`relative cursor-pointer group ${isMobile ? 'w-full' : 'w-full'}`}
+        onMouseEnter={() => {
+          if (!isMobile) {
+            setHoveredCard(event.id);
+            setShowClickHint(true);
+          }
+        }}
+        onMouseLeave={() => {
+          if (!isMobile) {
+            setHoveredCard(null);
+            setShowClickHint(false);
+          }
+        }}
+        className={`relative ${isMobile ? 'w-full' : 'w-full'}`}
         onClick={handleCardClick}
+        onTouchStart={() => setShowClickHint(true)}
+        onTouchEnd={() => setShowClickHint(false)}
       >
         {/* Main Card Container */}
-        <div className="relative overflow-hidden rounded-xl md:rounded-2xl transition-all duration-500 will-change-transform h-full min-h-[380px]">
+        <div className="relative overflow-hidden rounded-xl md:rounded-2xl transition-all duration-500 will-change-transform h-full min-h-[380px] cursor-pointer group">
           {/* Background with event gradient or image */}
           <div className="absolute inset-0 z-0 overflow-hidden">
             {event.image ? (
@@ -192,15 +233,18 @@ const EventCard = ({
           {/* Glassmorphism Overlay */}
           <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/40 via-black/20 to-black/60 backdrop-blur-[1px] border border-white/10" />
 
+          {/* Clickable Overlay (transparent layer for whole card click) */}
+          <div className="absolute inset-0 z-30 cursor-pointer" />
+
           {/* Card Content */}
           <motion.div 
             variants={contentVariants}
             initial="hidden"
             animate="visible"
-            className="relative z-20 h-full flex flex-col p-4 md:p-5"
+            className="relative z-20 h-full flex flex-col p-4 md:p-5 pointer-events-none" // Disable pointer events on content
           >
             {/* Top Section */}
-            <div className="flex justify-between items-start mb-3">
+            <div className="flex justify-between items-start mb-3 pointer-events-auto"> {/* Enable pointer events on buttons */}
               {/* Day Badge */}
               <motion.div
                 variants={itemVariants}
@@ -208,7 +252,7 @@ const EventCard = ({
               >
                 <div className="flex items-center gap-2">
                   <Calendar className="w-3 h-3 text-amber-300" />
-                  <span className="text-white text-xs font-bold">DAY {event.day}</span>
+                  <span className="text-white text-xs font-bold">{event.day}</span>
                 </div>
               </motion.div>
 
@@ -345,7 +389,7 @@ const EventCard = ({
             </div>
 
             {/* Bottom Section */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pointer-events-auto"> {/* Enable pointer events on buttons */}
               {/* Left - Price */}
               <motion.div
                 variants={itemVariants}
@@ -370,40 +414,14 @@ const EventCard = ({
                 {/* Book Now Button */}
                 <button 
                   onClick={(e) => handleButtonClick(e, 'register')}
-                  className="px-4 py-2 bg-gradient-to-r from-amber-600 to-red-600 text-white font-bold rounded-lg shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
+                  className="px-4 py-2 bg-gradient-to-r from-amber-600 to-red-600 text-white font-bold rounded-lg shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2 relative z-40" // Higher z-index
                 >
                   <Ticket className="w-4 h-4" />
                   <span className="text-sm">Book Now</span>
                 </button>
 
                 {/* Desktop Only Actions */}
-                {!isMobile && (
-                  <>
-                    {/* Like Button */}
-                    <button 
-                      onClick={(e) => handleButtonClick(e, 'like')}
-                      className={`p-2 rounded-lg border transition-all ${
-                        isLiked 
-                          ? 'bg-red-500/20 border-red-500/40 text-red-400' 
-                          : 'bg-black/40 border-white/20 text-gray-400 hover:text-red-400'
-                      }`}
-                    >
-                      <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
-                    </button>
-
-                    {/* Bookmark Button */}
-                    <button 
-                      onClick={(e) => handleButtonClick(e, 'bookmark')}
-                      className={`p-2 rounded-lg border transition-all ${
-                        isBookmarked 
-                          ? 'bg-amber-500/20 border-amber-500/40 text-amber-400' 
-                          : 'bg-black/40 border-white/20 text-gray-400 hover:text-amber-400'
-                      }`}
-                    >
-                      <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} />
-                    </button>
-                  </>
-                )}
+                
               </motion.div>
             </div>
           </motion.div>
@@ -417,53 +435,36 @@ const EventCard = ({
               </div>
 
               {/* Click Indicator */}
-              <div className="absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/80 backdrop-blur-sm rounded-full border border-white/20">
+              <div className={`absolute inset-0 z-30 transition-opacity duration-300 pointer-events-none ${
+                showClickHint ? 'opacity-100' : 'opacity-0'
+              }`}>
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 to-red-500/5" />
+                <div className="absolute bottom-4 right-4 px-3 py-2 bg-gradient-to-r from-black/90 to-black/80 backdrop-blur-sm rounded-lg border border-white/20 shadow-xl">
                   <div className="flex items-center gap-2">
-                    <span className="text-white text-xs font-medium">Click for Details</span>
+                    <ChevronRight className="w-4 h-4 text-amber-400 animate-pulse" />
+                    <span className="text-white text-sm font-medium">Click for Details</span>
                   </div>
                 </div>
               </div>
             </>
           )}
+
+          {/* Mobile Tap Indicator */}
+          {isMobile && showClickHint && (
+            <div className="absolute inset-0 z-30 pointer-events-none">
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 to-red-500/5" />
+              <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-black/90 backdrop-blur-sm rounded-full border border-white/20">
+                <div className="flex items-center gap-2">
+                  <ExternalLink className="w-4 h-4 text-amber-400 animate-bounce" />
+                  <span className="text-white text-sm font-medium">Tap for Details</span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Mobile Quick Actions */}
-        {isMobile && (
-          <div className="mt-2 flex items-center justify-between gap-2">
-            <button 
-              onClick={(e) => handleButtonClick(e, 'like')}
-              className={`flex-1 py-2 rounded-lg border flex items-center justify-center gap-1.5 ${
-                isLiked 
-                  ? 'bg-red-500/20 border-red-500/40 text-red-400' 
-                  : 'bg-black/40 border-white/20 text-gray-400'
-              }`}
-            >
-              <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
-              <span className="text-xs">Like</span>
-            </button>
-            
-            <button 
-              onClick={(e) => handleButtonClick(e, 'bookmark')}
-              className={`flex-1 py-2 rounded-lg border flex items-center justify-center gap-1.5 ${
-                isBookmarked 
-                  ? 'bg-amber-500/20 border-amber-500/40 text-amber-400' 
-                  : 'bg-black/40 border-white/20 text-gray-400'
-              }`}
-            >
-              <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} />
-              <span className="text-xs">Save</span>
-            </button>
-            
-            <button 
-              onClick={handleShare}
-              className="flex-1 py-2 rounded-lg border border-white/20 bg-black/40 flex items-center justify-center gap-1.5 text-gray-400"
-            >
-              <Share2 className="w-4 h-4" />
-              <span className="text-xs">Share</span>
-            </button>
-          </div>
-        )}
+        
       </motion.div>
 
       {/* Custom CSS */}
@@ -489,6 +490,12 @@ const EventCard = ({
           will-change: transform;
         }
         
+        /* Ensure buttons are above the clickable overlay */
+        .relative.z-40 {
+          position: relative;
+          z-index: 40;
+        }
+        
         /* Mobile optimizations */
         @media (max-width: 768px) {
           .event-card {
@@ -498,6 +505,13 @@ const EventCard = ({
           button {
             min-height: 44px;
             min-width: 44px;
+          }
+          
+          /* Better touch targets */
+          .relative.z-40,
+          button {
+            position: relative;
+            z-index: 40;
           }
         }
       `}</style>
