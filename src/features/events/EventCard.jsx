@@ -5,8 +5,9 @@ import {
   Users, Award, Crown, Heart, Share2, Bookmark,
   Zap, Music, Palette, Camera, Video, Theater, 
   BookOpen, Film, Trophy, UserCheck, Globe,
-  ChevronRight, ExternalLink
+  ChevronRight, ExternalLink, ShoppingCart, Check
 } from 'lucide-react';
+import { useCart } from '../../context/CartContext'; // Import useCart
 
 // Import icons for different categories
 const categoryIcons = {
@@ -34,8 +35,11 @@ const EventCard = ({
   const CategoryIcon = categoryIcons[event.category?.toLowerCase()] || categoryIcons.default;
   const isFeatured = event.featured;
   const [isLiked, setIsLiked] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
   const [showClickHint, setShowClickHint] = useState(false);
+  
+  // Use cart context
+  const { addToCart, removeFromCart, isInCart } = useCart();
+  const isEventInCart = isInCart(event.id);
 
   // Color schemes based on category
   const getCategoryColor = (category) => {
@@ -95,67 +99,37 @@ const EventCard = ({
     setSelectedEvent(event);
   }, [event, setSelectedEvent]);
 
-  // Handle button clicks - these will also trigger card click, but we can add additional logic
-  const handleButtonClick = useCallback((e, action) => {
-    // First trigger the card click to open modal
-    handleCardClick();
-    
-    // Then handle the specific button action
-    switch(action) {
-      case 'like':
-        setIsLiked(!isLiked);
-        // You can add API call or state update here
-        break;
-      case 'bookmark':
-        setIsBookmarked(!isBookmarked);
-        // You can add API call or state update here
-        break;
-      case 'register':
-        // Handle registration logic - this might open a form in the modal
-        console.log('Register for event:', event.title);
-        break;
-      default:
-        break;
-    }
-  }, [event.title, handleCardClick, isLiked, isBookmarked]);
-
-  // Handle share with modal opening
-  const handleShare = useCallback((e) => {
-    // First open the modal
-    handleCardClick();
-    
-    // Then handle share
-    if (navigator.share) {
-      navigator.share({
-        title: event.title,
-        text: event.tagline,
-        url: window.location.href,
-      });
+  // Handle Add to Cart button
+  const handleAddToCart = useCallback((e) => {
+    e.stopPropagation(); // Prevent card click
+    if (isEventInCart) {
+      removeFromCart(event.id);
     } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(`${event.title} - ${event.tagline}`);
-      alert('Event link copied to clipboard!');
+      addToCart(event);
     }
-  }, [event.title, event.tagline, handleCardClick]);
+  }, [event, isEventInCart, addToCart, removeFromCart]);
 
-  // Handle direct registration (without opening modal if you want)
+  // Handle Book Now button
+  const handleBookNow = useCallback((e) => {
+    e.stopPropagation();
+    // First add to cart if not already
+    if (!isEventInCart) {
+      const added = addToCart(event);
+      if (added) {
+        // Then open modal
+        setSelectedEvent(event);
+      }
+    } else {
+      // Just open modal
+      setSelectedEvent(event);
+    }
+  }, [event, isEventInCart, addToCart, setSelectedEvent]);
+
+  // Handle direct registration
   const handleDirectRegister = useCallback((e) => {
-    e.stopPropagation(); // Prevent card click
+    e.stopPropagation();
     console.log('Direct register for event:', event.title);
-    // You can trigger registration form or redirect
   }, [event.title]);
-
-  // Handle direct like/bookmark (without opening modal)
-  const handleDirectAction = useCallback((e, action) => {
-    e.stopPropagation(); // Prevent card click
-    if (action === 'like') {
-      setIsLiked(!isLiked);
-      // Add API call
-    } else if (action === 'bookmark') {
-      setIsBookmarked(!isBookmarked);
-      // Add API call
-    }
-  }, [isLiked, isBookmarked]);
 
   return (
     <>
@@ -236,15 +210,34 @@ const EventCard = ({
           {/* Clickable Overlay (transparent layer for whole card click) */}
           <div className="absolute inset-0 z-30 cursor-pointer" />
 
+          {/* Add to Cart Button - Top Right */}
+          <button
+            onClick={handleAddToCart}
+            className={`absolute top-3 right-3 z-40 p-2 rounded-full transition-all duration-300 ${
+              isEventInCart 
+                ? 'bg-green-500/90 text-white' 
+                : 'bg-black/80 text-amber-400 hover:bg-amber-600 hover:text-white'
+            } backdrop-blur-sm border ${
+              isEventInCart ? 'border-green-400/50' : 'border-amber-500/30'
+            } shadow-lg`}
+            aria-label={isEventInCart ? "Remove from cart" : "Add to cart"}
+          >
+            {isEventInCart ? (
+              <Check className="w-4 h-4" />
+            ) : (
+              <ShoppingCart className="w-4 h-4" />
+            )}
+          </button>
+
           {/* Card Content */}
           <motion.div 
             variants={contentVariants}
             initial="hidden"
             animate="visible"
-            className="relative z-20 h-full flex flex-col p-4 md:p-5 pointer-events-none" // Disable pointer events on content
+            className="relative z-20 h-full flex flex-col p-4 md:p-5 pointer-events-none"
           >
             {/* Top Section */}
-            <div className="flex justify-between items-start mb-3 pointer-events-auto"> {/* Enable pointer events on buttons */}
+            <div className="flex justify-between items-start mb-3 pointer-events-auto">
               {/* Day Badge */}
               <motion.div
                 variants={itemVariants}
@@ -389,7 +382,7 @@ const EventCard = ({
             </div>
 
             {/* Bottom Section */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pointer-events-auto"> {/* Enable pointer events on buttons */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pointer-events-auto">
               {/* Left - Price */}
               <motion.div
                 variants={itemVariants}
@@ -411,17 +404,36 @@ const EventCard = ({
                 variants={itemVariants}
                 className="flex items-center gap-2"
               >
+                {/* Add to Cart Button - Duplicate for better UX */}
+                <button 
+                  onClick={handleAddToCart}
+                  className={`px-4 py-2 rounded-lg shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2 relative z-40 ${
+                    isEventInCart
+                      ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white'
+                      : 'bg-gradient-to-r from-amber-600 to-red-600 text-white'
+                  }`}
+                >
+                  {isEventInCart ? (
+                    <>
+                      <Check className="w-4 h-4" />
+                      <span className="text-sm">Added</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="w-4 h-4" />
+                      <span className="text-sm">Add to Cart</span>
+                    </>
+                  )}
+                </button>
+
                 {/* Book Now Button */}
                 <button 
-                  onClick={(e) => handleButtonClick(e, 'register')}
-                  className="px-4 py-2 bg-gradient-to-r from-amber-600 to-red-600 text-white font-bold rounded-lg shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2 relative z-40" // Higher z-index
+                  onClick={handleBookNow}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-lg shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2 relative z-40"
                 >
                   <Ticket className="w-4 h-4" />
                   <span className="text-sm">Book Now</span>
                 </button>
-
-                {/* Desktop Only Actions */}
-                
               </motion.div>
             </div>
           </motion.div>
@@ -448,73 +460,8 @@ const EventCard = ({
               </div>
             </>
           )}
-
-          {/* Mobile Tap Indicator */}
-          {isMobile && showClickHint && (
-            <div className="absolute inset-0 z-30 pointer-events-none">
-              <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 to-red-500/5" />
-              <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-black/90 backdrop-blur-sm rounded-full border border-white/20">
-                <div className="flex items-center gap-2">
-                  <ExternalLink className="w-4 h-4 text-amber-400 animate-bounce" />
-                  <span className="text-white text-sm font-medium">Tap for Details</span>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
-
-        {/* Mobile Quick Actions */}
-        
       </motion.div>
-
-      {/* Custom CSS */}
-      <style jsx>{`
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-        
-        .animate-shimmer {
-          animation: shimmer 2s infinite;
-        }
-        
-        .line-clamp-2 {
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-        
-        /* Performance optimizations */
-        .will-change-transform {
-          will-change: transform;
-        }
-        
-        /* Ensure buttons are above the clickable overlay */
-        .relative.z-40 {
-          position: relative;
-          z-index: 40;
-        }
-        
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-          .event-card {
-            min-height: auto;
-          }
-          
-          button {
-            min-height: 44px;
-            min-width: 44px;
-          }
-          
-          /* Better touch targets */
-          .relative.z-40,
-          button {
-            position: relative;
-            z-index: 40;
-          }
-        }
-      `}</style>
     </>
   );
 };

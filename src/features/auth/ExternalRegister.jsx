@@ -368,7 +368,7 @@ const ExternalRegister = () => {
                         </div>
                       </label>
 
-                      <label className="flex items-center space-x-3 p-3 border border-white/20 rounded-lg hover:bg-white/5">
+                      {/* <label className="flex items-center space-x-3 p-3 border border-white/20 rounded-lg hover:bg-white/5">
                         <input
                           type="checkbox"
                           name="needTransport"
@@ -380,7 +380,7 @@ const ExternalRegister = () => {
                           <div className="font-medium">Need Transport</div>
                           <div className="text-sm text-white/60">Pickup from major points</div>
                         </div>
-                      </label>
+                      </label> */}
                     </div>
                   </div>
 

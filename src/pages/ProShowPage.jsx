@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Crown, Star, Ticket, Sparkles, Users, Calendar, ChevronRight, Play, CheckCircle, Music, Zap, Theater } from 'lucide-react';
+import { Crown, Star, Ticket, Sparkles, Users, Calendar, ChevronRight, Play, CheckCircle, Music, Zap, Theater, Sofa, Key, Coffee, Gift } from 'lucide-react';
 
 // Actor-focused proshow data with high-quality actor images
 const proShowData = [
@@ -178,7 +178,7 @@ const ActorCard = React.memo(({ show, index, isActive, onClick }) => {
 const ProShowPage = () => {
   const [activeCard, setActiveCard] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
+  const [registering, setRegistering] = useState(null); // 'normal' or 'vip'
   const containerRef = useRef(null);
 
   // Detect mobile with debounce
@@ -215,31 +215,39 @@ const ProShowPage = () => {
     setActiveCard(index);
   }, []);
 
-  const handleRegister = useCallback(() => {
-    setShowRegister(true);
+  const handleRegister = useCallback((type) => {
+    setRegistering(type);
     setTimeout(() => {
-      setShowRegister(false);
-      // Open registration page
-      window.open('#register', '_blank');
+      setRegistering(null);
+      // Open registration page based on type
+      if (type === 'normal') {
+        window.open('#register-normal', '_blank');
+      } else {
+        window.open('#register-vip', '_blank');
+      }
     }, 800);
   }, []);
 
   // Stats data
   const stats = useMemo(() => [
     { icon: Crown, label: "PREMIUM", value: "VIP Access", color: "text-amber-400" },
-    { icon: Users, label: "CAPACITY", value: "5000+ Seats", color: "text-purple-400" },
-    { icon: Calendar, label: "DATES", value: "Feb 27 - Mar 1", color: "text-blue-400" },
+    { icon: Users, label: "CAPACITY", value: "500+ Seats", color: "text-purple-400" },
+    { icon: Calendar, label: "DATES", value: "Feb 27 - Feb 28", color: "text-blue-400" },
     { icon: Star, label: "FEATURED", value: "3 Shows", color: "text-red-400" }
+  ], []);
+
+  // Normal Access Features
+  const normalFeatures = useMemo(() => [
+    { text: "Access to all 3 Shows", icon: CheckCircle },
+    { text: "Standard Seating", icon: Sofa },
+    { text: "Regular Entry", icon: Key }
   ], []);
 
   // VIP Features
   const vipFeatures = useMemo(() => [
-    { text: "Front Row Seating", icon: "🎯" },
-    { text: "Backstage Access", icon: "🎪" },
-    { text: "Meet & Greet", icon: "🤝" },
-    { text: "VIP Lounge", icon: "👑" },
-    { text: "Premium Merchandise", icon: "🎁" },
-    { text: "Priority Entry", icon: "🚀" }
+    { text: "Access to all 3 Shows", icon: CheckCircle },
+    { text: "Front Row Seating", icon: Sofa },
+    { text: "Priority Entry", icon: Key },
   ], []);
 
   return (
@@ -254,7 +262,7 @@ const ProShowPage = () => {
 
       {/* Main Content */}
       <div className="relative z-10">
-        {/* Hero Section with GET PASS button */}
+        {/* Hero Section with Two Payment Options */}
         <section className="relative pt-20 pb-12 md:pt-28 md:pb-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
@@ -306,74 +314,150 @@ const ProShowPage = () => {
                 </div>
               </motion.div>
 
-              {/* Right Column - GET PASS Button */}
+              {/* Right Column - Two Payment Options */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="relative"
+                className="space-y-6"
               >
-                {/* Glow Effect */}
-                <div className="absolute -inset-4 bg-gradient-to-r from-amber-600/20 via-yellow-600/20 to-amber-600/20 blur-3xl rounded-3xl" />
-                
-                {/* VIP Pass Card */}
-                <div className="relative bg-gradient-to-br from-black/90 to-black/70 backdrop-blur-sm rounded-3xl border border-amber-500/30 p-6 md:p-8 shadow-2xl">
-                  {/* VIP Header */}
-                  <div className="text-center mb-6">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600/20 to-yellow-600/20 backdrop-blur-sm rounded-full border border-amber-500/30 mb-4">
-                      <Crown className="w-4 h-4 text-amber-400" />
-                      <span className="text-amber-300 text-sm font-bold tracking-widest">VIP ALL-ACCESS</span>
-                    </div>
-                    
-                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                      Get Your VIP Pass
-                    </h3>
-                    
-                    <p className="text-white/70 text-sm md:text-base">
-                      Access all three star performances with premium benefits
-                    </p>
-                  </div>
-
-                  {/* Price */}
-                  <div className="text-center mb-6">
-                    <div className="inline-block p-4 bg-gradient-to-br from-amber-900/30 to-yellow-900/30 rounded-2xl border border-amber-500/20">
-                      <div className="text-white/60 text-xs mb-1 uppercase tracking-wider">All 3 Shows</div>
-                      <div className="text-4xl md:text-5xl font-bold text-amber-400 mb-1">₹500</div>
-                      <div className="text-white/50 text-xs">Limited passes available</div>
-                    </div>
-                  </div>
-
-                  {/* GET PASS Button */}
-                  <button
-                    onClick={handleRegister}
-                    disabled={showRegister}
-                    className={`group relative w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-amber-600 to-yellow-600 text-white font-bold text-lg rounded-2xl shadow-2xl transition-all duration-300 ${
-                      showRegister ? 'opacity-90 cursor-not-allowed' : 'hover:shadow-[0_0_40px_rgba(251,191,36,0.4)] hover:scale-105'
-                    }`}
-                    style={{ transform: 'translateZ(0)' }}
-                  >
-                    {showRegister ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span className="text-base md:text-lg">PROCESSING...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Ticket className="w-5 h-5" />
-                        <span className="text-base md:text-lg">GET VIP PASS</span>
-                        <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                      </>
-                    )}
-                  </button>
-
-                  {/* Features List */}
-                  <div className="mt-6 space-y-2">
-                    {vipFeatures.slice(0, 3).map((feature, index) => (
-                      <div key={index} className="flex items-center gap-2 text-sm text-white/70">
-                        <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
-                        <span>{feature.text}</span>
+                {/* Normal Access Card */}
+                <div className="relative">
+                  {/* Glow Effect */}
+                  <div className="absolute -inset-2 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-blue-600/10 blur-2xl rounded-3xl" />
+                  
+                  {/* Normal Pass Card */}
+                  <div className="relative bg-gradient-to-br from-black/90 to-black/70 backdrop-blur-sm rounded-3xl border border-blue-500/30 p-6 md:p-8 shadow-2xl">
+                    {/* Header */}
+                    <div className="text-center mb-6">
+                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm rounded-full border border-blue-500/30 mb-4">
+                        <Ticket className="w-4 h-4 text-blue-400" />
+                        <span className="text-blue-300 text-sm font-bold tracking-widest">STANDARD ACCESS</span>
                       </div>
-                    ))}
+                      
+                      <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                        Normal Access Pass
+                      </h3>
+                      
+                      <p className="text-white/70 text-sm md:text-base">
+                        Enjoy all three spectacular performances
+                      </p>
+                    </div>
+
+                    {/* Price */}
+                    <div className="text-center mb-6">
+                      <div className="inline-block p-4 bg-gradient-to-br from-blue-900/30 to-purple-900/30 rounded-2xl border border-blue-500/20">
+                        <div className="text-white/60 text-xs mb-1 uppercase tracking-wider">All 3 Shows</div>
+                        <div className="text-4xl md:text-5xl font-bold text-blue-400 mb-1">₹300</div>
+                        <div className="text-white/50 text-xs">Limited passes available</div>
+                      </div>
+                    </div>
+
+                    {/* GET PASS Button */}
+                    <button
+                      onClick={() => handleRegister('normal')}
+                      disabled={registering === 'normal'}
+                      className={`group relative w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg rounded-2xl shadow-2xl transition-all duration-300 ${
+                        registering === 'normal' ? 'opacity-90 cursor-not-allowed' : 'hover:shadow-[0_0_40px_rgba(59,130,246,0.4)] hover:scale-105'
+                      }`}
+                      style={{ transform: 'translateZ(0)' }}
+                    >
+                      {registering === 'normal' ? (
+                        <>
+                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          <span className="text-base md:text-lg">PROCESSING...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Ticket className="w-5 h-5" />
+                          <span className="text-base md:text-lg">GET NORMAL PASS</span>
+                          <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </>
+                      )}
+                    </button>
+
+                    {/* Features List */}
+                    <div className="mt-6 space-y-3">
+                      {normalFeatures.map((feature, index) => {
+                        const Icon = feature.icon;
+                        return (
+                          <div key={index} className="flex items-center gap-3 text-sm text-white/80">
+                            <Icon className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                            <span>{feature.text}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* VIP Front Row Card */}
+                <div className="relative">
+                  {/* Glow Effect */}
+                  <div className="absolute -inset-2 bg-gradient-to-r from-amber-600/20 via-yellow-600/20 to-amber-600/20 blur-2xl rounded-3xl" />
+                  
+                  {/* VIP Pass Card */}
+                  <div className="relative bg-gradient-to-br from-black/90 to-black/70 backdrop-blur-sm rounded-3xl border border-amber-500/30 p-6 md:p-8 shadow-2xl">
+                    {/* VIP Header */}
+                    <div className="text-center mb-6">
+                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600/20 to-yellow-600/20 backdrop-blur-sm rounded-full border border-amber-500/30 mb-4">
+                        <Crown className="w-4 h-4 text-amber-400" />
+                        <span className="text-amber-300 text-sm font-bold tracking-widest">VIP ALL-ACCESS</span>
+                      </div>
+                      
+                      <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                        Front Row VIP Pass
+                      </h3>
+                      
+                      <p className="text-white/70 text-sm md:text-base">
+                        Premium experience with exclusive benefits
+                      </p>
+                    </div>
+
+                    {/* Price */}
+                    <div className="text-center mb-6">
+                      <div className="inline-block p-4 bg-gradient-to-br from-amber-900/30 to-yellow-900/30 rounded-2xl border border-amber-500/20">
+                        <div className="text-white/60 text-xs mb-1 uppercase tracking-wider">All 3 Shows</div>
+                        <div className="text-4xl md:text-5xl font-bold text-amber-400 mb-1">₹500</div>
+                        <div className="text-white/50 text-xs">Limited VIP passes available</div>
+                      </div>
+                    </div>
+
+                    {/* GET VIP PASS Button */}
+                    <button
+                      onClick={() => handleRegister('vip')}
+                      disabled={registering === 'vip'}
+                      className={`group relative w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-amber-600 to-yellow-600 text-white font-bold text-lg rounded-2xl shadow-2xl transition-all duration-300 ${
+                        registering === 'vip' ? 'opacity-90 cursor-not-allowed' : 'hover:shadow-[0_0_40px_rgba(251,191,36,0.4)] hover:scale-105'
+                      }`}
+                      style={{ transform: 'translateZ(0)' }}
+                    >
+                      {registering === 'vip' ? (
+                        <>
+                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          <span className="text-base md:text-lg">PROCESSING...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Crown className="w-5 h-5" />
+                          <span className="text-base md:text-lg">GET VIP PASS</span>
+                          <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </>
+                      )}
+                    </button>
+
+                    {/* VIP Features List */}
+                    <div className="mt-6 space-y-3">
+                      {vipFeatures.map((feature, index) => {
+                        const Icon = feature.icon;
+                        return (
+                          <div key={index} className="flex items-center gap-3 text-sm text-white/80">
+                            <Icon className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                            <span>{feature.text}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -440,7 +524,7 @@ const ProShowPage = () => {
 
         {/* Additional Info Section */}
         <section className="relative py-12 md:py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -448,45 +532,99 @@ const ProShowPage = () => {
               className="relative"
             >
               <div className="relative bg-gradient-to-br from-black/80 to-black/60 backdrop-blur-sm rounded-3xl border border-amber-500/30 p-8 md:p-12">
-                <div className="text-center mb-8">
+                <div className="text-center mb-10">
                   <h3 className="text-2xl md:text-4xl font-bold text-white mb-4">
-                    Why Choose VIP?
+                    Choose Your Experience
                   </h3>
                   <p className="text-white/70 text-lg max-w-2xl mx-auto">
-                    Get the ultimate Sparkz experience with exclusive benefits and premium access
+                    Select the perfect package for your Sparkz Pro Show experience
                   </p>
                 </div>
 
-                {/* VIP Features Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {vipFeatures.map((feature, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.1 }}
-                      className="flex items-center gap-3 p-4 bg-white/5 rounded-xl border border-white/10 hover:border-amber-500/30 transition-colors"
-                    >
-                      <span className="text-2xl">{feature.icon}</span>
-                      <div>
-                        <div className="text-white font-medium">{feature.text}</div>
-                        <div className="text-white/50 text-sm">Included in VIP pass</div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* CTA Button at Bottom */}
-                <div className="text-center mt-8">
-                  <button
-                    onClick={handleRegister}
-                    className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-600 to-yellow-600 text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                {/* Two Column Comparison */}
+                <div className="grid md:grid-cols-2 gap-8">
+                  {/* Normal Pass */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    className="relative bg-gradient-to-br from-blue-900/20 to-purple-900/20 backdrop-blur-sm rounded-2xl border border-blue-500/20 p-6"
                   >
-                    <Ticket className="w-5 h-5" />
-                    <span>GET YOUR VIP PASS NOW</span>
-                    <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </button>
+                    <div className="text-center mb-6">
+                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-full mb-4">
+                        <Ticket className="w-5 h-5 text-blue-400" />
+                        <span className="text-blue-300 font-bold">STANDARD</span>
+                      </div>
+                      <div className="text-4xl font-bold text-white mb-2">₹300</div>
+                      <p className="text-white/70">Perfect for enjoying the shows</p>
+                    </div>
+                    
+                    <div className="space-y-4 mb-8">
+                      {normalFeatures.map((feature, index) => {
+                        const Icon = feature.icon;
+                        return (
+                          <div key={index} className="flex items-center gap-3">
+                            <div className="p-2 bg-blue-500/10 rounded-lg">
+                              <Icon className="w-5 h-5 text-blue-400" />
+                            </div>
+                            <span className="text-white/90">{feature.text}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    
+                    <button
+                      onClick={() => handleRegister('normal')}
+                      className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl hover:opacity-90 transition-opacity"
+                    >
+                      Get Standard Pass
+                    </button>
+                  </motion.div>
+
+                  {/* VIP Pass */}
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    className="relative bg-gradient-to-br from-amber-900/20 to-yellow-900/20 backdrop-blur-sm rounded-2xl border border-amber-500/30 p-6"
+                  >
+                    <div className="absolute top-4 right-4">
+                      <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-amber-600/90 to-yellow-600/90 rounded-full">
+                        <Star className="w-3 h-3 text-white" />
+                        <span className="text-white text-xs font-bold">POPULAR</span>
+                      </div>
+                    </div>
+                    
+                    <div className="text-center mb-6">
+                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600/20 to-yellow-600/20 rounded-full mb-4">
+                        <Crown className="w-5 h-5 text-amber-400" />
+                        <span className="text-amber-300 font-bold">VIP FRONT ROW</span>
+                      </div>
+                      <div className="text-4xl font-bold text-white mb-2">₹500</div>
+                      <p className="text-white/70">Ultimate premium experience</p>
+                    </div>
+                    
+                    <div className="space-y-4 mb-8">
+                      {vipFeatures.map((feature, index) => {
+                        const Icon = feature.icon;
+                        return (
+                          <div key={index} className="flex items-center gap-3">
+                            <div className="p-2 bg-amber-500/10 rounded-lg">
+                              <Icon className="w-5 h-5 text-amber-400" />
+                            </div>
+                            <span className="text-white/90">{feature.text}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    
+                    <button
+                      onClick={() => handleRegister('vip')}
+                      className="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-600 text-white font-bold rounded-xl hover:opacity-90 transition-opacity"
+                    >
+                      Get VIP Pass
+                    </button>
+                  </motion.div>
                 </div>
               </div>
             </motion.div>

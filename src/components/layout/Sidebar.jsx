@@ -10,6 +10,7 @@ const menuItems = [
   { name: 'Hospitality', icon: Coffee, path: '/hospitality' },
   { name: 'Sponsors', icon: Users, path: '/sponsors' },
   { name: 'Teams', icon: Target, path: '/teams' },
+  { name: 'Cart', icon: Film, path: '/cart' }
 ];
 
 const Sidebar = ({ isOpen, onClose }) => {

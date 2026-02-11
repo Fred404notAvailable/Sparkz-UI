@@ -2,14 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Users, Phone, Mail, Copy, Camera, Film } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-// Note: You'll need to adjust these imports based on your actual project structure
-// If images are in public folder, use paths like: '/Teams/Priya.jpeg'
-// If images are in src/assets, import them like below:
-
-// import PriyaImage from './Teams/Priya.jpeg';
-// import BalakannanImage from './Teams/Balakannan.png';
-// import SangeethaImage from './Teams/Sangeetha.jpeg';
-
 const TeamPage = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [copiedContact, setCopiedContact] = useState(null);
@@ -28,6 +20,7 @@ const TeamPage = () => {
       name: 'Dr. P Priya',
       image: '/Teams/Priya.jpeg', // Or use PriyaImage if imported
       color: 'from-amber-600 to-yellow-600',
+      role: 'Overall Coordinator',
       accentColor: 'border-amber-500',
     },
     {
@@ -35,6 +28,7 @@ const TeamPage = () => {
       name: 'Dr. S P Balakannan',
       image: '/Teams/Balakannan.png', // Or use BalakannanImage if imported
       color: 'from-purple-600 to-pink-600',
+      role: 'Student Affairs',
       accentColor: 'border-purple-500',
     },
     {
@@ -42,6 +36,7 @@ const TeamPage = () => {
       name: 'Dr. C Sangeetha',
       image: '/Teams/Sangeetha.jpeg', // Or use SangeethaImage if imported
       color: 'from-blue-600 to-cyan-600',
+      role: 'Overall Cooredinator',
       accentColor: 'border-blue-500',
     }
   ];
@@ -49,7 +44,7 @@ const TeamPage = () => {
   // Contact list data
   const contactList = [
     { id: 1, name: 'Jeyavel M', phone: '6382952819', club: 'FAC' },
-    { id: 2, name: 'S Vijayan', phone: '6374724920', club: 'Green Army' },
+    { id: 2, name: 'Sakthi', phone: '8015566148', club: 'FAC' },
     { id: 3, name: 'D. Bhuvanesh', phone: '8925597374', club: 'Nature Club' },
     { id: 4, name: 'G Deva Vinayagam', phone: '6379131320', club: 'Photography' },
     { id: 5, name: 'R Bharath Prasath', phone: '9344367178', club: 'Tamil Mandram' },
@@ -57,6 +52,7 @@ const TeamPage = () => {
     { id: 7, name: 'Mukesh K M S', phone: '9360256245', club: 'National Service Scheme' },
     { id: 8, name: 'P. Chaitanya Reddy', phone: '9573457152', club: 'YUVA Tourism Club' },
     { id: 9, name: 'M Barnes Samuel', phone: '7901444653', club: 'Vishaka Club' },
+    { id: 10, name: 'S Vijayan', phone: '6374724920', club: 'Green Army' },
   ];
 
   const handleCopyPhone = (phone, name) => {
@@ -231,10 +227,11 @@ const TeamPage = () => {
                     </div>
                   )}
                   
-                  {/* Director Tag */}
-                  <div className="inline-flex items-center gap-2 px-4 py-1 mt-2 bg-gradient-to-r from-amber-900/30 to-red-900/30 backdrop-blur-sm rounded-full border border-amber-500/30">
-                    <Film className="w-3 h-3 text-amber-400" />
-                    <span className="text-amber-300 text-xs font-medium">DIRECTOR</span>
+                  {/* Role Tag */}
+                  <div className="px-3 py-1 bg-gradient-to-r from-amber-900/30 to-red-900/30 backdrop-blur-sm rounded-full border border-amber-500/30 inline-block mb-2">
+                    <span className="text-amber-300 text-xs font-medium uppercase">
+                      {member.role}
+                    </span>
                   </div>
                   
                   {/* Bottom Border */}
@@ -363,7 +360,7 @@ const TeamPage = () => {
           <div className="inline-flex items-center gap-4 px-6 py-3 bg-white/5 backdrop-blur-sm rounded-full border border-white/10">
             <Mail className="w-5 h-5 text-amber-400" />
             <p className="text-white/70">
-              For general inquiries: <a href="mailto:sparkz@kare.edu" className="text-amber-400 hover:text-amber-300 transition-colors font-medium">sparkz.kalasalingam.edu.in</a>
+              For general inquiries: <a href="mailto:sparkz@kare.edu" className="text-amber-400 hover:text-amber-300 transition-colors font-medium">sparkz.klu.ac.in</a>
             </p>
           </div>
           <p className="text-white/30 text-xs mt-4">

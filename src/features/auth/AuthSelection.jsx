@@ -59,12 +59,18 @@ const AuthSelection = () => {
                 ))}
               </ul>
 
-              <div className="grid grid-cols-1 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <Link
                   to="/auth/kare/login"
                   className="py-3 bg-amber-600 text-white font-semibold rounded-lg hover:bg-amber-700 text-center transition-colors"
                 >
                   Login
+                </Link>
+                <Link
+                  to="/auth/kare/register"
+                  className="py-3 bg-transparent border border-amber-500 text-amber-400 font-semibold rounded-lg hover:bg-amber-500/10 text-center transition-colors"
+                >
+                  Register
                 </Link>
               </div>
             </div>
