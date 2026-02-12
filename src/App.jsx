@@ -8,8 +8,9 @@ import ProShowPage from './pages/ProShowPage';
 import SponsorsPage from './pages/SponsorsPage';
 import HospitalityPage from './pages/HospitalityPage';
 import TeamPage from './pages/TeamPage';
-import CartPage from './pages/CartPage'; // New Cart Page
-import { CartProvider } from './context/CartContext'; // Import CartProvider
+import CartPage from './pages/CartPage';
+import ProfilePage from './pages/ProfilePage'; // <-- NEW IMPORT
+import { CartProvider } from './context/CartContext';
 
 // Layout wrapper for AppLayout routes
 const AppLayoutWrapper = () => {
@@ -22,7 +23,7 @@ const AppLayoutWrapper = () => {
 
 function App() {
   return (
-    <CartProvider> {/* Wrap entire app with CartProvider */}
+    <CartProvider>
       <Router>
         <Routes>
           {/* Routes wrapped with AppLayout */}
@@ -33,13 +34,14 @@ function App() {
             <Route path="/sponsors" element={<SponsorsPage />} />
             <Route path="/hospitality" element={<HospitalityPage />} />
             <Route path="/teams" element={<TeamPage />} />
-            <Route path="/cart" element={<CartPage />} /> {/* New Cart Route */}
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/profile" element={<ProfilePage />} /> {/* <-- NEW ROUTE */}
           </Route>
           
           {/* Auth routes with their own layout */}
           <Route path="/auth/*" element={<AuthPage />} />
           
-          {/* 404 Page - also wrapped in AppLayout */}
+          {/* 404 Page */}
           <Route 
             path="*" 
             element={

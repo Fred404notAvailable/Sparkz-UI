@@ -7,7 +7,6 @@ import eventsData from '../assets/data/events.json';
 
 // Import components
 import {
-  EventsHero,
   EventsSearchAndFilter,
   EventsGrid,
   EventModal,
@@ -263,60 +262,17 @@ const EventsPage = () => {
       </div>
 
       {/* Page Header - Sticky */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/95 to-transparent backdrop-blur-lg border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-r from-amber-600/20 to-red-600/20 rounded-lg border border-amber-500/30">
-                <Film className="w-5 h-5 text-amber-400" />
-              </div>
-              <div>
-                <h1 className="text-lg md:text-xl font-bold font-['Cinzel'] text-white">
-                  SPARKZ<span className="text-amber-500">'26</span> CINEMA
-                </h1>
-                <div className="flex items-center gap-2 text-xs text-white/60">
-                  <span className="font-mono tracking-wider">REEL NO: 2026</span>
-                  <div className="w-1 h-1 bg-amber-500 rounded-full"></div>
-                  <span className="font-mono">{totalEvents} PREMIERES</span>
-                </div>
-              </div>
-            </div>
-            
-            {/* Live Counter */}
-            <div className="hidden md:block">
-              <div className="flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-black/60 to-black/40 backdrop-blur-sm rounded-lg border border-amber-500/20">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  <span className="text-white text-sm">
-                    LIVE: <span className="font-bold text-amber-400">{filteredEvents.length}</span> SHOWING
-                  </span>
-                </div>
-                {featuredEventsCount > 0 && (
-                  <>
-                    <div className="w-px h-4 bg-amber-500/30"></div>
-                    <div className="flex items-center gap-2">
-                      <Star className="w-3 h-3 text-amber-400" />
-                      <span className="text-white text-sm">
-                        <span className="font-bold text-amber-400">{featuredEventsCount}</span> FEATURED
-                      </span>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      
 
       {/* Main Content */}
       <div className="pt-20 pb-20 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
-          <div className="mb-8 md:mb-12">
+          {/* <div className="mb-8 md:mb-12">
             <div ref={heroRef}>
               <EventsHero isMobile={isMobile} />
             </div>
-          </div>
+          </div> */}
 
           {/* Search and Filter */}
           <div className="mb-10 md:mb-12">
