@@ -192,7 +192,7 @@ const AppLayout = ({ children }) => {
               <div className="relative">
                 <div className="w-20 h-8 flex items-center justify-center">
                   <img 
-                    src="/sparkz.png" 
+                    src="/kare.png" 
                     alt="SPARKZ Logo" 
                     className="w-full h-full object-contain"
                     style={{

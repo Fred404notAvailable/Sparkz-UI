@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
 // ========== CONFIGURE YOUR FIXED PRICE HERE ==========
-const FIXED_PRICE_PER_EVENT = 300; // ₹200 per event (change as needed)
+const FIXED_PRICE_PER_EVENT = 300;
 // =====================================================
 
 const CartPage = () => {
@@ -26,7 +26,7 @@ const CartPage = () => {
   } = useCart();
 
   // Compute total using fixed price per event
-  const totalAmount = cart.length * FIXED_PRICE_PER_EVENT;
+  const totalAmount = 300;
 
   const [showCheckoutForm, setShowCheckoutForm] = useState(false);
   const [transactionId, setTransactionId] = useState('');

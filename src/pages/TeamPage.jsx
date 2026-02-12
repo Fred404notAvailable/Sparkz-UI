@@ -17,19 +17,19 @@ const TeamPage = () => {
   const teamMembers = [
     {
       id: 1,
-      name: 'Dr. P Priya',
-      image: '/Teams/Priya.jpeg', // Or use PriyaImage if imported
-      color: 'from-amber-600 to-yellow-600',
-      role: 'Overall Coordinator',
-      accentColor: 'border-amber-500',
-    },
-    {
-      id: 2,
       name: 'Dr. S P Balakannan',
       image: '/Teams/Balakannan.png', // Or use BalakannanImage if imported
       color: 'from-purple-600 to-pink-600',
       role: 'Student Affairs',
       accentColor: 'border-purple-500',
+    },
+      {
+      id: 2,
+      name: 'Dr. P Priya',
+      image: '/Teams/Priya.jpeg', // Or use PriyaImage if imported
+      color: 'from-amber-600 to-yellow-600',
+      role: 'Overall Coordinator',
+      accentColor: 'border-amber-500',
     },
     {
       id: 3,

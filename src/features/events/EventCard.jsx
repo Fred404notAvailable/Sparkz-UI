@@ -167,7 +167,8 @@ const EventCard = ({
         <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/40 via-black/20 to-black/60 backdrop-blur-[1px] border border-white/10" />
 
         {/* Clickable overlay (whole card) */}
-        <div className="absolute inset-0 z-30 cursor-pointer" />
+        <div className="absolute inset-0 z-30 cursor-pointer pointer-events-none" />
+
 
         {/* ===== CART BUTTON REMOVED FROM TOP RIGHT ===== */}
 
