@@ -16,7 +16,12 @@ import {
 
 gsap.registerPlugin(ScrollTrigger);
 
+import { useAuth } from '../context/AuthContext'; // Import useAuth
+import { useNavigate } from 'react-router-dom';
+
 const EventsPage = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('all');
   const [hoveredCard, setHoveredCard] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -32,7 +37,7 @@ const EventsPage = () => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -67,7 +72,7 @@ const EventsPage = () => {
   // Generate categories from events data
   const categories = useMemo(() => {
     if (!eventsData || eventsData.length === 0) return [];
-    
+
     // Count events per category
     const categoryCounts = {};
     eventsData.forEach(event => {
@@ -105,16 +110,16 @@ const EventsPage = () => {
   const updateFilteredEvents = useMemo(() => {
     return eventsData.filter(event => {
       // Filter by category
-      const matchesCategory = activeCategory === 'all' || 
+      const matchesCategory = activeCategory === 'all' ||
         event.category?.toLowerCase() === activeCategory;
-      
+
       // Filter by search query
-      const matchesSearch = searchQuery === '' || 
+      const matchesSearch = searchQuery === '' ||
         event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         event.tagline.toLowerCase().includes(searchQuery.toLowerCase()) ||
         event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         event.category.toLowerCase().includes(searchQuery.toLowerCase());
-      
+
       return matchesCategory && matchesSearch;
     });
   }, [eventsData, activeCategory, searchQuery]);
@@ -208,6 +213,39 @@ const EventsPage = () => {
     setHoveredCard(null);
   };
 
+  const handleRegister = async (event) => {
+    if (!user) {
+      alert("Please login to register for events");
+      navigate('/auth');
+      return;
+    }
+
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'https://sparkz-server.onrender.com';
+      const res = await fetch(`${API_URL}/event/normal`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          user: user,
+          name: event.title, // Assuming event has a title
+          eventDetails: event
+        })
+      });
+
+      if (res.ok) {
+        alert("Registration successful! Check your email for the QR code.");
+      } else {
+        const errorData = await res.json();
+        alert(`Registration failed: ${errorData.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      alert("An error occurred during registration.");
+    }
+  };
+
   // Handle modal close
   const handleModalClose = () => {
     setSelectedEvent(null);
@@ -227,9 +265,9 @@ const EventsPage = () => {
       <div className="fixed inset-0 z-0">
         {/* Gradient Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
-        
+
         {/* Grid Pattern */}
-        <div 
+        <div
           className="absolute inset-0 opacity-5"
           style={{
             backgroundImage: `linear-gradient(rgba(245, 158, 11, 0.2) 1px, transparent 1px),
@@ -237,7 +275,7 @@ const EventsPage = () => {
             backgroundSize: '40px 40px',
           }}
         />
-        
+
         {/* Floating Particles */}
         {[...Array(30)].map((_, i) => (
           <div
@@ -262,7 +300,50 @@ const EventsPage = () => {
       </div>
 
       {/* Page Header - Sticky */}
-      
+      <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/95 to-transparent backdrop-blur-lg border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-r from-amber-600/20 to-red-600/20 rounded-lg border border-amber-500/30">
+                <Film className="w-5 h-5 text-amber-400" />
+              </div>
+              <div>
+                <h1 className="text-lg md:text-xl font-bold font-['Cinzel'] text-white">
+                  SPARKZ<span className="text-amber-500">'26</span> CINEMA
+                </h1>
+                <div className="flex items-center gap-2 text-xs text-white/60">
+                  <span className="font-mono tracking-wider">REEL NO: 2026</span>
+                  <div className="w-1 h-1 bg-amber-500 rounded-full"></div>
+                  <span className="font-mono">{totalEvents} PREMIERES</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Live Counter */}
+            <div className="hidden md:block">
+              <div className="flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-black/60 to-black/40 backdrop-blur-sm rounded-lg border border-amber-500/20">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                  <span className="text-white text-sm">
+                    LIVE: <span className="font-bold text-amber-400">{filteredEvents.length}</span> SHOWING
+                  </span>
+                </div>
+                {featuredEventsCount > 0 && (
+                  <>
+                    <div className="w-px h-4 bg-amber-500/30"></div>
+                    <div className="flex items-center gap-2">
+                      <Star className="w-3 h-3 text-amber-400" />
+                      <span className="text-white text-sm">
+                        <span className="font-bold text-amber-400">{featuredEventsCount}</span> FEATURED
+                      </span>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Main Content */}
       <div className="pt-20 pb-20 relative z-10">
@@ -348,7 +429,7 @@ const EventsPage = () => {
                 <Film className="w-12 h-12 text-amber-400/50 mx-auto mb-4" />
                 <h3 className="text-2xl font-bold text-white mb-2">No Events Found</h3>
                 <p className="text-gray-400 mb-6 max-w-md mx-auto">
-                  {searchQuery 
+                  {searchQuery
                     ? `No events match "${searchQuery}". Try a different search term.`
                     : 'No events match your current filters. Try selecting a different category.'}
                 </p>
@@ -370,10 +451,11 @@ const EventsPage = () => {
       {/* Event Modal */}
       <AnimatePresence mode="wait">
         {selectedEvent && (
-          <EventModal 
-            event={selectedEvent} 
+          <EventModal
+            event={selectedEvent}
             onClose={handleModalClose}
             getCategoryIcon={getCategoryIcon}
+            onRegister={() => handleRegister(selectedEvent)}
           />
         )}
       </AnimatePresence>

@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useRef, createContext } from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { 
-  Menu, 
-  X, 
-  Film, 
-  Volume2, 
-  VolumeX, 
-  Sparkles, 
+import {
+  Menu,
+  X,
+  Film,
+  Volume2,
+  VolumeX,
+  Sparkles,
   User,
   Spotlight,
   Play
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import SmoothScrollWrapper from './SmoothScrollWrapper';
+import { useAuth } from '../../context/AuthContext';
+import ProfileModal from '../profile/ProfileModal';
 
 const AppLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -23,6 +25,8 @@ const AppLayout = ({ children }) => {
   const [analyser, setAnalyser] = useState(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [showAudioPrompt, setShowAudioPrompt] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false); // Profile Modal State
+  const { user } = useAuth(); // Auth Context
 
   const audioRef = useRef(null);
   const audioContextRef = useRef(null);
@@ -86,6 +90,8 @@ const AppLayout = ({ children }) => {
       await audioRef.current.play();
       setIsAudioPlaying(true);
       setShowAudioPrompt(false);
+
+      // Resume audio context if suspended
       
       if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
         await audioContextRef.current.resume();
@@ -154,13 +160,13 @@ const AppLayout = ({ children }) => {
   return (
     <MusicContext.Provider value={{ isMuted, toggleMute, analyser, isAudioPlaying, startAudio }}>
       <div className="relative w-full min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0a0a0a] overflow-x-hidden">
-        
+
         {/* Hidden audio element */}
         <audio ref={audioRef} loop preload="auto">
           <source src="/audio/sparkz.mpeg" type="audio/mpeg" />
           Your browser does not support the audio element.
         </audio>
-        
+
         {/* Audio Play Prompt */}
         {showAudioPrompt && !isAudioPlaying && (
           <div className="fixed bottom-24 right-6 z-50 animate-pulse">
@@ -184,15 +190,15 @@ const AppLayout = ({ children }) => {
           <div className={clsx(
             "fixed top-0 left-0 z-30 flex items-center justify-between px-6 py-3 transition-all duration-300",
             isSidebarOpen ? "md:w-[calc(100%-350px)]" : "w-full",
-            isScrolled 
-              ? "bg-black/80 backdrop-blur-md border-b border-white/10" 
+            isScrolled
+              ? "bg-black/80 backdrop-blur-md border-b border-white/10"
               : "bg-black/20 backdrop-blur-sm border-b border-white/5"
           )}>
             <Link to="/" className="flex items-center gap-4 group">
               <div className="relative">
                 <div className="w-20 h-8 flex items-center justify-center">
                   <img 
-                    src="/kare.png" 
+                    src="/sparkz.png" 
                     alt="SPARKZ Logo" 
                     className="w-full h-full object-contain"
                     style={{
@@ -206,7 +212,7 @@ const AppLayout = ({ children }) => {
                 <span className="font-mono text-[10px] text-white/60 mt-0.5">REEL: {currentTime}</span>
               </div>
             </Link>
-            
+
             <div className="flex items-center gap-4">
               <div className="hidden md:flex items-center gap-6">
                 <Link to="/" className="text-white/70 hover:text-white transition-colors text-sm font-medium">Home</Link>
@@ -215,18 +221,30 @@ const AppLayout = ({ children }) => {
                 <Link to="/sponsors" className="text-white/70 hover:text-white transition-colors text-sm font-medium">Sponsors</Link>
                 <Link to="/hospitality" className="text-white/70 hover:text-white transition-colors text-sm font-medium">Hospitality</Link>
               </div>
-              
-              <Link to="/auth" className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600 to-red-600 text-white text-sm font-semibold rounded-full hover:from-amber-700 hover:to-red-700 transition-all duration-300 group">
-                <User size={16} />
-                <span>Login / Register</span>
-              </Link>
-              
+
+
+              {user ? (
+                <button
+                  onClick={() => setIsProfileOpen(true)}
+                  className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600 to-red-600 text-white text-sm font-semibold rounded-full hover:from-amber-700 hover:to-red-700 transition-all duration-300 group"
+                >
+                  <User size={16} />
+                  <span>Profile</span>
+                </button>
+              ) : (
+                <Link to="/auth" className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600 to-red-600 text-white text-sm font-semibold rounded-full hover:from-amber-700 hover:to-red-700 transition-all duration-300 group">
+                  <User size={16} />
+                  <span>Login / Register</span>
+                </Link>
+              )}
+
               <div className="w-px h-6 bg-white/20 mx-2"></div>
-              
+
+              {/* Mute button - only show if audio is playing */}
               {isAudioPlaying && (
-                <button 
-                  onClick={toggleMute} 
-                  className="p-2 hover:bg-white/5 rounded-full transition-colors group" 
+                <button
+                  onClick={toggleMute}
+                  className="p-2 hover:bg-white/5 rounded-full transition-colors group"
                   title={isMuted ? "Unmute" : "Mute"}
                 >
                   {isMuted ? (
@@ -236,11 +254,12 @@ const AppLayout = ({ children }) => {
                   )}
                 </button>
               )}
-              
+
+              {/* Start audio button (mobile/small screens) */}
               {!isAudioPlaying && (
-                <button 
-                  onClick={startAudio} 
-                  className="p-2 hover:bg-white/5 rounded-full transition-colors group" 
+                <button
+                  onClick={startAudio}
+                  className="p-2 hover:bg-white/5 rounded-full transition-colors group"
                   title="Play Music"
                 >
                   <Play className="w-5 h-5 text-amber-400 group-hover:text-amber-300 transition-colors" />
@@ -282,7 +301,7 @@ const AppLayout = ({ children }) => {
         </button>
 
         <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
-        
+
         {/* Mobile Bottom Navigation */}
         <div className="fixed bottom-0 left-0 right-0 z-500 md:hidden bg-black/90 backdrop-blur-lg border-t border-white/10">
           <div className="flex items-center justify-around p-3">
@@ -309,16 +328,18 @@ const AppLayout = ({ children }) => {
           </div>
         </div>
       </div>
-    </MusicContext.Provider>
+
+      <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+    </MusicContext.Provider >
   );
 };
 
 export const MusicContext = createContext({
   isMuted: false,
-  toggleMute: () => {},
+  toggleMute: () => { },
   analyser: null,
   isAudioPlaying: false,
-  startAudio: () => {}
+  startAudio: () => { }
 });
 
 export default AppLayout;

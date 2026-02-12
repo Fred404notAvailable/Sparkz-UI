@@ -1,13 +1,50 @@
-// ExternalRegister.jsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { 
-  User, Mail, Lock, Phone, Building, MapPin, 
-  BookOpen, Eye, EyeOff, ArrowLeft, CheckCircle 
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  User, Mail, Lock, Phone, Building, MapPin,
+  BookOpen, Eye, EyeOff, ArrowLeft, CheckCircle
 } from 'lucide-react';
 
+import { useAuth } from '../../context/AuthContext';
+
 const ExternalRegister = () => {
+  const { register } = useAuth();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  // ... (previous state)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match!');
+      return;
+    }
+    if (!formData.acceptTerms) {
+      alert('Please accept the terms and conditions');
+      return;
+    }
+
+    const userData = {
+      name: `${formData.firstName} ${formData.lastName}`,
+      email: formData.email,
+      password: formData.password,
+      phone: formData.phone,
+      college: formData.collegeName,
+      collegeLocation: formData.collegeLocation,
+      department: formData.department,
+      year: formData.year,
+      collegeId: formData.studentId,
+      accommodation: formData.needAccommodation,
+      role: 'user'
+    };
+
+    const result = await register('external', userData);
+    if (result.success) {
+      navigate('/auth/external/login');
+    } else {
+      alert(result.message || 'Registration failed');
+    }
+  };
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -18,7 +55,7 @@ const ExternalRegister = () => {
     phone: '',
     collegeName: '',
     collegeLocation: '',
-    
+
     // Step 2
     department: '',
     year: '',
@@ -55,25 +92,13 @@ const ExternalRegister = () => {
     setStep(step - 1);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
-      return;
-    }
-    if (!formData.acceptTerms) {
-      alert('Please accept the terms and conditions');
-      return;
-    }
-    console.log('External registration data:', formData);
-    // Handle registration logic here
-  };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0a0a0a] text-white">
       <div className="container mx-auto px-6 py-12">
         {/* Back Button */}
-        <Link 
+        <Link
           to="/auth"
           className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-8 transition-colors"
         >
