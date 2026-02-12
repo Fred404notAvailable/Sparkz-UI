@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  ShoppingCart, Trash2, ArrowLeft, CreditCard, 
+import axios from 'axios';
+import {
+  ShoppingCart, Trash2, ArrowLeft, CreditCard,
   Ticket, Calendar, Clock, MapPin, Users, CheckCircle,
   AlertCircle, Shield, Lock, Upload, QrCode, Copy,
   Camera, X, RotateCw, Receipt, Banknote,
@@ -9,6 +10,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useEffect } from 'react';
 
 // ========== CONFIGURE YOUR FIXED PRICE HERE ==========
 const FIXED_PRICE_PER_EVENT = 300; // ₹200 per event (change as needed)
@@ -35,37 +37,33 @@ const CartPage = () => {
   const [screenshotPreview, setScreenshotPreview] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [formError, setFormError] = useState('');
+  const [imgUrl, setImgurl] = useState("");
   const fileInputRef = useRef(null);
+  const wid = useRef()
 
   const remainingSlots = getRemainingSlots();
   const isCartFull = cart.length === MAX_EVENTS;
 
   // Static UPI ID for payment
   const sparkzUPI = 'sparkz26@upi';
-
-  // Handle file upload
+  useEffect(() => {
+    const widget = cloudinary.createUploadWidget(
+      {
+        cloudName: 'dfseckyjx',
+        uploadPreset: 'qbvu3y5j',
+        multiple: false
+      },
+      (error, result) => {
+        if (!error && result && result.event === 'success') {
+          const url = result.info.secure_url;
+          setImgurl(url)
+        }
+      }
+    );
+    wid.current = widget
+  }, [])
   const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (!file.type.match('image.*')) {
-      setFormError('Please upload an image file (JPG, PNG, etc.)');
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      setFormError('File size should be less than 5MB');
-      return;
-    }
-
-    setPaymentScreenshot(file);
-    setFormError('');
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setScreenshotPreview(e.target.result);
-    };
-    reader.readAsDataURL(file);
+    wid.current.open()
   };
 
   // Remove uploaded screenshot
@@ -103,13 +101,13 @@ const CartPage = () => {
   // Handle form submission
   const handleSubmitPayment = async (e) => {
     e.preventDefault();
-    
+
     if (!transactionId.trim()) {
       setFormError('Please enter Transaction ID');
       return;
     }
 
-    if (!paymentScreenshot) {
+    if (!imgUrl) {
       setFormError('Please upload payment screenshot');
       return;
     }
@@ -117,16 +115,19 @@ const CartPage = () => {
     setIsUploading(true);
     setFormError('');
 
-    // Simulate payment verification
-    setTimeout(async () => {
-      setIsUploading(false);
-      await checkout();
+    axios.post("https://sparkz-server.onrender.com/user/event/normal", {
+      transactionId,
+      paymentScreenshot: imgUrl,
+      event: cart,
+      user: JSON.parse(localStorage.getItem("sparkz_user"))
+    }).then((res) => {
+      console.log(res.data);
+      clearCart();
       setShowCheckoutForm(false);
-      setTransactionId('');
-      setUpiId('');
-      setPaymentScreenshot(null);
-      setScreenshotPreview(null);
-    }, 2000);
+      navigate("/")
+    }).catch((err) => {
+      console.error(err);
+    })
   };
 
   // Handle checkout button click
@@ -191,10 +192,13 @@ const CartPage = () => {
         {/* ========== CHECKOUT FORM OVERLAY ========== */}
         {showCheckoutForm && (
           <>
-            <div 
+            {/* Backdrop */}
+            <div
               className="fixed inset-0 bg-black/80 backdrop-blur-sm z-20"
               onClick={closeCheckoutForm}
             />
+
+            {/* Checkout Form */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -229,33 +233,41 @@ const CartPage = () => {
                       <div className="w-8 h-8 rounded-full bg-gradient-to-r from-amber-500 to-red-500 flex items-center justify-center text-white font-bold">
                         1
                       </div>
-                      <h3 className="text-lg font-bold">Scan & Pay</h3>
-                    </div>
 
-                    <div className="flex flex-col items-center">
-                      <div className="p-4 bg-white rounded-xl shadow-xl inline-block">
-                        {/* ===== YOUR QR CODE IMAGE ===== */}
-                        <img 
-                          src="/qr/sparkz-upi.png"   // <-- Replace with your actual QR path
-                          alt="SPARKZ UPI QR Code"
-                          className="w-52 h-52 object-contain"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.nextSibling.style.display = 'flex';
-                          }}
-                        />
-                        <div className="hidden w-52 h-52 bg-gray-100 rounded-lg flex-col items-center justify-center text-gray-500">
-                          <QrCode className="w-12 h-12 mb-2" />
-                          <span className="text-xs">QR not found</span>
+                      {/* QR Code Image Container */}
+                      <div className="p-4 bg-white rounded-lg inline-block mb-3">
+                        <div className="relative w-48 h-48 flex items-center justify-center">
+                          {/* This is where you would place your QR code image */}
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="text-center">
+                              <div className="text-black text-sm font-bold mb-2">SPARKZ'26</div>
+                              {/* Replace this div with your actual QR code image */}
+                              <div className="w-40 h-40 border-2 border-dashed border-gray-400 rounded-lg flex items-center justify-center">
+                                <div className="text-center">
+                                  <QrCode className="w-12 h-12 text-gray-600 mx-auto mb-2" />
+                                  <div className="text-gray-500 text-xs">
+                                    {/* Instructions for actual QR image */}
+                                    {/* Replace with: <img src="/path/to/your-qr-code.png" alt="Payment QR Code" /> */}
+                                    Place your QR code image here
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="mt-2 text-black text-xs font-bold">
+                                UPI ID: {sparkzUPI}
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
 
-                      <div className="mt-4 text-center">
-                        <div className="text-2xl font-bold text-amber-400">₹{totalAmount}</div>
-                        <div className="flex items-center justify-center gap-2 mt-2 text-sm">
-                          <code className="px-3 py-1 bg-black/50 rounded-lg border border-amber-500/30 text-amber-300">
-                            {sparkzUPI}
-                          </code>
+                      {/* Payment Amount and Actions */}
+                      <div className="mt-4">
+                        <div className="flex items-center justify-center gap-2 text-lg font-bold text-amber-400 mb-3">
+                          <Banknote className="w-5 h-5" />
+                          <span>Amount: ₹{totalAmount}</span>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
                           <button
                             type="button"
                             onClick={copyUPI}
@@ -310,6 +322,14 @@ const CartPage = () => {
                       <h3 className="text-lg font-bold">Submit Payment Details</h3>
                     </div>
 
+                  {/* Transaction Details Form */}
+                  <div className="space-y-4">
+                    <h3 className="font-bold flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-amber-400" />
+                      Payment Verification
+                    </h3>
+
+                    {/* Transaction ID */}
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
                         Transaction ID / UTR Number <span className="text-red-400">*</span>
@@ -346,29 +366,15 @@ const CartPage = () => {
                         Payment Screenshot <span className="text-red-400">*</span>
                         <span className="text-amber-400 text-xs ml-2">(Required for verification)</span>
                       </label>
-                      
-                      {screenshotPreview ? (
-                        <div className="relative border-2 border-dashed border-amber-500/30 rounded-xl p-4">
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center gap-2 text-amber-400">
-                              <Camera className="w-4 h-4" />
-                              <span className="text-sm">Screenshot Uploaded</span>
-                            </div>
-                            <button
-                              type="button"
-                              onClick={removeScreenshot}
-                              className="text-red-400 hover:text-red-300"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          </div>
-                          <div className="relative">
-                            <img
-                              src={screenshotPreview}
-                              alt="Payment screenshot"
-                              className="w-full h-48 object-contain rounded-lg bg-black/50"
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 hover:opacity-100 transition-opacity rounded-lg">
+
+                      {imgUrl ? (
+                        <div className="relative">
+                          <div className="border-2 border-dashed border-amber-500/30 rounded-xl p-4">
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-2 text-amber-400">
+                                <Camera className="w-4 h-4" />
+                                <span className="text-sm">Screenshot Uploaded</span>
+                              </div>
                               <button
                                 type="button"
                                 onClick={() => fileInputRef.current?.click()}
@@ -377,9 +383,25 @@ const CartPage = () => {
                                 Change Image
                               </button>
                             </div>
-                          </div>
-                          <div className="text-xs text-gray-500 mt-2">
-                            {paymentScreenshot?.name} • {(paymentScreenshot?.size / 1024).toFixed(2)} KB
+                            <div className="relative">
+                              <img
+                                src={imgUrl}
+                                alt="Payment screenshot"
+                                className="w-full h-48 object-contain rounded-lg bg-black/50"
+                              />
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 hover:opacity-100 transition-opacity rounded-lg">
+                                <button
+                                  type="button"
+                                  onClick={() => fileInputRef.current?.click()}
+                                  className="px-4 py-2 bg-gradient-to-r from-amber-600 to-red-600 rounded-lg text-white text-sm"
+                                >
+                                  Change Image
+                                </button>
+                              </div>
+                            </div>
+                            <div className="text-xs text-gray-500 mt-2">
+                              {imgUrl?.name} • {(imgUrl?.size / 1024).toFixed(2)} KB
+                            </div>
                           </div>
                         </div>
                       ) : (
@@ -400,13 +422,10 @@ const CartPage = () => {
                         </div>
                       )}
 
-                      <input
+                      <div
                         ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileUpload}
+                        onClick={handleFileUpload}
                         className="hidden"
-                        capture="environment"
                       />
                     </div>
 
@@ -431,12 +450,12 @@ const CartPage = () => {
                     </button>
                     <button
                       type="submit"
-                      disabled={isUploading || !transactionId || !paymentScreenshot}
-                      className={`flex-1 py-3 rounded-xl font-bold transition-all ${
-                        isUploading || !transactionId || !paymentScreenshot
-                          ? 'bg-gray-800 cursor-not-allowed text-gray-400'
-                          : 'bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 hover:shadow-2xl hover:shadow-amber-500/20 active:scale-95'
-                      }`}
+                      onClick={handleSubmitPayment}
+                      disabled={isUploading || !transactionId || !imgUrl}
+                      className={`flex-1 py-3 rounded-xl font-bold transition-all ${isUploading || !transactionId || !imgUrl
+                        ? 'bg-gray-800 cursor-not-allowed text-gray-400'
+                        : 'bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 hover:shadow-2xl hover:shadow-amber-500/20 active:scale-95'
+                        }`}
                     >
                       {isUploading ? (
                         <div className="flex items-center justify-center gap-2">
@@ -485,9 +504,8 @@ const CartPage = () => {
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${(cart.length / MAX_EVENTS) * 100}%` }}
-                      className={`h-full rounded-full ${
-                        isCartFull ? 'bg-red-500' : 'bg-gradient-to-r from-amber-500 to-red-500'
-                      }`}
+                      className={`h-full rounded-full ${isCartFull ? 'bg-red-500' : 'bg-gradient-to-r from-amber-500 to-red-500'
+                        }`}
                     />
                   </div>
                   <div className="text-xs text-gray-400 text-center mt-1">
@@ -527,9 +545,9 @@ const CartPage = () => {
             ) : (
               <div className="space-y-4">
                 {cart.map((event, index) => (
-                  <CartEventCard 
-                    key={event.id} 
-                    event={event} 
+                  <CartEventCard
+                    key={event.id}
+                    event={event}
                     index={index}
                     onRemove={() => removeFromCart(event.id)}
                   />
@@ -552,8 +570,7 @@ const CartPage = () => {
                     <span className="text-gray-400">Events</span>
                     <span className="font-medium">{cart.length} event{cart.length !== 1 ? 's' : ''}</span>
                   </div>
-                  
-                  {/* List events without prices */}
+
                   {cart.map((event) => (
                     <div key={event.id} className="flex justify-between items-center text-sm">
                       <span className="text-gray-400 truncate pr-2">{event.title}</span>
@@ -600,11 +617,10 @@ const CartPage = () => {
                 <button
                   onClick={handleCheckoutClick}
                   disabled={cart.length === 0 || isLoading}
-                  className={`w-full py-4 rounded-xl font-bold text-lg transition-all ${
-                    cart.length === 0 || isLoading
-                      ? 'bg-gray-800 cursor-not-allowed text-gray-400'
-                      : 'bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 hover:shadow-2xl hover:shadow-amber-500/20 active:scale-95'
-                  }`}
+                  className={`w-full py-4 rounded-xl font-bold text-lg transition-all ${cart.length === 0 || isLoading
+                    ? 'bg-gray-800 cursor-not-allowed text-gray-400'
+                    : 'bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 hover:shadow-2xl hover:shadow-amber-500/20 active:scale-95'
+                    }`}
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center gap-2">
@@ -661,7 +677,10 @@ const CartEventCard = ({ event, index, onRemove }) => {
               <Trash2 className="w-4 h-4 text-red-400 hover:text-red-300" />
             </button>
           </div>
+
           <p className="text-amber-300 text-sm mb-3 line-clamp-2">{event.tagline}</p>
+
+          {/* Event Info Grid */}
           <div className="grid grid-cols-2 gap-2 text-sm">
             <div className="flex items-center gap-2">
               <Calendar className="w-3 h-3 text-gray-400" />

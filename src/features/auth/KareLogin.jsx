@@ -1,6 +1,7 @@
 // KareLogin.jsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext'; // Import useAuth
 import { Mail, Lock, University, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 
 const KareLogin = () => {
@@ -19,17 +20,24 @@ const KareLogin = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempt:', formData);
-    // Handle login logic here
+    const result = await login(formData.email, formData.password);
+    if (result.success) {
+      navigate('/');
+    } else {
+      alert(result.message || 'Login failed');
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0a0a0a] text-white">
       <div className="container mx-auto px-6 py-12">
         {/* Back Button */}
-        <Link 
+        <Link
           to="/auth"
           className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-8 transition-colors"
         >
@@ -158,7 +166,7 @@ const KareLogin = () => {
           {/* Security Notice */}
           <div className="mt-8 p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
             <p className="text-sm text-white/80 text-center">
-              <span className="font-semibold">Security Notice:</span> Never share your credentials. 
+              <span className="font-semibold">Security Notice:</span> Never share your credentials.
               SPARKZ will never ask for your password via email or phone.
             </p>
           </div>
