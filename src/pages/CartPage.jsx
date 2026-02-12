@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  ShoppingCart, Trash2, ArrowLeft, CreditCard, 
+import axios from 'axios';
+import {
+  ShoppingCart, Trash2, ArrowLeft, CreditCard,
   Ticket, Calendar, Clock, MapPin, Users, CheckCircle,
   AlertCircle, Shield, Lock, Upload, QrCode, Copy,
   Camera, X, RotateCw, Download, Receipt, Banknote,
@@ -9,14 +10,15 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useEffect } from 'react';
 
 const CartPage = () => {
-  const { 
-    cart, 
-    removeFromCart, 
-    clearCart, 
-    getCartTotal, 
-    checkout, 
+  const {
+    cart,
+    removeFromCart,
+    clearCart,
+    getCartTotal,
+    checkout,
     isLoading,
     MAX_EVENTS,
     getRemainingSlots
@@ -29,7 +31,9 @@ const CartPage = () => {
   const [screenshotPreview, setScreenshotPreview] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [formError, setFormError] = useState('');
+  const [imgUrl, setImgurl] = useState("");
   const fileInputRef = useRef(null);
+  const wid = useRef()
 
   const totalAmount = getCartTotal();
   const remainingSlots = getRemainingSlots();
@@ -37,33 +41,24 @@ const CartPage = () => {
 
   // Static UPI ID for payment
   const sparkzUPI = 'sparkz26@upi';
-
-  // Handle file upload
+  useEffect(() => {
+    const widget = cloudinary.createUploadWidget(
+      {
+        cloudName: 'dfseckyjx',
+        uploadPreset: 'qbvu3y5j',
+        multiple: false
+      },
+      (error, result) => {
+        if (!error && result && result.event === 'success') {
+          const url = result.info.secure_url;
+          setImgurl(url)
+        }
+      }
+    );
+    wid.current = widget
+  }, [])
   const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    // Validate file type
-    if (!file.type.match('image.*')) {
-      setFormError('Please upload an image file (JPG, PNG, etc.)');
-      return;
-    }
-
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setFormError('File size should be less than 5MB');
-      return;
-    }
-
-    setPaymentScreenshot(file);
-    setFormError('');
-
-    // Create preview
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setScreenshotPreview(e.target.result);
-    };
-    reader.readAsDataURL(file);
+    wid.current.open()
   };
 
   // Remove uploaded screenshot
@@ -105,13 +100,13 @@ const CartPage = () => {
   // Handle form submission
   const handleSubmitPayment = async (e) => {
     e.preventDefault();
-    
+
     if (!transactionId.trim()) {
       setFormError('Please enter Transaction ID');
       return;
     }
 
-    if (!paymentScreenshot) {
+    if (!imgUrl) {
       setFormError('Please upload payment screenshot');
       return;
     }
@@ -119,20 +114,19 @@ const CartPage = () => {
     setIsUploading(true);
     setFormError('');
 
-    // Simulate payment verification
-    setTimeout(async () => {
-      setIsUploading(false);
-      
-      // Process checkout
-      await checkout();
-      
-      // Reset form
+    axios.post("https://sparkz-server.onrender.com/user/event/normal", {
+      transactionId,
+      paymentScreenshot: imgUrl,
+      event: cart,
+      user: JSON.parse(localStorage.getItem("sparkz_user"))
+    }).then((res) => {
+      console.log(res.data);
+      clearCart();
       setShowCheckoutForm(false);
-      setTransactionId('');
-      setUpiId('');
-      setPaymentScreenshot(null);
-      setScreenshotPreview(null);
-    }, 2000);
+      navigate("/")
+    }).catch((err) => {
+      console.error(err);
+    })
   };
 
   // Handle checkout button click
@@ -198,11 +192,11 @@ const CartPage = () => {
         {showCheckoutForm && (
           <>
             {/* Backdrop */}
-            <div 
+            <div
               className="fixed inset-0 bg-black/80 backdrop-blur-sm z-20"
               onClick={closeCheckoutForm}
             />
-            
+
             {/* Checkout Form */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -243,7 +237,7 @@ const CartPage = () => {
                           Scan QR code with any UPI app
                         </div>
                       </div>
-                      
+
                       {/* QR Code Image Container */}
                       <div className="p-4 bg-white rounded-lg inline-block mb-3">
                         <div className="relative w-48 h-48 flex items-center justify-center">
@@ -269,14 +263,14 @@ const CartPage = () => {
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Payment Amount and Actions */}
                       <div className="mt-4">
                         <div className="flex items-center justify-center gap-2 text-lg font-bold text-amber-400 mb-3">
                           <Banknote className="w-5 h-5" />
                           <span>Amount: ₹{totalAmount}</span>
                         </div>
-                        
+
                         <div className="grid grid-cols-2 gap-2">
                           <button
                             type="button"
@@ -337,7 +331,7 @@ const CartPage = () => {
                       <Lock className="w-4 h-4 text-amber-400" />
                       Payment Verification
                     </h3>
-                    
+
                     {/* Transaction ID */}
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -377,8 +371,8 @@ const CartPage = () => {
                         Payment Screenshot *
                         <span className="text-amber-400 text-xs ml-2">(Required for verification)</span>
                       </label>
-                      
-                      {screenshotPreview ? (
+
+                      {imgUrl ? (
                         <div className="relative">
                           <div className="border-2 border-dashed border-amber-500/30 rounded-xl p-4">
                             <div className="flex items-center justify-between mb-3">
@@ -396,7 +390,7 @@ const CartPage = () => {
                             </div>
                             <div className="relative">
                               <img
-                                src={screenshotPreview}
+                                src={imgUrl}
                                 alt="Payment screenshot"
                                 className="w-full h-48 object-contain rounded-lg bg-black/50"
                               />
@@ -411,7 +405,7 @@ const CartPage = () => {
                               </div>
                             </div>
                             <div className="text-xs text-gray-500 mt-2">
-                              {paymentScreenshot?.name} • {(paymentScreenshot?.size / 1024).toFixed(2)} KB
+                              {imgUrl?.name} • {(imgUrl?.size / 1024).toFixed(2)} KB
                             </div>
                           </div>
                         </div>
@@ -433,13 +427,10 @@ const CartPage = () => {
                         </div>
                       )}
 
-                      <input
+                      <div
                         ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileUpload}
+                        onClick={handleFileUpload}
                         className="hidden"
-                        capture="environment"
                       />
                     </div>
 
@@ -465,12 +456,12 @@ const CartPage = () => {
                     </button>
                     <button
                       type="submit"
-                      disabled={isUploading || !transactionId || !paymentScreenshot}
-                      className={`flex-1 py-3 rounded-xl font-bold transition-all ${
-                        isUploading || !transactionId || !paymentScreenshot
-                          ? 'bg-gray-800 cursor-not-allowed text-gray-400'
-                          : 'bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 hover:shadow-2xl hover:shadow-amber-500/20 active:scale-95'
-                      }`}
+                      onClick={handleSubmitPayment}
+                      disabled={isUploading || !transactionId || !imgUrl}
+                      className={`flex-1 py-3 rounded-xl font-bold transition-all ${isUploading || !transactionId || !imgUrl
+                        ? 'bg-gray-800 cursor-not-allowed text-gray-400'
+                        : 'bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 hover:shadow-2xl hover:shadow-amber-500/20 active:scale-95'
+                        }`}
                     >
                       {isUploading ? (
                         <div className="flex items-center justify-center gap-2">
@@ -524,9 +515,8 @@ const CartPage = () => {
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${(cart.length / MAX_EVENTS) * 100}%` }}
-                      className={`h-full rounded-full ${
-                        isCartFull ? 'bg-red-500' : 'bg-gradient-to-r from-amber-500 to-red-500'
-                      }`}
+                      className={`h-full rounded-full ${isCartFull ? 'bg-red-500' : 'bg-gradient-to-r from-amber-500 to-red-500'
+                        }`}
                     />
                   </div>
                   <div className="text-xs text-gray-400 text-center mt-1">
@@ -568,9 +558,9 @@ const CartPage = () => {
             ) : (
               <div className="space-y-4">
                 {cart.map((event, index) => (
-                  <CartEventCard 
-                    key={event.id} 
-                    event={event} 
+                  <CartEventCard
+                    key={event.id}
+                    event={event}
                     index={index}
                     onRemove={() => removeFromCart(event.id)}
                   />
@@ -594,7 +584,7 @@ const CartPage = () => {
                     <span className="text-gray-400">Events</span>
                     <span className="font-medium">{cart.length} events</span>
                   </div>
-                  
+
                   {cart.map((event) => (
                     <div key={event.id} className="flex justify-between items-center text-sm">
                       <span className="text-gray-400 truncate pr-2">{event.title}</span>
@@ -659,11 +649,10 @@ const CartPage = () => {
                 <button
                   onClick={handleCheckoutClick}
                   disabled={cart.length === 0 || isLoading}
-                  className={`w-full py-4 rounded-xl font-bold text-lg transition-all ${
-                    cart.length === 0 || isLoading
-                      ? 'bg-gray-800 cursor-not-allowed text-gray-400'
-                      : 'bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 hover:shadow-2xl hover:shadow-amber-500/20 active:scale-95'
-                  }`}
+                  className={`w-full py-4 rounded-xl font-bold text-lg transition-all ${cart.length === 0 || isLoading
+                    ? 'bg-gray-800 cursor-not-allowed text-gray-400'
+                    : 'bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 hover:shadow-2xl hover:shadow-amber-500/20 active:scale-95'
+                    }`}
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center gap-2">
@@ -724,9 +713,9 @@ const CartEventCard = ({ event, index, onRemove }) => {
               <Trash2 className="w-4 h-4 text-red-400 hover:text-red-300" />
             </button>
           </div>
-          
+
           <p className="text-amber-300 text-sm mb-3 line-clamp-2">{event.tagline}</p>
-          
+
           {/* Event Info Grid */}
           <div className="grid grid-cols-2 gap-2 text-sm">
             <div className="flex items-center gap-2">

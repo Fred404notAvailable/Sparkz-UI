@@ -1,9 +1,12 @@
 // ExternalLogin.jsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Building, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 const ExternalLogin = () => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -19,17 +22,22 @@ const ExternalLogin = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('External login attempt:', formData);
-    // Handle login logic here
+    const result = await login(formData.email, formData.password);
+    if (result.success) {
+      navigate('/');
+    } else {
+      alert(result.message || 'Login failed');
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0a0a0a] text-white">
       <div className="container mx-auto px-6 py-12">
         {/* Back Button */}
-        <Link 
+        <Link
           to="/auth"
           className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-8 transition-colors"
         >
