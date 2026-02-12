@@ -313,12 +313,12 @@ const AboutSparkz = () => {
 
         <div className="film-strip-inner flex items-center gap-0 pl-[5vw] w-max">
            {[
-             { time: "DAY 1 • 09:00", title: "THE OPENING", subtitle: "Grand Premiere", icon: <Star />, color: "bg-amber-500", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80" },
-             { time: "DAY 1 • 11:00", title: "DANCE WARS", subtitle: "Choreography", icon: <Zap />, color: "bg-red-600", img: "https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&q=80" },
-             { time: "DAY 1 • 14:00", title: "BAND BLAST", subtitle: "Battle of Bands", icon: <Music />, color: "bg-purple-600", img: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80" },
-             { time: "DAY 1 • 19:00", title: "STAR NIGHT", subtitle: "Pro Show", icon: <Mic />, color: "bg-blue-600", img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80" },
-             { time: "DAY 2 • 09:00", title: "FILM FIESTA", subtitle: "Short Films", icon: <Film />, color: "bg-green-600", img: "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80" },
-             { time: "DAY 2 • 16:00", title: "THE CLIMAX", subtitle: "Valedictory", icon: <Trophy />, color: "bg-yellow-500", img: "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?auto=format&fit=crop&q=80" },
+             { time: "DAY 1", title: "HAND HOLDING NATURE", subtitle: "Together for a Greener Tomorrow", icon: <Star />, color: "bg-amber-500", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80" },
+             { time: "DAY 1", title: "FIRELESS COOKING ", subtitle: "Creativity Without Flames", icon: <Zap />, color: "bg-red-600", img: "https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&q=80" },
+             { time: "DAY 1", title: "DEBATE", subtitle: "Clash of Perspectives", icon: <Music />, color: "bg-purple-600", img: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80" },
+             { time: "DAY 1", title: "GROUP DANCE", subtitle: "Rhythm in Unity", icon: <Mic />, color: "bg-blue-600", img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80" },
+             { time: "DAY 2", title: "SHORT DRAMA / SKIT", subtitle: "Stage Stories Live", icon: <Film />, color: "bg-green-600", img: "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80" },
+             { time: "DAY 2", title: "Battle of Bands", subtitle: "Rock the Stage", icon: <Trophy />, color: "bg-yellow-500", img: "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?auto=format&fit=crop&q=80" },
            ].map((item, idx) => (
              <div key={idx} className="relative w-[85vw] md:w-[35vw] h-[55vh] flex-shrink-0 border-r border-white/10 bg-gray-900 group overflow-hidden">
                <div className="absolute inset-0 bg-cover bg-center opacity-20 group-hover:opacity-50 transition-all duration-500 scale-110 group-hover:scale-100 grayscale group-hover:grayscale-0"
