@@ -17,6 +17,16 @@ import SmoothScrollWrapper from './SmoothScrollWrapper';
 import { useAuth } from '../../context/AuthContext';
 import ProfileModal from '../profile/ProfileModal';
 
+// Export Context so AboutSparkz can use it
+export const MusicContext = createContext({
+  isMuted: false,
+  toggleMute: () => { },
+  analyser: null,
+  isAudioPlaying: false,
+  startAudio: () => { },
+  handleExternalPlay: () => { } // Added for YouTube video control
+});
+
 const AppLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -25,14 +35,18 @@ const AppLayout = ({ children }) => {
   const [analyser, setAnalyser] = useState(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [showAudioPrompt, setShowAudioPrompt] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false); // Profile Modal State
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  
+  // Track if external video (YouTube) is playing
+  const [isExternalPaused, setIsExternalPaused] = useState(false);
+  
   const { user } = useAuth(); // Auth Context
 
   const audioRef = useRef(null);
   const audioContextRef = useRef(null);
   const sourceRef = useRef(null);
 
-  // Initialize audio without auto-playing
+  // Initialize audio
   useEffect(() => {
     const audio = new Audio('/audio/sparkz.mpeg');
     audio.loop = true;
@@ -83,6 +97,17 @@ const AppLayout = ({ children }) => {
     };
   }, []);
 
+  // Handle Audio Logic (Pause when YouTube plays)
+  useEffect(() => {
+    if (!audioRef.current) return;
+
+    if (isExternalPaused) {
+      audioRef.current.pause();
+    } else if (isAudioPlaying) {
+      audioRef.current.play().catch(e => console.error("Resume failed", e));
+    }
+  }, [isExternalPaused, isAudioPlaying]);
+
   const startAudio = async () => {
     if (!audioRef.current || isAudioPlaying) return;
 
@@ -90,8 +115,6 @@ const AppLayout = ({ children }) => {
       await audioRef.current.play();
       setIsAudioPlaying(true);
       setShowAudioPrompt(false);
-
-      // Resume audio context if suspended
       
       if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
         await audioContextRef.current.resume();
@@ -102,6 +125,11 @@ const AppLayout = ({ children }) => {
     }
   };
 
+  // Function passed to children to control background music
+  const handleExternalPlay = (isPlaying) => {
+    setIsExternalPaused(isPlaying);
+  };
+
   useEffect(() => {
     const handleFirstInteraction = () => {
       if (!isAudioPlaying) {
@@ -110,26 +138,19 @@ const AppLayout = ({ children }) => {
     };
 
     document.addEventListener('click', handleFirstInteraction, { once: true });
-    document.addEventListener('keydown', handleFirstInteraction, { once: true });
-    document.addEventListener('touchstart', handleFirstInteraction, { once: true });
-
     return () => {
       document.removeEventListener('click', handleFirstInteraction);
-      document.removeEventListener('keydown', handleFirstInteraction);
-      document.removeEventListener('touchstart', handleFirstInteraction);
     };
   }, [isAudioPlaying]);
 
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.muted = isMuted;
-      if (isMuted) {
-        audioRef.current.volume = 0;
-      } else {
+      if (!isMuted && !isExternalPaused) {
         audioRef.current.volume = 0.4;
       }
     }
-  }, [isMuted]);
+  }, [isMuted, isExternalPaused]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -158,16 +179,13 @@ const AppLayout = ({ children }) => {
   };
 
   return (
-    <MusicContext.Provider value={{ isMuted, toggleMute, analyser, isAudioPlaying, startAudio }}>
+    <MusicContext.Provider value={{ isMuted, toggleMute, analyser, isAudioPlaying, startAudio, handleExternalPlay }}>
       <div className="relative w-full min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0a0a0a] overflow-x-hidden">
 
-        {/* Hidden audio element */}
         <audio ref={audioRef} loop preload="auto">
           <source src="/audio/sparkz.mpeg" type="audio/mpeg" />
-          Your browser does not support the audio element.
         </audio>
 
-        {/* Audio Play Prompt */}
         {showAudioPrompt && !isAudioPlaying && (
           <div className="fixed bottom-24 right-6 z-50 animate-pulse">
             <button
@@ -198,7 +216,7 @@ const AppLayout = ({ children }) => {
               <div className="relative">
                 <div className="w-20 h-8 flex items-center justify-center">
                   <img 
-                    src="/sparkz.png" 
+                    src="/kare.png" 
                     alt="SPARKZ Logo" 
                     className="w-full h-full object-contain"
                     style={{
@@ -206,7 +224,6 @@ const AppLayout = ({ children }) => {
                     }}
                   />
                 </div>
-                <div className="absolute -inset-2 bg-gradient-to-r from-amber-500/20 to-red-600/20 rounded-lg blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
               </div>
               <div className="flex flex-col">
                 <span className="font-mono text-[10px] text-white/60 mt-0.5">REEL: {currentTime}</span>
@@ -219,29 +236,30 @@ const AppLayout = ({ children }) => {
                 <Link to="/events" className="text-white/70 hover:text-white transition-colors text-sm font-medium">Events</Link>
                 <Link to="/proshow" className="text-white/70 hover:text-white transition-colors text-sm font-medium">Pro Show</Link>
                 <Link to="/sponsors" className="text-white/70 hover:text-white transition-colors text-sm font-medium">Sponsors</Link>
-                <Link to="/hospitality" className="text-white/70 hover:text-white transition-colors text-sm font-medium">Hospitality</Link>
               </div>
 
-
+              {/* LOGIN / REGISTER BUTTON LOGIC */}
               {user ? (
                 <button
                   onClick={() => setIsProfileOpen(true)}
-                  className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600 to-red-600 text-white text-sm font-semibold rounded-full hover:from-amber-700 hover:to-red-700 transition-all duration-300 group"
+                  className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600 to-red-600 text-white text-sm font-semibold rounded-full hover:from-amber-700 hover:to-red-700 transition-all duration-300 group shadow-[0_0_15px_rgba(245,158,11,0.3)]"
                 >
                   <User size={16} />
                   <span>Profile</span>
                 </button>
               ) : (
-                <Link to="/auth" className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600 to-red-600 text-white text-sm font-semibold rounded-full hover:from-amber-700 hover:to-red-700 transition-all duration-300 group">
+                <Link 
+                  to="/auth" 
+                  className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600 to-red-600 text-white text-sm font-semibold rounded-full hover:from-amber-700 hover:to-red-700 transition-all duration-300 group shadow-[0_0_15px_rgba(245,158,11,0.3)] hover:scale-105"
+                >
                   <User size={16} />
                   <span>Login / Register</span>
                 </Link>
               )}
 
-              <div className="w-px h-6 bg-white/20 mx-2"></div>
+              <div className="w-px h-6 bg-white/20 mx-2 hidden md:block"></div>
 
-              {/* Mute button - only show if audio is playing */}
-              {isAudioPlaying && (
+              {isAudioPlaying && !isExternalPaused && (
                 <button
                   onClick={toggleMute}
                   className="p-2 hover:bg-white/5 rounded-full transition-colors group"
@@ -254,32 +272,14 @@ const AppLayout = ({ children }) => {
                   )}
                 </button>
               )}
-
-              {/* Start audio button (mobile/small screens) */}
-              {!isAudioPlaying && (
-                <button
-                  onClick={startAudio}
-                  className="p-2 hover:bg-white/5 rounded-full transition-colors group"
-                  title="Play Music"
-                >
-                  <Play className="w-5 h-5 text-amber-400 group-hover:text-amber-300 transition-colors" />
-                </button>
-              )}
             </div>
           </div>
 
-          {/* ===== MAIN CONTENT WITH PROPER SPACING ===== */}
-          {/* 
-            - pt-20: prevents content from hiding under the fixed header (approx 80px) 
-            - pb-24: adds bottom padding on mobile to clear the fixed bottom navigation bar
-            - md:pb-0: removes bottom padding on tablet/desktop (no bottom nav)
-          */}
           <div className="main-content pt-20 pb-24 md:pb-0">
             <SmoothScrollWrapper>{children}</SmoothScrollWrapper>
           </div>
         </div>
 
-        {/* Sidebar Toggle Button (desktop only) */}
         <button
           onClick={toggleSidebar}
           className={clsx(
@@ -289,7 +289,6 @@ const AppLayout = ({ children }) => {
             "hidden md:flex"
           )}
           style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 75%, 75% 100%, 0% 100%)' }}
-          aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
         >
           <div className="flex items-center gap-2">
             {isSidebarOpen ? <X size={18} /> : <Menu size={18} />}
@@ -297,13 +296,11 @@ const AppLayout = ({ children }) => {
               {isSidebarOpen ? "CLOSE" : "DIRECTOR'S CUT"}
             </span>
           </div>
-          <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-amber-500 animate-pulse"></div>
         </button>
 
         <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
 
-        {/* Mobile Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 z-500 md:hidden bg-black/90 backdrop-blur-lg border-t border-white/10">
+        <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-black/90 backdrop-blur-lg border-t border-white/10">
           <div className="flex items-center justify-around p-3">
             <Link to="/" className="flex flex-col items-center p-2 text-white/60 hover:text-white transition-colors">
               <Sparkles size={18} />
@@ -317,10 +314,13 @@ const AppLayout = ({ children }) => {
               <Spotlight size={18} />
               <span className="text-xs mt-1">Pro Show</span>
             </Link>
+            
+            {/* Mobile Login Link */}
             <Link to="/auth" className="flex flex-col items-center p-2 text-white/60 hover:text-amber-400 transition-colors">
               <User size={18} />
-              <span className="text-xs mt-1">Login</span>
+              <span className="text-xs mt-1">{user ? 'Profile' : 'Login'}</span>
             </Link>
+            
             <button onClick={toggleSidebar} className="flex flex-col items-center p-2 text-white/60 hover:text-white transition-colors">
               <Menu size={18} />
               <span className="text-xs mt-1">Menu</span>
@@ -333,13 +333,5 @@ const AppLayout = ({ children }) => {
     </MusicContext.Provider >
   );
 };
-
-export const MusicContext = createContext({
-  isMuted: false,
-  toggleMute: () => { },
-  analyser: null,
-  isAudioPlaying: false,
-  startAudio: () => { }
-});
 
 export default AppLayout;

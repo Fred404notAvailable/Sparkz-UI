@@ -1,587 +1,379 @@
-import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
+import React, { useLayoutEffect, useRef, useState, useEffect, useContext } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useInView } from 'framer-motion';
+import { motion, useScroll, useSpring } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { 
-  Play, Pause, Calendar, MapPin, Clock, Users, Trophy, Star, Award, 
-  ChevronRight, Sparkles, Film, Camera, Clapperboard, Video, Mic, 
-  Music, Palette, Theater, Zap, Globe, Drum, Headphones,
-  Radio, Guitar, Volume2, Disc, CameraIcon, FilmIcon, Ticket, UserPlus,
-  Youtube, Instagram, Facebook, Twitter, Map, Phone, Mail
+  Play, Calendar, MapPin, Ticket, 
+  ArrowRight, Star, Film, Music, Mic, 
+  Zap, Trophy, MonitorPlay
 } from 'lucide-react';
+import { MusicContext } from '../../components/layout/AppLayout.jsx'; // Ensure this path matches your file structure
 
 gsap.registerPlugin(ScrollTrigger);
 
 const AboutSparkz = () => {
-  const sectionRef = useRef(null);
-  const headlineRef = useRef(null);
-  const statsRef = useRef(null);
-  const timelineRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
+  const containerRef = useRef(null);
+  const videoSectionRef = useRef(null);
+  const heroRef = useRef(null);
+  
+  // State for YouTube Video
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-  // Detect mobile devices for responsive adjustments
+  // Access MusicContext to pause background audio
+  const { handleExternalPlay } = useContext(MusicContext);
+
+  // REPLACE THIS WITH YOUR YOUTUBE VIDEO ID
+  const YOUTUBE_VIDEO_ID = "GCgcYojrDAQ"; 
+
+  // Handle Background Music Pause/Resume
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
+    if (handleExternalPlay) {
+      handleExternalPlay(isVideoPlaying);
+    }
+    return () => {
+      if (handleExternalPlay) handleExternalPlay(false);
     };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+  }, [isVideoPlaying, handleExternalPlay]);
+
+  // Mouse Parallax Effect for Logo
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({
+        x: (e.clientX / window.innerWidth - 0.5) * 20,
+        y: (e.clientY / window.innerHeight - 0.5) * 20
+      });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   useLayoutEffect(() => {
-    if (!isInView) return;
-
     const ctx = gsap.context(() => {
-      // Logo animation
-      gsap.from(headlineRef.current, {
+      
+      // 1. Hero Logo Reveal
+      gsap.from(".hero-logo", {
+        scale: 0.5,
         opacity: 0,
-        scale: 0.8,
-        duration: 1.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: headlineRef.current,
-          start: "top 80%",
-          toggleActions: "play none none reverse",
-        }
+        filter: "blur(20px)",
+        duration: 1.5,
+        ease: "power3.out"
       });
 
-      // Stats counter animation
-      const stats = statsRef.current?.querySelectorAll('.stat-number');
-      if (stats) {
-        stats.forEach(stat => {
-          const target = parseInt(stat.getAttribute('data-value'));
-          gsap.to(stat, {
-            innerText: target,
-            duration: 2.5,
-            ease: "power2.out",
-            snap: { innerText: 1 },
-            scrollTrigger: {
-              trigger: stat,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
-            }
-          });
-        });
-      }
-
-      // Timeline items animation
-      const timelineItems = timelineRef.current?.querySelectorAll('.timeline-item');
-      if (timelineItems) {
-        timelineItems.forEach((item, index) => {
-          gsap.from(item, {
-            opacity: 0,
-            x: isMobile ? 0 : 30,
-            y: isMobile ? 20 : 0,
-            duration: 0.8,
-            delay: index * 0.2,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: item,
-              start: "top 90%",
-              toggleActions: "play none none reverse",
-            }
-          });
-        });
-      }
-
-      // Feature cards animation
-      const cards = gsap.utils.toArray('.feature-card');
-      cards.forEach((card, index) => {
-        gsap.from(card, {
-          opacity: 0,
-          y: 30,
-          duration: 0.8,
-          delay: index * 0.1,
+      // 2. Text Highlight Animation
+      const splitText = gsap.utils.toArray(".highlight-text");
+      splitText.forEach((text) => {
+        gsap.to(text, {
+          backgroundSize: "100% 100%",
+          color: "#000000",
           scrollTrigger: {
-            trigger: card,
-            start: "top 90%",
-            toggleActions: "play none none reverse",
+            trigger: text,
+            start: "top 85%",
+            end: "bottom 65%",
+            scrub: true,
           }
         });
       });
 
-    }, sectionRef);
+      // 3. Cinematic Video Expand
+      const videoTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: videoSectionRef.current,
+          start: "top 80%",
+          end: "center center",
+          scrub: 1,
+        }
+      });
+      
+      videoTl.to(".video-container", {
+        width: "100%",
+        borderRadius: "0px",
+        scale: 1,
+        ease: "power2.inOut"
+      });
+
+      // 4. Horizontal Film Strip
+      const strip = document.querySelector(".film-strip-inner");
+      if (strip) {
+        gsap.to(strip, {
+          x: () => -(strip.scrollWidth - window.innerWidth),
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".film-strip-wrapper",
+            start: "top top",
+            end: () => `+=${strip.scrollWidth}`,
+            scrub: 1,
+            pin: true,
+            anticipatePin: 1
+          }
+        });
+      }
+
+    }, containerRef);
 
     return () => ctx.revert();
-  }, [isInView, isMobile]);
+  }, []);
 
-  const toggleAnimation = () => {
-    setIsPlaying(!isPlaying);
-    if (isPlaying) {
-      ScrollTrigger.getAll().forEach(trigger => trigger.disable());
-    } else {
-      ScrollTrigger.getAll().forEach(trigger => trigger.enable());
-    }
-  };
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
 
   return (
-    <section ref={sectionRef} className="relative w-full bg-gradient-to-b from-gray-950 via-black to-gray-950 overflow-hidden py-8 md:py-20 z-10">
+    <div ref={containerRef} className="relative w-full bg-black text-white overflow-x-hidden font-sans selection:bg-amber-500 selection:text-black">
       
-      {/* Responsive Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Optimized grid for mobile */}
-        <div className="absolute inset-0 opacity-[0.02] bg-[size:20px_20px] md:bg-[size:40px_40px] bg-[linear-gradient(to_right,#f59e0b_1px,transparent_1px),linear-gradient(to_bottom,#f59e0b_1px,transparent_1px)]"></div>
-        
-        {/* Dynamic light beams - optimized for mobile */}
-        <div className="absolute top-0 left-0 w-full h-32 md:h-64 bg-gradient-to-b from-amber-500/10 via-transparent to-transparent blur-2xl md:blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-full h-32 md:h-64 bg-gradient-to-t from-red-500/10 via-transparent to-transparent blur-2xl md:blur-3xl"></div>
+      {/* --- GLOBAL FX --- */}
+      <div className="fixed inset-0 opacity-[0.06] pointer-events-none z-50 mix-blend-overlay" 
+           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E")` }}>
       </div>
+      <motion.div className="fixed top-0 left-0 right-0 h-1 md:h-2 bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 origin-left z-[100]" style={{ scaleX }} />
 
-      {/* Film reel edges - responsive */}
-      <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-transparent via-amber-500/20 to-transparent"></div>
-      <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-transparent via-red-500/20 to-transparent"></div>
-
-      {/* Animation Control - Mobile Optimized */}
-      <div className="absolute top-3 right-3 md:top-6 md:right-6 z-20">
-        <button
-          onClick={toggleAnimation}
-          className="flex items-center gap-2 px-3 py-2 bg-black/80 backdrop-blur-sm border border-amber-500/40 rounded-full text-amber-300 hover:text-white hover:border-amber-400 transition-all duration-300 group shadow-lg shadow-amber-500/10 min-h-[44px] min-w-[44px]"
-        >
-          {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-          <span className="text-xs md:text-sm font-bold uppercase tracking-wider hidden sm:inline-block" style={{fontFamily: "'Orbitron', sans-serif"}}>
-            {isPlaying ? 'Pause' : 'Play'}
-          </span>
-        </button>
-      </div>
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* --- SECTION 1: HERO (LOGO REVEAL) --- */}
+      <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
         
-        {/* Hero Section - Responsive */}
-        <div className="mb-8 md:mb-16 relative text-center">
-          {/* Cinematic Title Banner - Responsive */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-900/20 to-red-900/20 border border-amber-500/40 rounded-full mb-4 md:mb-6 shadow-lg">
-            <FilmIcon className="w-4 h-4 md:w-5 md:h-5 text-amber-400" />
-            <span className="text-amber-300 text-sm md:text-base font-bold uppercase tracking-wider" style={{fontFamily: "'Orbitron', sans-serif"}}>
-              CINEMATIC EXPERIENCE
+        {/* Dynamic Spotlight Background */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] bg-gradient-to-r from-amber-900/10 via-red-900/10 to-amber-900/10 rounded-full blur-[100px] md:blur-[150px] animate-pulse duration-700"></div>
+
+        <div className="relative z-10 flex flex-col items-center w-full max-w-7xl">
+          
+          {/* University Tag */}
+          <motion.div 
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="flex items-center gap-2 md:gap-4 mb-6 md:mb-12 border border-white/10 bg-white/5 backdrop-blur-md px-4 py-2 md:px-6 md:py-3 rounded-full"
+          >
+            <span className="w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
+            <span className="text-xs md:text-sm font-bold tracking-[0.2em] text-gray-300 uppercase">
+              Kalasalingam University
             </span>
-            <Clapperboard className="w-4 h-4 md:w-5 md:h-5 text-red-400" />
-          </div>
-          
-          {/* Large Logo Display - Responsive - UPDATED: Removed badge and increased size */}
-          <div className="relative mb-6 md:mb-8">
-            <div 
-              ref={headlineRef}
-              className="inline-block w-full max-w-4xl md:max-w-5xl mx-auto relative"
-            >
-              {/* Responsive Logo - UPDATED: Increased size */}
-              <div className="relative p-4 md:p-8 lg:p-12">
-                <img 
-                  src="/sparkz.png" 
-                  alt="SPARKZ 2K26"
-                  className="w-full h-auto max-h-56 md:max-h-64 lg:max-h-72 xl:max-h-80 object-contain drop-shadow-[0_0_30px_rgba(245,158,11,0.4)]"
-                  loading="eager"
-                />
-                {/* Glow effects */}
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-red-500/10 blur-xl md:blur-2xl opacity-40 -z-10"></div>
-              </div>
-              
-              {/* REMOVED: Edition Badge */}
-            </div>
-          </div>
-          
-          {/* Event Details - Stacked on Mobile */}
-          <div className="flex flex-col items-center gap-3 md:flex-row md:justify-center md:gap-6 lg:gap-10 mb-6 md:mb-8">
-            <div className="flex items-center gap-2 px-4 py-2.5 bg-black/70 backdrop-blur-sm border border-amber-500/30 rounded-lg w-full max-w-xs md:w-auto">
-              <Calendar className="w-5 h-5 text-amber-400 flex-shrink-0" />
-              <span className="text-white text-base md:text-lg font-medium text-center md:text-left" style={{fontFamily: "'Rajdhani', sans-serif"}}>Feb 27 & 28, 2026</span>
-            </div>
-            
-            {/* Mobile separator */}
-            <div className="flex items-center justify-center gap-1 md:hidden">
-              <div className="w-1 h-1 bg-amber-500 rounded-full"></div>
-              <div className="w-1 h-1 bg-red-500 rounded-full"></div>
-              <div className="w-1 h-1 bg-amber-500 rounded-full"></div>
-            </div>
-            
-            <div className="flex items-center gap-2 px-4 py-2.5 bg-black/70 backdrop-blur-sm border border-red-500/30 rounded-lg w-full max-w-xs md:w-auto">
-              <MapPin className="w-5 h-5 text-red-400 flex-shrink-0" />
-              <span className="text-white text-base md:text-lg font-medium text-center md:text-left" style={{fontFamily: "'Rajdhani', sans-serif"}}>Kalasalingam University</span>
-            </div>
-          </div>
-          
-          {/* Cinematic Tagline - Responsive */}
-          <p className="text-gray-200 text-base md:text-xl lg:text-2xl max-w-2xl md:max-w-3xl mx-auto leading-relaxed italic px-4" style={{fontFamily: "'Playfair Display', serif"}}>
-            "Where every frame tells a story, and every moment becomes cinematic legend"
-          </p>
-        </div>
+          </motion.div>
 
-        {/* Feature Highlights Grid - Responsive */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 mb-12 md:mb-20">
-          {[
-            {
-              icon: <Camera className="w-7 h-7 md:w-8 md:h-8" />,
-              title: "48-Hour Marathon",
-              description: "Non-stop cinematic experience with continuous entertainment",
-              stats: "48 HOURS",
-              gradient: "from-amber-500 to-orange-500"
-            },
-            {
-              icon: <Clapperboard className="w-7 h-7 md:w-8 md:h-8" />,
-              title: "Grand Production",
-              description: "Multiple competition categories for all talents",
-              stats: "25+ EVENTS",
-              gradient: "from-orange-500 to-red-500"
-            },
-            {
-              icon: <Video className="w-7 h-7 md:w-8 md:h-8" />,
-              title: "Star Performances",
-              description: "Celebrity shows and professional entertainment",
-              stats: "MAIN EVENT",
-              gradient: "from-red-500 to-purple-500"
-            }
-          ].map((item, idx) => (
-            <div 
-              key={idx}
-              className="feature-card p-4 md:p-6 lg:p-8 bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-sm border border-gray-800 rounded-xl md:rounded-2xl hover:border-amber-500/40 transition-all duration-300 group"
-            >
-              <div className="flex flex-col h-full">
-                <div className="flex items-start gap-4 md:gap-5 mb-4 md:mb-6">
-                  <div className={`p-3 md:p-4 bg-gradient-to-br ${item.gradient} rounded-lg md:rounded-xl shadow-lg flex-shrink-0`}>
-                    <div className="text-white">{item.icon}</div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between mb-2 md:mb-3">
-                      <h4 className="text-white font-bold text-lg md:text-xl lg:text-2xl mb-1 md:mb-0" style={{fontFamily: "'Orbitron', sans-serif"}}>{item.title}</h4>
-                      <div className="text-amber-300 text-base md:text-lg font-bold" style={{fontFamily: "'Rajdhani', sans-serif"}}>{item.stats}</div>
-                    </div>
-                    <p className="text-gray-300 text-sm md:text-base leading-relaxed" style={{fontFamily: "'Rajdhani', sans-serif"}}>{item.description}</p>
-                  </div>
-                </div>
-                <div className="mt-auto pt-4 border-t border-gray-800">
-                  <div className="h-1 w-full bg-gradient-to-r from-transparent via-gray-800 to-transparent group-hover:via-amber-500 transition-all duration-300"></div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Main Content Grid - Responsive */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-start">
-          
-          {/* Left Column: About Description & Categories - UPDATED: Combined into single box */}
-          <div className="space-y-8 md:space-y-12">
-            {/* Theme Section */}
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-900/20 to-red-900/20 rounded-full border border-gray-700">
-                <Zap className="w-4 h-4 text-amber-400 animate-pulse" />
-                <span className="text-amber-300 text-sm md:text-base font-bold uppercase tracking-wider" style={{fontFamily: "'Orbitron', sans-serif"}}>THE CINEMATIC UNIVERSE</span>
-              </div>
-              
-              {/* About Text - Responsive */}
-              <div className="space-y-4 md:space-y-6">
-                <p className="text-gray-200 text-base md:text-lg lg:text-xl leading-relaxed" style={{fontFamily: "'Rajdhani', sans-serif"}}>
-                  <span className="text-amber-400 font-bold">SPARKZ 2K26</span> presents its most spectacular edition yet, themed <span className="text-amber-400 font-bold" style={{fontFamily: "'Cinzel', serif"}}>"Cinematic Universe"</span>. Step into a world where every performance is a scene, every competition a climax, and every participant a star in the making.
-                </p>
-                
-                <p className="text-gray-200 text-base md:text-lg lg:text-xl leading-relaxed" style={{fontFamily: "'Rajdhani', sans-serif"}}>
-                  Over two epic days, Kalasalingam University transforms into a vibrant studio lot where talent from across India converges. From sunrise to midnight, experience a symphony of creativity that blurs the line between reality and cinema.
-                </p>
-              </div>
-            </div>
+          {/* SPARKZ LOGO - CENTERPIECE */}
+          <div className="hero-logo relative w-full max-w-[280px] md:max-w-[500px] lg:max-w-[600px] aspect-square flex items-center justify-center mb-8 md:mb-12"
+               style={{ transform: `translate(${mousePos.x}px, ${mousePos.y}px)` }}>
             
-            {/* Category Box - UPDATED: Combined categories and description into single box */}
-            <div className="bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-sm border border-gray-800 rounded-xl md:rounded-2xl p-5 md:p-6 lg:p-8 shadow-xl">
-              <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 md:mb-8">
-                <h4 className="text-white text-xl md:text-2xl lg:text-3xl font-bold mb-2 md:mb-0" style={{fontFamily: "'Orbitron', sans-serif"}}>
-                  <Globe className="w-5 h-5 md:w-6 md:h-6 text-amber-400 inline mr-2" />
-                  Event Categories
-                </h4>
-                <div className="text-amber-400 text-sm font-medium px-3 py-1 bg-amber-500/10 rounded-full">8 Categories</div>
-              </div>
-              
-              {/* Categories Description */}
-              <div className="mb-6 md:mb-8 p-4 bg-gray-900/50 rounded-lg border border-gray-700">
-                <p className="text-gray-200 text-base md:text-lg leading-relaxed" style={{fontFamily: "'Rajdhani', sans-serif"}}>
-                  Live music performances and band competitions
-                </p>
-              </div>
-              
-              {/* Category Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 lg:gap-6 mb-8 md:mb-10">
-                {[
-                  { icon: <Music className="w-6 h-6 md:w-7 md:h-7" />, label: "Music", color: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
-                  { icon: <Theater className="w-6 h-6 md:w-7 md:h-7" />, label: "Drama", color: "bg-red-500/20 text-red-400 border-red-500/30" },
-                  { icon: <Palette className="w-6 h-6 md:w-7 md:h-7" />, label: "Arts", color: "bg-green-500/20 text-green-400 border-green-500/30" },
-                  { icon: <Mic className="w-6 h-6 md:w-7 md:h-7" />, label: "Literary", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
-                  { icon: <CameraIcon className="w-6 h-6 md:w-7 md:h-7" />, label: "Photo", color: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30" },
-                  { icon: <Video className="w-6 h-6 md:w-7 md:h-7" />, label: "Video", color: "bg-pink-500/20 text-pink-400 border-pink-500/30" },
-                  { icon: <Film className="w-6 h-6 md:w-7 md:h-7" />, label: "Film", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
-                  { icon: <Trophy className="w-6 h-6 md:w-7 md:h-7" />, label: "Sports", color: "bg-orange-500/20 text-orange-400 border-orange-500/30" }
-                ].map((item, idx) => (
-                  <div key={idx} className="text-center group">
-                    <div className={`p-3 md:p-4 rounded-lg border ${item.color} mb-2 group-hover:scale-105 transition-transform duration-300`}>
-                      {item.icon}
-                    </div>
-                    <div className="text-white text-sm md:text-base font-medium" style={{fontFamily: "'Rajdhani', sans-serif"}}>{item.label}</div>
-                  </div>
-                ))}
-              </div>
-              
-              {/* Additional Event Highlights - Fills the blank space */}
-              <div className="space-y-4 md:space-y-6 pt-6 border-t border-gray-800">
-                <div className="space-y-3">
-                  <h5 className="text-white text-lg md:text-xl font-bold flex items-center gap-2" style={{fontFamily: "'Orbitron', sans-serif"}}>
-                    <Calendar className="w-4 h-4 md:w-5 md:h-5 text-amber-400" />
-                    Day 2 Highlights
-                  </h5>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                    <div className="p-3 md:p-4 bg-gray-900/50 rounded-lg border border-gray-700 hover:border-amber-500/40 transition-all duration-300">
-                      <div className="text-amber-400 text-sm font-bold mb-1" style={{fontFamily: "'Rajdhani', sans-serif"}}>DAY 2 • MORNING</div>
-                      <div className="text-white font-semibold mb-1" style={{fontFamily: "'Orbitron', sans-serif"}}>Art & Photography</div>
-                      <div className="text-gray-300 text-sm" style={{fontFamily: "'Rajdhani', sans-serif"}}>Exhibitions and competitions with professional judging</div>
-                    </div>
-                    
-                    <div className="p-3 md:p-4 bg-gray-900/50 rounded-lg border border-gray-700 hover:border-red-500/40 transition-all duration-300">
-                      <div className="text-amber-400 text-sm font-bold mb-1" style={{fontFamily: "'Rajdhani', sans-serif"}}>DAY 2 • AFTERNOON</div>
-                      <div className="text-white font-semibold mb-1" style={{fontFamily: "'Orbitron', sans-serif"}}>Drama & Theater</div>
-                      <div className="text-gray-300 text-sm" style={{fontFamily: "'Rajdhani', sans-serif"}}>Stage performances and acting competitions</div>
-                    </div>
-                  </div>
-                  
-                  <div className="p-3 md:p-4 bg-gradient-to-r from-amber-900/20 to-red-900/20 rounded-lg border border-amber-500/30 hover:border-amber-500/60 transition-all duration-300">
-                    <div className="text-amber-300 text-sm font-bold mb-1" style={{fontFamily: "'Rajdhani', sans-serif"}}>DAY 2 • NIGHT</div>
-                    <div className="text-white font-semibold mb-1 flex items-center gap-2" style={{fontFamily: "'Orbitron', sans-serif"}}>
-                      <Star className="w-4 h-4" />
-                      Awards Ceremony
-                    </div>
-                    <div className="text-gray-200 text-sm" style={{fontFamily: "'Rajdhani', sans-serif"}}>Pro show and prize distribution with celebrity guests</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* Logo Glow */}
+            <div className="absolute inset-0 bg-amber-500/20 rounded-full blur-[60px] md:blur-[100px] animate-pulse"></div>
+            
+            <img 
+              src="/sparkz.png" 
+              alt="Sparkz Logo" 
+              className="relative z-10 w-full h-full object-contain drop-shadow-[0_0_35px_rgba(245,158,11,0.5)]"
+            />
           </div>
 
-          {/* Right Column: Timeline Only - UPDATED: Removed duplicate stats */}
-          <div className="h-full">
-            <div className="bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-sm border border-gray-800 rounded-xl md:rounded-2xl p-5 md:p-6 lg:p-8 shadow-xl h-full">
-              <div className="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
-                <Camera className="w-5 h-5 md:w-6 md:h-6 text-amber-400" />
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-white" style={{fontFamily: "'Orbitron', sans-serif"}}>Festival Timeline</h3>
-              </div>
-              
-              <div ref={timelineRef} className="space-y-4 md:space-y-6 lg:space-y-8 relative">
-                {/* Timeline line - hidden on mobile */}
-                <div className="absolute left-4 md:left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-amber-500 via-red-500 to-transparent hidden md:block"></div>
-                
-                {[
-                  { 
-                    time: 'DAY 1 • MORNING',
-                    icon: <Sparkles className="w-5 h-5 md:w-6 md:h-6" />,
-                    title: 'Opening Ceremony', 
-                    description: 'Grand premiere with cinematic parade and guest appearances',
-                    gradient: 'from-amber-500 to-amber-600'
-                  },
-                  { 
-                    time: 'DAY 1 • AFTERNOON',
-                    icon: <Drum className="w-5 h-5 md:w-6 md:h-6" />,
-                    title: 'Music & Dance Competitions', 
-                    description: 'Multiple genres and styles across different stages',
-                    gradient: 'from-orange-500 to-red-500'
-                  },
-                  { 
-                    time: 'DAY 1 • EVENING',
-                    icon: <Headphones className="w-5 h-5 md:w-6 md:h-6" />,
-                    title: 'Battle of Bands', 
-                    description: 'Live music performances and band competitions',
-                    gradient: 'from-red-500 to-purple-500'
-                  },
-                  { 
-                    time: 'DAY 2 • MORNING',
-                    icon: <Palette className="w-5 h-5 md:w-6 md:h-6" />,
-                    title: 'Art & Photography', 
-                    description: 'Exhibitions and competitions with professional judging',
-                    gradient: 'from-purple-500 to-pink-500'
-                  },
-                  { 
-                    time: 'DAY 2 • AFTERNOON',
-                    icon: <Theater className="w-5 h-5 md:w-6 md:h-6" />,
-                    title: 'Drama & Theater', 
-                    description: 'Stage performances and acting competitions',
-                    gradient: 'from-pink-500 to-indigo-500'
-                  },
-                  { 
-                    time: 'DAY 2 • NIGHT',
-                    icon: <Star className="w-5 h-5 md:w-6 md:h-6" />,
-                    title: 'Awards Ceremony', 
-                    description: 'Pro show and prize distribution with celebrity guests',
-                    gradient: 'from-indigo-500 to-blue-500'
-                  }
-                ].map((item, idx) => (
-                  <div key={idx} className="timeline-item flex items-start gap-3 md:gap-4 lg:gap-6 group cursor-pointer relative pl-2">
-                    <div className={`flex-shrink-0 w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-lg md:rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-white shadow-lg`}>
-                      {item.icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-amber-400 text-xs md:text-sm lg:text-base font-bold mb-1" style={{fontFamily: "'Rajdhani', sans-serif"}}>{item.time}</div>
-                      <div className="text-white font-semibold text-base md:text-lg lg:text-xl mb-1 md:mb-2" style={{fontFamily: "'Orbitron', sans-serif"}}>{item.title}</div>
-                      <div className="text-gray-300 text-sm md:text-base leading-relaxed" style={{fontFamily: "'Rajdhani', sans-serif"}}>{item.description}</div>
-                    </div>
-                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-gray-600 group-hover:text-amber-500 transition-colors duration-300 flex-shrink-0 mt-1" />
-                  </div>
-                ))}
-              </div>
-            </div>
+          {/* Animated Date & Location */}
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-12 w-full justify-center">
+             <div className="w-full md:w-auto p-4 md:p-6 bg-[#0a0a0a] border border-white/10 rounded-xl flex items-center justify-between md:justify-start gap-4 hover:border-amber-500/50 transition-colors duration-300 group">
+                <div className="p-3 bg-amber-500/10 rounded-lg text-amber-500 group-hover:bg-amber-500 group-hover:text-black transition-all">
+                  <Calendar className="w-6 h-6 md:w-8 md:h-8" />
+                </div>
+                <div className="text-right md:text-left">
+                  <p className="text-xs text-gray-500 uppercase font-bold tracking-widest">Premiere</p>
+                  <p className="text-xl md:text-2xl font-black text-white">FEB 27 & FEB 28</p>
+                </div>
+             </div>
+
+             <div className="w-full md:w-auto p-4 md:p-6 bg-[#0a0a0a] border border-white/10 rounded-xl flex items-center justify-between md:justify-start gap-4 hover:border-red-500/50 transition-colors duration-300 group">
+                <div className="p-3 bg-red-500/10 rounded-lg text-red-500 group-hover:bg-red-500 group-hover:text-black transition-all">
+                  <MapPin className="w-6 h-6 md:w-8 md:h-8" />
+                </div>
+                <div className="text-right md:text-left">
+                  <p className="text-xs text-gray-500 uppercase font-bold tracking-widest">Venue</p>
+                  <p className="text-xl md:text-2xl font-black text-white">KALASALINGAM UNIVERSITY</p>
+                </div>
+             </div>
           </div>
         </div>
+      </section>
 
-        {/* Stats Section - Responsive */}
-        <div 
-          ref={statsRef}
-          className="mt-12 md:mt-20 grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6"
-        >
-          {[
-            { value: '50', label: 'Colleges', suffix: '+', icon: <Ticket className="w-6 h-6 md:w-8 md:h-8" />, color: 'from-purple-500/20 to-purple-600/20' },
-            { value: '8000', label: 'Participants', suffix: '+', icon: <UserPlus className="w-6 h-6 md:w-8 md:h-8" />, color: 'from-blue-500/20 to-cyan-500/20' },
-            { value: '25', label: 'Categories', suffix: '+', icon: <Trophy className="w-6 h-6 md:w-8 md:h-8" />, color: 'from-amber-500/20 to-orange-500/20' },
-            { value: '500000', label: 'Prize Pool', suffix: '+', icon: <Award className="w-6 h-6 md:w-8 md:h-8" />, color: 'from-red-500/20 to-pink-500/20' }
-          ].map((stat, idx) => (
-            <div key={idx} className={`p-4 md:p-6 bg-gradient-to-br ${stat.color} backdrop-blur-sm border border-gray-800 rounded-xl hover:border-amber-500/40 transition-all duration-300 group`}>
-              <div className="flex flex-col items-center text-center">
-                <div className="text-amber-400 mb-3">{stat.icon}</div>
-                <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1" style={{fontFamily: "'Orbitron', sans-serif"}}>
-                  <span className="stat-number" data-value={stat.value}>
-                    0
-                  </span>
-                  <span className="text-amber-400">{stat.suffix}</span>
-                </div>
-                <div className="text-gray-300 text-base md:text-lg font-medium" style={{fontFamily: "'Rajdhani', sans-serif"}}>{stat.label}</div>
-                <div className="mt-3 h-1 w-0 group-hover:w-full bg-gradient-to-r from-amber-500 to-red-500 transition-all duration-500"></div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* CTA Section - Responsive */}
-        <div className="mt-12 md:mt-20 text-center">
-          <div className="max-w-2xl md:max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-900/20 to-red-900/20 border border-amber-500/40 rounded-full mb-4 md:mb-6">
-              <Clapperboard className="w-4 h-4 md:w-5 md:h-5" />
-              <span className="text-amber-300 text-sm md:text-base font-bold uppercase tracking-wider" style={{fontFamily: "'Orbitron', sans-serif"}}>JOIN NOW</span>
-              <Clapperboard className="w-4 h-4 md:w-5 md:h-5" />
-            </div>
-            
-            <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 md:mb-6" style={{fontFamily: "'Orbitron', sans-serif"}}>
-              Be Part of Cinematic History
-            </h3>
-            <p className="text-gray-200 mb-6 md:mb-8 text-base md:text-lg leading-relaxed px-4" style={{fontFamily: "'Rajdhani', sans-serif"}}>
-              Register now for SPARKZ 2K26 and showcase your talent on the grandest stage. Limited spots available!
+      {/* --- SECTION 2: THE MANIFESTO --- */}
+      <section className="relative py-20 md:py-32 px-4 md:px-8 bg-black">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-amber-500 font-bold tracking-[0.3em] mb-10 text-sm md:text-xl uppercase flex items-center gap-3">
+            <span className="w-8 h-[2px] bg-amber-500"></span>
+            The Cinematic Experience
+          </h2>
+          
+          <div className="text-3xl md:text-6xl lg:text-7xl font-black leading-[1.2] uppercase text-white space-y-2 md:space-y-4">
+            <p>
+              Welcome to the
             </p>
-            
-            <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3 md:gap-4">
-              <button className="px-6 py-3 md:px-8 md:py-4 bg-gradient-to-r from-amber-600 to-red-600 text-white font-bold rounded-lg md:rounded-xl hover:from-amber-700 hover:to-red-700 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 md:gap-3 group shadow-lg min-h-[50px]">
-                <Film className="w-5 h-5 md:w-6 md:h-6" />
-                <span className="text-base md:text-lg" style={{fontFamily: "'Orbitron', sans-serif"}}>Register Now</span>
-                <ChevronRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button className="px-6 py-3 md:px-8 md:py-4 bg-gray-900/70 backdrop-blur-sm border border-gray-700 text-white font-semibold rounded-lg md:rounded-xl hover:bg-gray-800 hover:border-amber-500/50 transition-all duration-300 flex items-center justify-center gap-2 md:gap-3 group min-h-[50px]">
-                <span className="text-base md:text-lg" style={{fontFamily: "'Rajdhani', sans-serif"}}>View Schedule</span>
-                <ChevronRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
-            
-            {/* Registration Status */}
-            <div className="mt-6 md:mt-8 inline-flex items-center gap-2 md:gap-3 px-4 py-2 md:px-5 md:py-3 bg-black/70 backdrop-blur-sm border border-gray-800 rounded-full">
-              <div className="flex gap-1 md:gap-2">
-                <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-green-500 rounded-full animate-pulse"></div>
-                <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-green-500 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
-                <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-green-500 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
-              </div>
-              <span className="text-gray-200 text-xs md:text-sm font-medium" style={{fontFamily: "'Rajdhani', sans-serif"}}>
-                Open until Feb 25, 2026
-              </span>
-            </div>
+            <p>
+              <span className="highlight-text inline-block px-1 md:px-3 bg-gradient-to-r from-amber-500 to-amber-500 bg-[length:0%_100%] bg-no-repeat transition-all">Blockbuster</span> of the year.
+            </p>
+            <p className="text-gray-500">
+              Where 48 hours feels like
+            </p>
+            <p>
+              <span className="highlight-text inline-block px-1 md:px-3 bg-gradient-to-r from-white to-white bg-[length:0%_100%] bg-no-repeat transition-all">A Lifetime.</span>
+            </p>
           </div>
+        </div>
+      </section>
+
+      {/* --- SECTION 3: YOUTUBE VIDEO SECTION --- */}
+      <section ref={videoSectionRef} className="relative py-10 md:py-20 flex flex-col items-center">
+        <div className="mb-8 md:mb-12 flex items-center gap-2 uppercase tracking-widest text-sm font-bold text-gray-400">
+          <MonitorPlay size={16} className="text-red-500" />
+          <span>Official Teaser</span>
+        </div>
+
+        {/* Video Container - Expands on Scroll */}
+        <div className="video-container relative w-[90%] md:w-[70%] aspect-video bg-gray-900 rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 group">
+          
+          {!isVideoPlaying ? (
+            /* --- 1. COVER MODE --- */
+            <div className="relative w-full h-full cursor-pointer" onClick={() => setIsVideoPlaying(true)}>
+              
+              {/* Thumbnail Image */}
+              <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                   style={{ backgroundImage: "url('https://images.unsplash.com/photo-1478720568477-152d9b164e63?auto=format&fit=crop&q=80')" }}>
+              </div>
+
+              {/* Dark Overlay for Text Readability */}
+              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500"></div>
+
+              {/* Play Button & Text */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
+                 <div className="w-20 h-20 md:w-24 md:h-24 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 text-white group-hover:bg-amber-500 group-hover:border-amber-500 group-hover:scale-110 transition-all duration-300 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+                    <Play className="fill-current ml-2 w-8 h-8 md:w-10 md:h-10" />
+                 </div>
+                 <h3 className="mt-6 text-xl md:text-3xl font-black uppercase text-white tracking-widest drop-shadow-lg">
+                   Watch Trailer
+                 </h3>
+              </div>
+              
+              {/* Bottom Tag */}
+              <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 z-20">
+                <p className="text-xs md:text-sm font-bold bg-red-600 text-white px-3 py-1 rounded inline-block mb-2">NOW STREAMING</p>
+                <p className="text-gray-300 text-xs md:text-sm font-mono">SPARKZ_TEASER_FINAL_CUT.mp4</p>
+              </div>
+            </div>
+          ) : (
+            /* --- 2. YOUTUBE PLAYER MODE --- */
+            <div className="w-full h-full bg-black">
+              <iframe 
+                src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&rel=0&modestbranding=1&showinfo=0`}
+                title="Sparkz Official Teaser"
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowFullScreen
+              ></iframe>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* --- MARQUEE SEPARATOR --- */}
+      <div className="py-8 md:py-16 bg-amber-500 text-black overflow-hidden whitespace-nowrap border-y-4 border-white">
+        <div className="inline-flex animate-marquee">
+          {[...Array(6)].map((_, i) => (
+             <span key={i} className="text-4xl md:text-7xl font-black uppercase tracking-tighter mx-4 md:mx-8 italic">
+               Sparkz 2K26 • Cinematic Universe •
+             </span>
+          ))}
         </div>
       </div>
 
-      {/* Mobile Optimization */}
+      {/* --- SECTION 4: THE TIMELINE --- */}
+      <section className="film-strip-wrapper relative h-[100vh] bg-[#050505] overflow-hidden flex flex-col justify-center">
+        
+        <div className="absolute top-4 left-4 md:top-10 md:left-10 z-10 px-4">
+          <div className="text-amber-500 font-bold tracking-widest text-xs md:text-sm mb-2">PRODUCTION SCHEDULE</div>
+          <h3 className="text-4xl md:text-8xl font-black text-white/20 select-none">TIMELINE</h3>
+        </div>
+
+        {/* Film Strip Holes Top */}
+        <div className="absolute top-[18%] left-0 w-full h-4 md:h-8 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSIzMCI+PHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjIwIiB4PSIxNSIgeT0iNSIgZmlsbD0iIzIyMiIvPjwvc3ZnPg==')] z-20"></div>
+
+        <div className="film-strip-inner flex items-center gap-0 pl-[5vw] w-max">
+           {/* Timeline Cards */}
+           {[
+             { time: "DAY 1 • 09:00", title: "THE OPENING", subtitle: "Grand Premiere", icon: <Star />, color: "bg-amber-500", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80" },
+             { time: "DAY 1 • 11:00", title: "DANCE WARS", subtitle: "Choreography", icon: <Zap />, color: "bg-red-600", img: "https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&q=80" },
+             { time: "DAY 1 • 14:00", title: "BAND BLAST", subtitle: "Battle of Bands", icon: <Music />, color: "bg-purple-600", img: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80" },
+             { time: "DAY 1 • 19:00", title: "STAR NIGHT", subtitle: "Pro Show", icon: <Mic />, color: "bg-blue-600", img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80" },
+             { time: "DAY 2 • 09:00", title: "FILM FIESTA", subtitle: "Short Films", icon: <Film />, color: "bg-green-600", img: "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80" },
+             { time: "DAY 2 • 16:00", title: "THE CLIMAX", subtitle: "Valedictory", icon: <Trophy />, color: "bg-yellow-500", img: "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?auto=format&fit=crop&q=80" },
+           ].map((item, idx) => (
+             <div key={idx} className="relative w-[85vw] md:w-[35vw] h-[55vh] flex-shrink-0 border-r border-white/10 bg-gray-900 group overflow-hidden">
+               <div className="absolute inset-0 bg-cover bg-center opacity-20 group-hover:opacity-50 transition-all duration-500 scale-110 group-hover:scale-100 grayscale group-hover:grayscale-0"
+                    style={{ backgroundImage: `url(${item.img})` }}></div>
+               
+               <div className="relative z-10 flex flex-col justify-between h-full p-6 md:p-10">
+                 <div className="flex justify-between items-start">
+                   <span className="text-sm md:text-base font-mono text-white bg-black/50 px-2 py-1 rounded backdrop-blur-sm border-l-2 border-amber-500">
+                     {item.time}
+                   </span>
+                   <div className={`p-3 md:p-4 rounded-full ${item.color} text-white shadow-lg transform group-hover:rotate-12 transition-transform duration-500`}>
+                     {React.cloneElement(item.icon, { size: 24 })}
+                   </div>
+                 </div>
+                 
+                 <div>
+                   <h4 className="text-sm md:text-lg text-amber-500 font-bold mb-1 uppercase tracking-wider">{item.subtitle}</h4>
+                   <h3 className="text-4xl md:text-6xl font-black uppercase leading-[0.9] text-white mix-blend-difference">
+                     {item.title}
+                   </h3>
+                 </div>
+               </div>
+             </div>
+           ))}
+           
+           {/* Final CTA Card */}
+           <div className="w-[85vw] md:w-[30vw] h-[55vh] flex-shrink-0 bg-amber-500 flex flex-col items-center justify-center p-8 text-black text-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMCAwaDQwdjQwSDB6IiBmaWxsPSIjMDAwIi8+PC9zdmc+')]"></div>
+              <h4 className="text-4xl md:text-5xl font-black mb-4 relative z-10">THE END?</h4>
+              <p className="text-lg md:text-xl font-bold mb-6 relative z-10">NO, JUST THE BEGINNING.</p>
+              <Link to="/auth" className="bg-black text-white px-8 py-3 font-bold rounded-full hover:scale-105 transition-transform relative z-10 flex items-center gap-2">
+                Register Now <ArrowRight size={18} />
+              </Link>
+           </div>
+        </div>
+
+        {/* Film Strip Holes Bottom */}
+        <div className="absolute bottom-[18%] left-0 w-full h-4 md:h-8 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSIzMCI+PHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjIwIiB4PSIxNSIgeT0iNSIgZmlsbD0iIzIyMiIvPjwvc3ZnPg==')] z-20"></div>
+      </section>
+
+      {/* --- SECTION 5: FOOTER CTA --- */}
+      <section className="relative py-24 md:py-32 px-4 flex flex-col items-center justify-center text-center bg-black border-t border-white/10">
+        
+        <div className="max-w-5xl mx-auto relative group">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] bg-gradient-to-r from-amber-600/20 via-red-600/20 to-amber-600/20 blur-[80px] rounded-full opacity-50 group-hover:opacity-80 transition-opacity duration-700"></div>
+          
+          <h2 className="text-4xl md:text-8xl font-black uppercase text-white mb-8 relative z-10 leading-none">
+            CLAIM YOUR <br/> 
+            <span className="text-transparent stroke-white stroke-2" style={{ WebkitTextStroke: '1px white' }}>TICKET</span>
+          </h2>
+          
+          <div className="relative z-20 mt-8 md:mt-12 flex flex-col items-center gap-6">
+            <Link to="/auth" className="group relative bg-white text-black px-10 py-5 md:px-14 md:py-6 text-xl md:text-2xl font-black uppercase tracking-widest hover:bg-amber-500 transition-all duration-300 hover:scale-105 shadow-[0_0_50px_rgba(255,255,255,0.2)] flex items-center gap-4 overflow-hidden">
+              <span className="relative z-10 flex items-center gap-3">
+                <Ticket size={28} /> Register Now
+              </span>
+              <div className="absolute inset-0 bg-amber-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <style jsx>{`
-        /* Mobile-specific optimizations */
-        @media (max-width: 640px) {
-          /* Improve touch targets */
-          button, [role="button"], .clickable {
-            min-height: 44px;
-            min-width: 44px;
-          }
-          
-          /* Prevent text overflow */
-          * {
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-          }
-          
-          /* Optimize font rendering */
-          body {
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
-          }
-          
-          /* Better tap highlight */
-          * {
-            -webkit-tap-highlight-color: rgba(245, 158, 11, 0.1);
-          }
+        .animate-marquee {
+          animation: marquee 20s linear infinite;
         }
-        
-        /* Small mobile devices (iPhone SE, etc.) */
-        @media (max-width: 375px) {
-          .text-responsive {
-            font-size: 90%;
-          }
-          
-          .padding-responsive {
-            padding-left: 0.75rem;
-            padding-right: 0.75rem;
-          }
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
-        
-        /* Medium mobile devices */
-        @media (min-width: 376px) and (max-width: 767px) {
-          .text-responsive {
-            font-size: 95%;
-          }
-        }
-        
-        /* Tablet optimization */
-        @media (min-width: 768px) and (max-width: 1023px) {
-          .text-responsive {
-            font-size: 100%;
-          }
-        }
-        
-        /* Smooth animations for all devices */
-        .transition-smooth {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        /* Font loading optimization */
-        @font-face {
-          font-family: 'Orbitron';
-          font-style: normal;
-          font-weight: 400 900;
-          font-display: swap;
-        }
-        
-        @font-face {
-          font-family: 'Rajdhani';
-          font-style: normal;
-          font-weight: 300 700;
-          font-display: swap;
-        }
-        
-        @font-face {
-          font-family: 'Playfair Display';
-          font-style: italic;
-          font-weight: 400 700;
-          font-display: swap;
+        .stroke-white { -webkit-text-stroke: 1px white; }
+        .stroke-2 { -webkit-text-stroke-width: 1px; }
+        @media (min-width: 768px) {
+          .stroke-2 { -webkit-text-stroke-width: 2px; }
         }
       `}</style>
-    </section>
+
+    </div>
   );
 };
 
