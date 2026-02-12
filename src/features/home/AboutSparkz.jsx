@@ -6,9 +6,9 @@ import { Link } from 'react-router-dom';
 import { 
   Play, Calendar, MapPin, Ticket, 
   ArrowRight, Star, Film, Music, Mic, 
-  Zap, Trophy, MonitorPlay
+  Zap, Trophy, MonitorPlay, Users, Coins, Layers
 } from 'lucide-react';
-import { MusicContext } from '../../components/layout/AppLayout.jsx'; // Ensure this path matches your file structure
+import { MusicContext } from '../../components/layout/AppLayout.jsx';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,12 +16,13 @@ const AboutSparkz = () => {
   const containerRef = useRef(null);
   const videoSectionRef = useRef(null);
   const heroRef = useRef(null);
+  const statsRef = useRef(null);
   
   // State for YouTube Video
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-  // Access MusicContext to pause background audio
+  // Access MusicContext
   const { handleExternalPlay } = useContext(MusicContext);
 
   // REPLACE THIS WITH YOUR YOUTUBE VIDEO ID
@@ -37,7 +38,7 @@ const AboutSparkz = () => {
     };
   }, [isVideoPlaying, handleExternalPlay]);
 
-  // Mouse Parallax Effect for Logo
+  // Mouse Parallax Effect
   useEffect(() => {
     const handleMouseMove = (e) => {
       setMousePos({
@@ -52,13 +53,36 @@ const AboutSparkz = () => {
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       
-      // 1. Hero Logo Reveal
-      gsap.from(".hero-logo", {
-        scale: 0.5,
+      // 1. Hero Animations Setup
+      const tl = gsap.timeline();
+
+      // University Logo Reveal
+      tl.from(".uni-badge", {
+        y: -30,
         opacity: 0,
-        filter: "blur(20px)",
-        duration: 1.5,
+        duration: 0.8,
         ease: "power3.out"
+      });
+
+      // Massive Sparkz Logo Reveal
+      tl.from(".hero-logo-img", {
+        scale: 0.8,
+        opacity: 0,
+        filter: "blur(10px)",
+        duration: 1.2,
+        ease: "elastic.out(1, 0.7)"
+      }, "-=0.4");
+
+      // Stats Counters Animation
+      const stats = gsap.utils.toArray(".stat-number");
+      stats.forEach((stat) => {
+        const targetValue = stat.getAttribute("data-target");
+        tl.to(stat, {
+          innerText: targetValue,
+          duration: 2,
+          snap: { innerText: 1 },
+          ease: "power2.out",
+        }, "-=1");
       });
 
       // 2. Text Highlight Animation
@@ -76,7 +100,7 @@ const AboutSparkz = () => {
         });
       });
 
-      // 3. Cinematic Video Expand
+      // 3. Video Expand
       const videoTl = gsap.timeline({
         scrollTrigger: {
           trigger: videoSectionRef.current,
@@ -127,63 +151,79 @@ const AboutSparkz = () => {
       </div>
       <motion.div className="fixed top-0 left-0 right-0 h-1 md:h-2 bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 origin-left z-[100]" style={{ scaleX }} />
 
-      {/* --- SECTION 1: HERO (LOGO REVEAL) --- */}
-      <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
+      {/* --- SECTION 1: HERO RE-DESIGNED --- */}
+      <section ref={heroRef} className="relative min-h-screen pt-20 flex flex-col items-center justify-center px-4 overflow-hidden">
         
-        {/* Dynamic Spotlight Background */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] bg-gradient-to-r from-amber-900/10 via-red-900/10 to-amber-900/10 rounded-full blur-[100px] md:blur-[150px] animate-pulse duration-700"></div>
+        {/* Ambient Spotlights */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[50vh] bg-amber-600/10 blur-[120px] pointer-events-none"></div>
+        <div className="absolute bottom-0 right-0 w-[40vw] h-[40vw] bg-red-900/10 blur-[100px] pointer-events-none"></div>
 
         <div className="relative z-10 flex flex-col items-center w-full max-w-7xl">
           
-          {/* University Tag */}
-          <motion.div 
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="flex items-center gap-2 md:gap-4 mb-6 md:mb-12 border border-white/10 bg-white/5 backdrop-blur-md px-4 py-2 md:px-6 md:py-3 rounded-full"
-          >
-            <span className="w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
-            <span className="text-xs md:text-sm font-bold tracking-[0.2em] text-gray-300 uppercase">
-              Kalasalingam University
+          {/* 1. KARE LOGO (Professional & Minimal) */}
+          <div className="uni-badge mb-8 flex flex-col items-center gap-2">
+            <span className="text-[10px] md:text-xs font-bold tracking-[0.4em] text-amber-500/80 uppercase">
+              Presents
             </span>
-          </motion.div>
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 px-6 py-3 rounded-full hover:border-amber-500/30 transition-colors duration-300">
+              <img 
+                src="https://www.kalasalingam.ac.in/wp-content/uploads/2022/02/Logo.png"
+                alt="Kalasalingam University"
+                className="h-10 md:h-14 w-auto object-contain brightness-110 drop-shadow-lg"
+              />
+            </div>
+          </div>
 
-          {/* SPARKZ LOGO - CENTERPIECE */}
-          <div className="hero-logo relative w-full max-w-[280px] md:max-w-[500px] lg:max-w-[600px] aspect-square flex items-center justify-center mb-8 md:mb-12"
-               style={{ transform: `translate(${mousePos.x}px, ${mousePos.y}px)` }}>
+          {/* 2. SPARKZ LOGO (Massive & Central) */}
+          <div 
+            className="hero-logo relative w-full flex justify-center mb-12 md:mb-16"
+            style={{ transform: `translate(${mousePos.x * 0.5}px, ${mousePos.y * 0.5}px)` }}
+          >
+            {/* Glow Behind */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] aspect-square bg-amber-500/20 rounded-full blur-[80px] animate-pulse"></div>
             
-            {/* Logo Glow */}
-            <div className="absolute inset-0 bg-amber-500/20 rounded-full blur-[60px] md:blur-[100px] animate-pulse"></div>
-            
+            {/* Main Image */}
             <img 
               src="/sparkz.png" 
               alt="Sparkz Logo" 
-              className="relative z-10 w-full h-full object-contain drop-shadow-[0_0_35px_rgba(245,158,11,0.5)]"
+              className="hero-logo-img relative z-10 w-[85vw] max-w-[600px] md:max-w-[750px] object-contain drop-shadow-[0_0_50px_rgba(245,158,11,0.4)]"
             />
           </div>
 
-          {/* Animated Date & Location */}
-          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-12 w-full justify-center">
-             <div className="w-full md:w-auto p-4 md:p-6 bg-[#0a0a0a] border border-white/10 rounded-xl flex items-center justify-between md:justify-start gap-4 hover:border-amber-500/50 transition-colors duration-300 group">
-                <div className="p-3 bg-amber-500/10 rounded-lg text-amber-500 group-hover:bg-amber-500 group-hover:text-black transition-all">
-                  <Calendar className="w-6 h-6 md:w-8 md:h-8" />
+          {/* 3. STATS GRID (Integrated into Hero) */}
+          <div ref={statsRef} className="w-full max-w-5xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 px-2">
+              
+              {[
+                { label: "Colleges", value: "50", suffix: "+", icon: <MapPin size={18} /> },
+                { label: "Participants", value: "8000", suffix: "+", icon: <Users size={18} /> },
+                { label: "Events", value: "52", suffix: "+", icon: <Layers size={18} /> },
+                { label: "Prize Pool", value: "2", suffix: "Lakhs+", icon: <Coins size={18} /> },
+              ].map((item, idx) => (
+                <div key={idx} className="flex flex-col items-center justify-center p-4 bg-white/5 backdrop-blur-sm border border-white/5 rounded-2xl hover:bg-white/10 hover:border-amber-500/30 transition-all duration-300 group">
+                  <div className="mb-2 p-2 bg-amber-500/10 rounded-full text-amber-500 group-hover:scale-110 transition-transform">
+                    {item.icon}
+                  </div>
+                  <div className="text-3xl md:text-4xl font-black text-white font-sans flex items-baseline">
+                    <span className="stat-number" data-target={item.value}>0</span>
+                    <span className="text-amber-500 text-xl md:text-2xl ml-1">{item.suffix}</span>
+                  </div>
+                  <div className="text-xs md:text-sm font-medium text-gray-400 uppercase tracking-widest mt-1">
+                    {item.label}
+                  </div>
                 </div>
-                <div className="text-right md:text-left">
-                  <p className="text-xs text-gray-500 uppercase font-bold tracking-widest">Premiere</p>
-                  <p className="text-xl md:text-2xl font-black text-white">FEB 27 & FEB 28</p>
-                </div>
-             </div>
+              ))}
 
-             <div className="w-full md:w-auto p-4 md:p-6 bg-[#0a0a0a] border border-white/10 rounded-xl flex items-center justify-between md:justify-start gap-4 hover:border-red-500/50 transition-colors duration-300 group">
-                <div className="p-3 bg-red-500/10 rounded-lg text-red-500 group-hover:bg-red-500 group-hover:text-black transition-all">
-                  <MapPin className="w-6 h-6 md:w-8 md:h-8" />
-                </div>
-                <div className="text-right md:text-left">
-                  <p className="text-xs text-gray-500 uppercase font-bold tracking-widest">Venue</p>
-                  <p className="text-xl md:text-2xl font-black text-white">KALASALINGAM UNIVERSITY</p>
-                </div>
-             </div>
+            </div>
           </div>
+
+          {/* 4. Date Tag (Floating Bottom) */}
+          <div className="mt-12 flex items-center gap-4 text-sm font-medium text-gray-400">
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-gray-600"></div>
+            <span className="uppercase tracking-[0.2em]">Feb 27 & 28 • 2026</span>
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-gray-600"></div>
+          </div>
+
         </div>
       </section>
 
@@ -219,22 +259,13 @@ const AboutSparkz = () => {
           <span>Official Teaser</span>
         </div>
 
-        {/* Video Container - Expands on Scroll */}
         <div className="video-container relative w-[90%] md:w-[70%] aspect-video bg-gray-900 rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 group">
-          
           {!isVideoPlaying ? (
-            /* --- 1. COVER MODE --- */
             <div className="relative w-full h-full cursor-pointer" onClick={() => setIsVideoPlaying(true)}>
-              
-              {/* Thumbnail Image */}
               <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
                    style={{ backgroundImage: "url('https://images.unsplash.com/photo-1478720568477-152d9b164e63?auto=format&fit=crop&q=80')" }}>
               </div>
-
-              {/* Dark Overlay for Text Readability */}
               <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500"></div>
-
-              {/* Play Button & Text */}
               <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
                  <div className="w-20 h-20 md:w-24 md:h-24 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 text-white group-hover:bg-amber-500 group-hover:border-amber-500 group-hover:scale-110 transition-all duration-300 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
                     <Play className="fill-current ml-2 w-8 h-8 md:w-10 md:h-10" />
@@ -245,7 +276,6 @@ const AboutSparkz = () => {
               </div>
             </div>
           ) : (
-            /* --- 2. YOUTUBE PLAYER MODE --- */
             <div className="w-full h-full bg-black">
               <iframe 
                 src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&rel=0&modestbranding=1&showinfo=0`}
@@ -259,7 +289,7 @@ const AboutSparkz = () => {
         </div>
       </section>
 
-      {/* --- MARQUEE SEPARATOR --- */}
+      {/* --- MARQUEE --- */}
       <div className="py-8 md:py-16 bg-amber-500 text-black overflow-hidden whitespace-nowrap border-y-4 border-white">
         <div className="inline-flex animate-marquee">
           {[...Array(6)].map((_, i) => (
@@ -270,7 +300,7 @@ const AboutSparkz = () => {
         </div>
       </div>
 
-      {/* --- SECTION 4: THE TIMELINE --- */}
+      {/* --- SECTION 4: TIMELINE --- */}
       <section className="film-strip-wrapper relative h-[100vh] bg-[#050505] overflow-hidden flex flex-col justify-center">
         
         <div className="absolute top-4 left-4 md:top-10 md:left-10 z-10 px-4">
@@ -278,11 +308,10 @@ const AboutSparkz = () => {
           <h3 className="text-4xl md:text-8xl font-black text-white/20 select-none">TIMELINE</h3>
         </div>
 
-        {/* Film Strip Holes Top */}
+        {/* Film Holes */}
         <div className="absolute top-[18%] left-0 w-full h-4 md:h-8 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSIzMCI+PHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjIwIiB4PSIxNSIgeT0iNSIgZmlsbD0iIzIyMiIvPjwvc3ZnPg==')] z-20"></div>
 
         <div className="film-strip-inner flex items-center gap-0 pl-[5vw] w-max">
-           {/* Timeline Cards */}
            {[
              { time: "DAY 1 • 09:00", title: "THE OPENING", subtitle: "Grand Premiere", icon: <Star />, color: "bg-amber-500", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80" },
              { time: "DAY 1 • 11:00", title: "DANCE WARS", subtitle: "Choreography", icon: <Zap />, color: "bg-red-600", img: "https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&q=80" },
@@ -315,7 +344,6 @@ const AboutSparkz = () => {
              </div>
            ))}
            
-           {/* Final CTA Card */}
            <div className="w-[85vw] md:w-[30vw] h-[55vh] flex-shrink-0 bg-amber-500 flex flex-col items-center justify-center p-8 text-black text-center relative overflow-hidden">
               <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMCAwaDQwdjQwSDB6IiBmaWxsPSIjMDAwIi8+PC9zdmc+')]"></div>
               <h4 className="text-4xl md:text-5xl font-black mb-4 relative z-10">THE END?</h4>
@@ -326,13 +354,11 @@ const AboutSparkz = () => {
            </div>
         </div>
 
-        {/* Film Strip Holes Bottom */}
         <div className="absolute bottom-[18%] left-0 w-full h-4 md:h-8 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSIzMCI+PHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjIwIiB4PSIxNSIgeT0iNSIgZmlsbD0iIzIyMiIvPjwvc3ZnPg==')] z-20"></div>
       </section>
 
-      {/* --- SECTION 5: FOOTER CTA --- */}
+      {/* --- SECTION 5: FOOTER --- */}
       <section className="relative py-24 md:py-32 px-4 flex flex-col items-center justify-center text-center bg-black border-t border-white/10">
-        
         <div className="max-w-5xl mx-auto relative group">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] bg-gradient-to-r from-amber-600/20 via-red-600/20 to-amber-600/20 blur-[80px] rounded-full opacity-50 group-hover:opacity-80 transition-opacity duration-700"></div>
           

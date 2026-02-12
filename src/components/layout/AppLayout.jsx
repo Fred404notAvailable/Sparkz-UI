@@ -17,14 +17,13 @@ import SmoothScrollWrapper from './SmoothScrollWrapper';
 import { useAuth } from '../../context/AuthContext';
 import ProfileModal from '../profile/ProfileModal';
 
-// Export Context so AboutSparkz can use it
 export const MusicContext = createContext({
   isMuted: false,
   toggleMute: () => { },
   analyser: null,
   isAudioPlaying: false,
   startAudio: () => { },
-  handleExternalPlay: () => { } // Added for YouTube video control
+  handleExternalPlay: () => { }
 });
 
 const AppLayout = ({ children }) => {
@@ -37,16 +36,14 @@ const AppLayout = ({ children }) => {
   const [showAudioPrompt, setShowAudioPrompt] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   
-  // Track if external video (YouTube) is playing
   const [isExternalPaused, setIsExternalPaused] = useState(false);
   
-  const { user } = useAuth(); // Auth Context
+  const { user } = useAuth();
 
   const audioRef = useRef(null);
   const audioContextRef = useRef(null);
   const sourceRef = useRef(null);
 
-  // Initialize audio
   useEffect(() => {
     const audio = new Audio('/audio/sparkz.mpeg');
     audio.loop = true;
@@ -97,10 +94,8 @@ const AppLayout = ({ children }) => {
     };
   }, []);
 
-  // Handle Audio Logic (Pause when YouTube plays)
   useEffect(() => {
     if (!audioRef.current) return;
-
     if (isExternalPaused) {
       audioRef.current.pause();
     } else if (isAudioPlaying) {
@@ -110,12 +105,10 @@ const AppLayout = ({ children }) => {
 
   const startAudio = async () => {
     if (!audioRef.current || isAudioPlaying) return;
-
     try {
       await audioRef.current.play();
       setIsAudioPlaying(true);
       setShowAudioPrompt(false);
-      
       if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
         await audioContextRef.current.resume();
       }
@@ -125,7 +118,6 @@ const AppLayout = ({ children }) => {
     }
   };
 
-  // Function passed to children to control background music
   const handleExternalPlay = (isPlaying) => {
     setIsExternalPaused(isPlaying);
   };
@@ -136,7 +128,6 @@ const AppLayout = ({ children }) => {
         startAudio();
       }
     };
-
     document.addEventListener('click', handleFirstInteraction, { once: true });
     return () => {
       document.removeEventListener('click', handleFirstInteraction);
@@ -180,7 +171,7 @@ const AppLayout = ({ children }) => {
 
   return (
     <MusicContext.Provider value={{ isMuted, toggleMute, analyser, isAudioPlaying, startAudio, handleExternalPlay }}>
-      <div className="relative w-full min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0a0a0a] overflow-x-hidden">
+      <div className="relative w-full min-h-screen bg-[#0a0a0a] overflow-x-hidden selection:bg-amber-500 selection:text-black">
 
         <audio ref={audioRef} loop preload="auto">
           <source src="/audio/sparkz.mpeg" type="audio/mpeg" />
@@ -204,132 +195,141 @@ const AppLayout = ({ children }) => {
             isSidebarOpen ? "md:mr-[350px]" : "md:mr-0"
           )}
         >
-          {/* Fixed Header */}
+          {/* 
+              FIXED HEADER: 
+              - Removed excess height
+              - Added glassmorphism only when scrolled to keep hero clean
+          */}
           <div className={clsx(
-            "fixed top-0 left-0 z-30 flex items-center justify-between px-6 py-3 transition-all duration-300",
+            "fixed top-0 left-0 z-40 flex items-center justify-between px-4 md:px-8 py-4 transition-all duration-500",
             isSidebarOpen ? "md:w-[calc(100%-350px)]" : "w-full",
             isScrolled
-              ? "bg-black/80 backdrop-blur-md border-b border-white/10"
-              : "bg-black/20 backdrop-blur-sm border-b border-white/5"
+              ? "bg-black/80 backdrop-blur-xl border-b border-white/5 py-3 shadow-2xl"
+              : "bg-transparent py-6"
           )}>
+            {/* LOGO AREA */}
             <Link to="/" className="flex items-center gap-4 group">
-              <div className="relative">
-                <div className="w-20 h-8 flex items-center justify-center">
-                  <img 
-                    src="/kare.png" 
-                    alt="SPARKZ Logo" 
-                    className="w-full h-full object-contain"
-                    style={{
-                      filter: 'drop-shadow(0 0 8px rgba(251, 191, 36, 0.4))'
-                    }}
-                  />
-                </div>
+              <div className="relative h-10 w-auto">
+                <img 
+                  src="/kare.png" 
+                  alt="SPARKZ Logo" 
+                  className="h-full w-auto object-contain drop-shadow-[0_0_10px_rgba(251,191,36,0.3)] transition-transform group-hover:scale-105"
+                />
               </div>
-              <div className="flex flex-col">
-                <span className="font-mono text-[10px] text-white/60 mt-0.5">REEL: {currentTime}</span>
+              <div className="hidden md:flex flex-col border-l border-white/20 pl-4">
+                <span className="font-mono text-[10px] text-amber-500 tracking-widest font-bold">REC</span>
+                <span className="font-mono text-[10px] text-white/60">{currentTime}</span>
               </div>
             </Link>
 
-            <div className="flex items-center gap-4">
-              <div className="hidden md:flex items-center gap-6">
-                <Link to="/" className="text-white/70 hover:text-white transition-colors text-sm font-medium">Home</Link>
-                <Link to="/events" className="text-white/70 hover:text-white transition-colors text-sm font-medium">Events</Link>
-                <Link to="/proshow" className="text-white/70 hover:text-white transition-colors text-sm font-medium">Pro Show</Link>
-                <Link to="/sponsors" className="text-white/70 hover:text-white transition-colors text-sm font-medium">Sponsors</Link>
+            {/* DESKTOP NAV */}
+            <div className="flex items-center gap-6">
+              <div className="hidden md:flex items-center gap-8 bg-black/40 backdrop-blur-md px-6 py-2 rounded-full border border-white/5">
+                <Link to="/" className="text-white/70 hover:text-white hover:text-amber-400 transition-colors text-xs font-bold uppercase tracking-widest">Home</Link>
+                <Link to="/events" className="text-white/70 hover:text-white hover:text-amber-400 transition-colors text-xs font-bold uppercase tracking-widest">Events</Link>
+                <Link to="/proshow" className="text-white/70 hover:text-white hover:text-amber-400 transition-colors text-xs font-bold uppercase tracking-widest">Pro Show</Link>
+                <Link to="/sponsors" className="text-white/70 hover:text-white hover:text-amber-400 transition-colors text-xs font-bold uppercase tracking-widest">Sponsors</Link>
               </div>
 
-              {/* LOGIN / REGISTER BUTTON LOGIC */}
-              {user ? (
-                <button
-                  onClick={() => setIsProfileOpen(true)}
-                  className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600 to-red-600 text-white text-sm font-semibold rounded-full hover:from-amber-700 hover:to-red-700 transition-all duration-300 group shadow-[0_0_15px_rgba(245,158,11,0.3)]"
-                >
-                  <User size={16} />
-                  <span>Profile</span>
-                </button>
-              ) : (
-                <Link 
-                  to="/auth" 
-                  className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600 to-red-600 text-white text-sm font-semibold rounded-full hover:from-amber-700 hover:to-red-700 transition-all duration-300 group shadow-[0_0_15px_rgba(245,158,11,0.3)] hover:scale-105"
-                >
-                  <User size={16} />
-                  <span>Login / Register</span>
-                </Link>
-              )}
+              <div className="flex items-center gap-3">
+                {user ? (
+                  <button
+                    onClick={() => setIsProfileOpen(true)}
+                    className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-600 to-red-600 text-white text-xs font-bold uppercase tracking-widest rounded-full hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all duration-300"
+                  >
+                    <User size={14} />
+                    <span>Profile</span>
+                  </button>
+                ) : (
+                  <Link 
+                    to="/auth" 
+                    className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-600 to-red-600 text-white text-xs font-bold uppercase tracking-widest rounded-full hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all duration-300"
+                  >
+                    <User size={14} />
+                    <span>Login</span>
+                  </Link>
+                )}
 
-              <div className="w-px h-6 bg-white/20 mx-2 hidden md:block"></div>
+                {isAudioPlaying && !isExternalPaused && (
+                  <button
+                    onClick={toggleMute}
+                    className="p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all group"
+                  >
+                    {isMuted ? (
+                      <VolumeX className="w-4 h-4 text-white/50 group-hover:text-red-400" />
+                    ) : (
+                      <div className="flex items-center gap-0.5">
+                        <span className="w-0.5 h-2 bg-amber-500 animate-[music_1s_ease-in-out_infinite]"></span>
+                        <span className="w-0.5 h-3 bg-amber-500 animate-[music_1.2s_ease-in-out_infinite]"></span>
+                        <span className="w-0.5 h-1.5 bg-amber-500 animate-[music_0.8s_ease-in-out_infinite]"></span>
+                      </div>
+                    )}
+                  </button>
+                )}
 
-              {isAudioPlaying && !isExternalPaused && (
+                {/* Desktop Sidebar Toggle */}
                 <button
-                  onClick={toggleMute}
-                  className="p-2 hover:bg-white/5 rounded-full transition-colors group"
-                  title={isMuted ? "Unmute" : "Mute"}
+                  onClick={toggleSidebar}
+                  className="hidden md:flex items-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all group"
                 >
-                  {isMuted ? (
-                    <VolumeX className="w-5 h-5 text-white/60 group-hover:text-amber-400 transition-colors" />
-                  ) : (
-                    <Volume2 className="w-5 h-5 text-amber-400 group-hover:text-amber-300 transition-colors" />
-                  )}
+                  <Menu size={16} className="text-white/80 group-hover:text-amber-400" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-white/80 group-hover:text-white">Menu</span>
                 </button>
-              )}
+              </div>
             </div>
           </div>
 
-          <div className="main-content pt-20 pb-24 md:pb-0">
+          {/* 
+             MAIN CONTENT:
+             - Changed pt-20 to pt-0 so background images go to the top
+             - Added pb-20 for mobile nav spacing
+          */}
+          <div className="main-content pt-0 pb-20 md:pb-0 min-h-screen">
             <SmoothScrollWrapper>{children}</SmoothScrollWrapper>
           </div>
         </div>
 
-        <button
-          onClick={toggleSidebar}
-          className={clsx(
-            "fixed top-20 z-[60] p-4 border-2 border-amber-500/30 transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] hover:border-amber-500 hover:bg-amber-500/10",
-            "uppercase font-mono text-xs tracking-widest bg-black/50 backdrop-blur-sm text-amber-200 group",
-            isSidebarOpen ? "right-[360px]" : "right-6",
-            "hidden md:flex"
-          )}
-          style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 75%, 75% 100%, 0% 100%)' }}
-        >
-          <div className="flex items-center gap-2">
-            {isSidebarOpen ? <X size={18} /> : <Menu size={18} />}
-            <span className="hidden md:inline group-hover:tracking-widest transition-all">
-              {isSidebarOpen ? "CLOSE" : "DIRECTOR'S CUT"}
-            </span>
-          </div>
-        </button>
-
         <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
 
-        <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-black/90 backdrop-blur-lg border-t border-white/10">
-          <div className="flex items-center justify-around p-3">
-            <Link to="/" className="flex flex-col items-center p-2 text-white/60 hover:text-white transition-colors">
-              <Sparkles size={18} />
-              <span className="text-xs mt-1">Home</span>
+        {/* Mobile Bottom Navigation */}
+        <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-black/80 backdrop-blur-xl border-t border-white/10 pb-safe">
+          <div className="flex items-center justify-around p-2">
+            <Link to="/" className="flex flex-col items-center p-2 text-white/50 hover:text-amber-500 transition-colors">
+              <Sparkles size={20} />
+              <span className="text-[10px] font-bold uppercase tracking-widest mt-1">Home</span>
             </Link>
-            <Link to="/events" className="flex flex-col items-center p-2 text-white/60 hover:text-white transition-colors">
-              <Film size={18} />
-              <span className="text-xs mt-1">Events</span>
+            <Link to="/events" className="flex flex-col items-center p-2 text-white/50 hover:text-amber-500 transition-colors">
+              <Film size={20} />
+              <span className="text-[10px] font-bold uppercase tracking-widest mt-1">Events</span>
             </Link>
-            <Link to="/proshow" className="flex flex-col items-center p-2 text-white/60 hover:text-amber-400 transition-colors">
-              <Spotlight size={18} />
-              <span className="text-xs mt-1">Pro Show</span>
+            <div className="relative -top-6">
+               <Link to="/auth" className="flex items-center justify-center w-14 h-14 bg-gradient-to-tr from-amber-600 to-red-600 rounded-full shadow-[0_0_20px_rgba(245,158,11,0.4)] border-4 border-black">
+                 <User size={24} className="text-white" />
+               </Link>
+            </div>
+            <Link to="/proshow" className="flex flex-col items-center p-2 text-white/50 hover:text-amber-500 transition-colors">
+              <Spotlight size={20} />
+              <span className="text-[10px] font-bold uppercase tracking-widest mt-1">Pro</span>
             </Link>
-            
-            {/* Mobile Login Link */}
-            <Link to="/auth" className="flex flex-col items-center p-2 text-white/60 hover:text-amber-400 transition-colors">
-              <User size={18} />
-              <span className="text-xs mt-1">{user ? 'Profile' : 'Login'}</span>
-            </Link>
-            
-            <button onClick={toggleSidebar} className="flex flex-col items-center p-2 text-white/60 hover:text-white transition-colors">
-              <Menu size={18} />
-              <span className="text-xs mt-1">Menu</span>
+            <button onClick={toggleSidebar} className="flex flex-col items-center p-2 text-white/50 hover:text-amber-500 transition-colors">
+              <Menu size={20} />
+              <span className="text-[10px] font-bold uppercase tracking-widest mt-1">Menu</span>
             </button>
           </div>
         </div>
       </div>
 
       <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+      
+      <style jsx>{`
+        @keyframes music {
+          0%, 100% { height: 4px; }
+          50% { height: 12px; }
+        }
+        .pb-safe {
+          padding-bottom: env(safe-area-inset-bottom);
+        }
+      `}</style>
     </MusicContext.Provider >
   );
 };

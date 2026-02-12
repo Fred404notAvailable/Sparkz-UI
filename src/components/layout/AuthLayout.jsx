@@ -62,7 +62,7 @@ const AuthLayout = ({ children }) => {
               <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 to-red-600 rounded-lg blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
             </div>
             <div className="flex flex-col">
-              <span className="font-['Cinzel'] text-lg font-bold tracking-tight leading-none">
+              <span className="font-['Cinzel'] text-lg font-bold tracking-tight leading-none text-white">
                 SPARKZ<span className="text-amber-500">'26</span>
               </span>
               <span className="font-mono text-[10px] text-white/60 mt-0.5">AUTH PORTAL</span>
