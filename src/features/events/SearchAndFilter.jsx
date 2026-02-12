@@ -269,7 +269,7 @@ const EventsSearchAndFilter = ({
 
           {/* Sort Options */}
           <div className="relative">
-            <button
+            {/* <button
               onClick={() => setShowSortOptions(!showSortOptions)}
               className="flex items-center gap-2 px-4 py-2.5 bg-black/40 backdrop-blur-sm rounded-lg border border-gray-700 hover:border-amber-500/50 transition-all"
             >
@@ -278,7 +278,7 @@ const EventsSearchAndFilter = ({
                 Sort: {sortOptions.find(s => s.id === sortBy)?.label}
               </span>
               {showSortOptions ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-            </button>
+            </button> */}
 
             <AnimatePresence>
               {showSortOptions && (

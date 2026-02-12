@@ -7,7 +7,6 @@ import eventsData from '../assets/data/events.json';
 
 // Import components
 import {
-  EventsHero,
   EventsSearchAndFilter,
   EventsGrid,
   EventModal,
@@ -350,11 +349,11 @@ const EventsPage = () => {
       <div className="pt-20 pb-20 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
-          <div className="mb-8 md:mb-12">
+          {/* <div className="mb-8 md:mb-12">
             <div ref={heroRef}>
               <EventsHero isMobile={isMobile} />
             </div>
-          </div>
+          </div> */}
 
           {/* Search and Filter */}
           <div className="mb-10 md:mb-12">

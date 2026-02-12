@@ -18,7 +18,7 @@ import { useAuth } from '../../context/AuthContext';
 import ProfileModal from '../profile/ProfileModal';
 
 const AppLayout = ({ children }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Changed to false by default
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState('00:00:00');
   const [isScrolled, setIsScrolled] = useState(false);
@@ -63,10 +63,8 @@ const AppLayout = ({ children }) => {
       }
     };
 
-    // Setup context but don't play yet
     setupAudioContext();
 
-    // Show audio prompt after a delay if no interaction
     const promptTimer = setTimeout(() => {
       if (!isAudioPlaying) {
         setShowAudioPrompt(true);
@@ -85,7 +83,6 @@ const AppLayout = ({ children }) => {
     };
   }, []);
 
-  // Handle audio playback with user interaction
   const startAudio = async () => {
     if (!audioRef.current || isAudioPlaying) return;
 
@@ -95,6 +92,7 @@ const AppLayout = ({ children }) => {
       setShowAudioPrompt(false);
 
       // Resume audio context if suspended
+      
       if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
         await audioContextRef.current.resume();
       }
@@ -104,7 +102,6 @@ const AppLayout = ({ children }) => {
     }
   };
 
-  // Setup global click handler for audio start
   useEffect(() => {
     const handleFirstInteraction = () => {
       if (!isAudioPlaying) {
@@ -112,7 +109,6 @@ const AppLayout = ({ children }) => {
       }
     };
 
-    // Add event listeners for first interaction
     document.addEventListener('click', handleFirstInteraction, { once: true });
     document.addEventListener('keydown', handleFirstInteraction, { once: true });
     document.addEventListener('touchstart', handleFirstInteraction, { once: true });
@@ -124,7 +120,6 @@ const AppLayout = ({ children }) => {
     };
   }, [isAudioPlaying]);
 
-  // Handle mute/unmute
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.muted = isMuted;
@@ -136,7 +131,6 @@ const AppLayout = ({ children }) => {
     }
   }, [isMuted]);
 
-  // Update current time and handle scroll
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
@@ -192,6 +186,7 @@ const AppLayout = ({ children }) => {
             isSidebarOpen ? "md:mr-[350px]" : "md:mr-0"
           )}
         >
+          {/* Fixed Header */}
           <div className={clsx(
             "fixed top-0 left-0 z-30 flex items-center justify-between px-6 py-3 transition-all duration-300",
             isSidebarOpen ? "md:w-[calc(100%-350px)]" : "w-full",
@@ -201,7 +196,6 @@ const AppLayout = ({ children }) => {
           )}>
             <Link to="/" className="flex items-center gap-4 group">
               <div className="relative">
-                {/* Sparkz Logo Image */}
                 <div className="w-20 h-8 flex items-center justify-center">
                   <img
                     src="/sparkz.png"
@@ -212,11 +206,9 @@ const AppLayout = ({ children }) => {
                     }}
                   />
                 </div>
-                {/* Optional glow effect */}
                 <div className="absolute -inset-2 bg-gradient-to-r from-amber-500/20 to-red-600/20 rounded-lg blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
               </div>
               <div className="flex flex-col">
-                {/* Removed SPARKZ'26 text and replaced with current time only */}
                 <span className="font-mono text-[10px] text-white/60 mt-0.5">REEL: {currentTime}</span>
               </div>
             </Link>
@@ -276,12 +268,18 @@ const AppLayout = ({ children }) => {
             </div>
           </div>
 
-          <div className="main-content">
+          {/* ===== MAIN CONTENT WITH PROPER SPACING ===== */}
+          {/* 
+            - pt-20: prevents content from hiding under the fixed header (approx 80px) 
+            - pb-24: adds bottom padding on mobile to clear the fixed bottom navigation bar
+            - md:pb-0: removes bottom padding on tablet/desktop (no bottom nav)
+          */}
+          <div className="main-content pt-20 pb-24 md:pb-0">
             <SmoothScrollWrapper>{children}</SmoothScrollWrapper>
           </div>
         </div>
 
-        {/* Toggle Button */}
+        {/* Sidebar Toggle Button (desktop only) */}
         <button
           onClick={toggleSidebar}
           className={clsx(
