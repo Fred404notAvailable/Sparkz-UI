@@ -1,611 +1,313 @@
-import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
-  ChevronLeft, ChevronRight, ChevronDown, ChevronUp, 
-  Quote, Sparkles, Award, Target, Users, Star,
-  Calendar, Zap, Heart, Flag
+  ChevronRight, Quote, Sparkles, User, 
+  Target, Award 
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const LeadersSlider = () => {
-  const containerRef = useRef(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [showThumbnails, setShowThumbnails] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const autoPlayRef = useRef(null);
 
-  // Check mobile screen size
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // Memoize leaders data with enhanced info
-  const leaders = useMemo(() => [
+  const leaders = [
     {
       id: 1,
-      name: '"Kalvivallal" Thiru T. Kalasalingam',
-      title: 'Founder Chairman',
+      name: 'Thiru T. Kalasalingam',
+      honorific: '"Kalvivallal"',
+      role: 'Founder Chairman',
       image: 'https://www.kalasalingam.ac.in/wp-content/uploads/2021/04/Chairman-Sir-Photo-modified-1.png',
-      bgColor: 'from-amber-900/20 via-amber-800/10 to-amber-900/20',
-      gradient: 'from-amber-600 to-amber-800',
-      achievements: ['Founded Kalasalingam University', 'Pioneer in Technical Education', '40+ Years of Leadership'],
-      color: 'amber'
+      quote: "Education is the most powerful weapon which you can use to change the world.",
+      tags: ['Visionary', 'Pioneer']
     },
     {
       id: 2,
-      name: '"Illayavallal" Dr. K. Sridharan',
-      title: 'Chancellor',
+      name: 'Dr. K. Sridharan',
+      honorific: '"Illayavallal"',
+      role: 'Chancellor',
       image: 'https://www.kalasalingam.ac.in/wp-content/uploads/2021/04/leader-2-modified.png',
-      bgColor: 'from-red-900/20 via-red-800/10 to-red-900/20',
-      gradient: 'from-red-600 to-red-800',
-      achievements: ['Academic Visionary', 'Research Excellence Advocate', 'Global Education Leader'],
-      color: 'red'
+      quote: "We strive to create leaders who will shape the future of our nation.",
+      tags: ['Leadership', 'Innovation']
     },
     {
       id: 3,
       name: 'Dr. S. Arivalagi',
-      title: 'Pro Chancellor',
+      honorific: '',
+      role: 'Pro Chancellor',
       image: 'https://www.kalasalingam.ac.in/wp-content/uploads/2021/10/Dr.-Arivalagi-modified.png',
-      bgColor: 'from-amber-900/20 via-amber-800/10 to-amber-900/20',
-      gradient: 'from-amber-600 to-orange-600',
-      achievements: ['Administrative Excellence', 'Strategic Planning Expert', 'Student Development Focus'],
-      color: 'orange'
+      quote: "Excellence in administration leads to excellence in education.",
+      tags: ['Strategy', 'Growth']
     },
     {
       id: 4,
-      name: 'Dr. S Shasi Anand',
-      title: 'Vice President (Acad)',
+      name: 'Dr. S. Shasi Anand',
+      honorific: '',
+      role: 'Vice President',
       image: 'https://www.kalasalingam.ac.in/wp-content/uploads/2022/06/VP.png',
-      bgColor: 'from-red-900/20 via-red-800/10 to-red-900/20',
-      gradient: 'from-red-600 to-pink-600',
-      achievements: ['Academic Innovation', 'Curriculum Development', 'Faculty Excellence'],
-      color: 'pink'
+      quote: "Innovation in curriculum is key to staying relevant in the modern world.",
+      tags: ['Academic', 'Research']
     },
     {
       id: 5,
-      name: 'Mr S Arjun',
-      title: 'Vice President (Admin)',
+      name: 'Mr. S. Arjun',
+      honorific: '',
+      role: 'Vice President',
       image: 'https://www.kalasalingam.ac.in/wp-content/uploads/2021/04/Arjun-Sir-1-modified-1.png',
-      bgColor: 'from-amber-900/20 via-amber-800/10 to-amber-900/20',
-      gradient: 'from-yellow-600 to-amber-600',
-      achievements: ['Operational Excellence', 'Infrastructure Development', 'Administrative Leadership'],
-      color: 'yellow'
+      quote: "Building world-class infrastructure for world-class minds.",
+      tags: ['Operations', 'Infrastructure']
     },
     {
       id: 6,
-      name: 'Dr. S Narayanan',
-      title: 'Vice-Chancellor',
+      name: 'Dr. S. Narayanan',
+      honorific: '',
+      role: 'Vice-Chancellor',
       image: 'https://www.kalasalingam.ac.in/wp-content/uploads/2023/01/VC-Dr-S-Narayanan-Photo.png',
-      bgColor: 'from-red-900/20 via-red-800/10 to-red-900/20',
-      gradient: 'from-red-600 to-rose-600',
-      achievements: ['Academic Leadership', 'Research Advancement', 'International Collaboration'],
-      color: 'rose'
+      quote: "Research and collaboration are the pillars of a great university.",
+      tags: ['Research', 'Global Ties']
     },
     {
       id: 7,
       name: 'Dr. V. Vasudevan',
-      title: 'Registrar',
+      honorific: '',
+      role: 'Registrar',
       image: 'https://www.kalasalingam.ac.in/wp-content/uploads/2024/04/drvv.png',
-      bgColor: 'from-amber-900/20 via-amber-800/10 to-amber-900/20',
-      gradient: 'from-orange-600 to-amber-600',
-      achievements: ['Academic Administration', 'Policy Implementation', 'Institutional Governance'],
-      color: 'orange'
+      quote: "Ensuring smooth governance for a thriving academic environment.",
+      tags: ['Governance', 'Policy']
     }
-  ], []);
+  ];
 
-  // Smooth animation for slide changes
-  const animateSlide = useCallback((direction) => {
-    setIsAnimating(true);
-    if (direction === 'next') {
-      setCurrentIndex(prev => (prev === leaders.length - 1 ? 0 : prev + 1));
-    } else {
-      setCurrentIndex(prev => (prev === 0 ? leaders.length - 1 : prev - 1));
+  // Auto-play logic
+  useEffect(() => {
+    if (isAutoPlaying) {
+      autoPlayRef.current = setInterval(() => {
+        setActiveIndex((prev) => (prev + 1) % leaders.length);
+      }, 5000);
     }
-    setTimeout(() => setIsAnimating(false), 300);
-  }, [leaders.length]);
+    return () => clearInterval(autoPlayRef.current);
+  }, [isAutoPlaying, leaders.length]);
 
-  // Navigation functions
-  const nextSlide = useCallback(() => {
-    animateSlide('next');
-  }, [animateSlide]);
-
-  const prevSlide = useCallback(() => {
-    animateSlide('prev');
-  }, [animateSlide]);
-
-  // Auto slide
-  useEffect(() => {
-    const interval = setInterval(nextSlide, 6000);
-    return () => clearInterval(interval);
-  }, [nextSlide]);
-
-  // Initialize component
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Mobile Thumbnail Navigation Component
-  const MobileThumbnailNav = () => (
-    <div className="md:hidden mt-6">
-      {/* Toggle Button */}
-      <button
-        onClick={() => setShowThumbnails(!showThumbnails)}
-        className="w-full flex items-center justify-center gap-3 py-3 bg-gradient-to-r from-gray-900/80 to-black/80 backdrop-blur-sm rounded-xl border border-gray-700 mb-3 group hover:border-amber-500/50 transition-all duration-300"
-      >
-        <Sparkles className="w-4 h-4 text-amber-400" />
-        <span className="text-amber-300 text-sm font-medium">
-          {showThumbnails ? 'Hide All Leaders' : 'View All Leaders'}
-        </span>
-        <Sparkles className="w-4 h-4 text-amber-400" />
-      </button>
-
-      {/* Thumbnail Grid */}
-      <div className={`grid grid-cols-4 gap-2 transition-all duration-500 overflow-hidden ${
-        showThumbnails ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0'
-      }`}>
-        {leaders.map((leader, index) => (
-          <button
-            key={leader.id}
-            onClick={() => {
-              setCurrentIndex(index);
-              setShowThumbnails(false);
-            }}
-            className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-300 group ${
-              currentIndex === index 
-                ? `border-amber-500 scale-105 ring-2 ring-amber-500/30 shadow-lg` 
-                : 'border-gray-700 opacity-80 hover:opacity-100 hover:border-gray-600'
-            }`}
-          >
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <img
-              src={leader.image}
-              alt=""
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-            <div className="absolute bottom-0 left-0 right-0 p-1.5 bg-gradient-to-t from-black/90 to-transparent">
-              <span className="text-white text-[10px] font-medium block truncate text-center">
-                {leader.title.split(' ')[0]}
-              </span>
-            </div>
-            {currentIndex === index && (
-              <div className="absolute top-1 right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
-            )}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
+  const handleManualChange = (index) => {
+    setIsAutoPlaying(false);
+    setActiveIndex(index);
+  };
 
   return (
-    <section 
-      ref={containerRef}
-      className="relative py-6 md:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-black"
-      style={{
-        opacity: isLoaded ? 1 : 0,
-        transition: 'opacity 0.5s ease-in-out'
-      }}
-    >
-      {/* Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black overflow-hidden">
-        {/* Grid Pattern */}
-        <div className="absolute inset-0 opacity-[0.015] bg-[size:40px_40px] bg-[linear-gradient(to_right,#f59e0b_1px,transparent_1px),linear-gradient(to_bottom,#f59e0b_1px,transparent_1px)]"></div>
+    <section className="relative min-h-[90vh] bg-[#050505] text-white overflow-hidden py-12 md:py-20 flex items-center">
+      
+      {/* --- BACKGROUND FX --- */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        {/* Animated Orbs */}
+        <div className="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-amber-600/10 rounded-full blur-[100px] animate-pulse"></div>
+        <div className="absolute bottom-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-red-900/10 rounded-full blur-[120px]"></div>
         
-        {/* Dynamic Light Effects */}
-        <div className="absolute top-0 left-1/4 w-64 h-64 bg-gradient-to-br from-amber-500/10 to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-gradient-to-tr from-red-500/10 to-transparent rounded-full blur-3xl"></div>
-        
-        {/* Floating Particles */}
-        <div className="absolute top-10 left-10 w-1 h-1 bg-amber-500/30 rounded-full animate-pulse"></div>
-        <div className="absolute top-20 right-20 w-2 h-2 bg-red-500/20 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
-        <div className="absolute bottom-20 left-20 w-1 h-1 bg-amber-500/20 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+        {/* Grid Texture */}
+        <div className="absolute inset-0 opacity-[0.05]" 
+             style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0)', backgroundSize: '40px 40px' }}>
+        </div>
       </div>
 
-      {/* Border Effects */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-500/20 to-transparent"></div>
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/20 to-transparent"></div>
-
-      <div className="relative z-10 max-w-7xl mx-auto">
-        {/* Header Section */}
-        <div className="text-center mb-8 md:mb-16">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-900/20 to-red-900/20 rounded-full border border-amber-500/30 mb-4 md:mb-6 shadow-lg">
-            <Star className="w-4 h-4 text-amber-400" />
-            <span className="text-amber-300 text-sm md:text-base font-bold uppercase tracking-wider">
-              VISIONARY LEADERSHIP
-            </span>
-            <Star className="w-4 h-4 text-red-400" />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 w-full h-full">
+        
+        {/* HEADER */}
+        <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-12 md:mb-20">
+          <div>
+            <div className="flex items-center gap-2 text-amber-500 font-bold tracking-[0.2em] text-xs md:text-sm uppercase mb-3">
+              <Award size={16} />
+              <span>The Visionaries</span>
+            </div>
+            <h2 className="text-4xl md:text-7xl font-black uppercase leading-none tracking-tighter">
+              Leadership <span className="text-transparent stroke-white" style={{ WebkitTextStroke: '1px white' }}>Council</span>
+            </h2>
           </div>
           
-          {/* Title */}
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6">
-            Guiding <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-500">Excellence</span>
-          </h1>
-          
-          {/* Subtitle */}
-          <p className="text-gray-300 text-base md:text-xl max-w-2xl mx-auto px-4">
-            Meet the visionaries who shape the future of education and innovation
-          </p>
+          {/* Progress Indicator */}
+          <div className="hidden md:flex flex-col items-end gap-2">
+            <span className="text-xs font-mono text-gray-400">LEADER_ID: 0{activeIndex + 1}</span>
+            <div className="flex gap-1">
+              {leaders.map((_, i) => (
+                <div 
+                  key={i} 
+                  className={`h-1 rounded-full transition-all duration-500 ${i === activeIndex ? 'w-8 bg-amber-500' : 'w-2 bg-gray-800'}`} 
+                />
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Progress Indicator - Mobile */}
-        {isMobile && (
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-amber-400 text-sm font-medium">
-                {currentIndex + 1} / {leaders.length}
-              </span>
-              <div className="flex items-center gap-1">
-                <Flag className="w-3 h-3 text-amber-500" />
-                <span className="text-gray-400 text-sm">
-                  {leaders[currentIndex].title}
-                </span>
-              </div>
-            </div>
-            <div className="h-1.5 bg-gray-800/50 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-gradient-to-r from-amber-500 to-red-500 transition-all duration-500 rounded-full"
-                style={{ width: `${((currentIndex + 1) / leaders.length) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-        )}
-
-        {/* Main Card Container */}
-        <div className={`relative transition-all duration-300 ${isAnimating ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}`}>
-          {/* Card */}
-          <div className="bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-sm rounded-2xl md:rounded-3xl overflow-hidden border border-gray-800 shadow-2xl">
-            {/* Mobile Layout */}
-            <div className="md:hidden">
-              {/* Image Section */}
-              <div className="relative p-4">
-                <div className="relative aspect-square rounded-xl overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black"></div>
-                  <img
-                    src={leaders[currentIndex].image}
-                    alt={leaders[currentIndex].name}
-                    className="relative z-10 w-full h-full object-cover"
-                    loading="eager"
-                  />
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                </div>
-                
-                {/* Position Badge */}
-                <div className="absolute top-6 right-4">
-                  <div className="px-3 py-1.5 bg-gradient-to-r from-amber-600 to-red-600 rounded-full shadow-lg">
-                    <span className="text-white text-xs font-bold">
-                      {leaders[currentIndex].title}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Content Section */}
-              <div className="p-4 pt-0 space-y-4">
-                {/* Name */}
-                <h2 className="text-2xl font-bold text-white leading-tight">
-                  {leaders[currentIndex].name}
-                </h2>
-
-                {/* Achievements */}
-                <div className="space-y-2">
-                  {leaders[currentIndex].achievements.slice(0, 2).map((achievement, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-sm">
-                      <div className="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
-                      <span className="text-gray-300">{achievement}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Stats Grid */}
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="bg-gray-900/50 rounded-lg p-3 text-center">
-                    <div className="text-amber-400 text-lg font-bold">15+</div>
-                    <div className="text-gray-400 text-xs">Years</div>
-                  </div>
-                  <div className="bg-gray-900/50 rounded-lg p-3 text-center">
-                    <div className="text-amber-400 text-lg font-bold">50+</div>
-                    <div className="text-gray-400 text-xs">Awards</div>
-                  </div>
-                  <div className="bg-gray-900/50 rounded-lg p-3 text-center">
-                    <div className="text-amber-400 text-lg font-bold">∞</div>
-                    <div className="text-gray-400 text-xs">Impact</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Desktop Layout */}
-            <div className="hidden md:grid md:grid-cols-3 gap-6 lg:gap-8 p-6 lg:p-8">
-              {/* Image Column */}
-              <div className="relative">
-                <div className="relative aspect-square rounded-xl overflow-hidden border border-gray-700">
-                  <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black"></div>
-                  <img
-                    src={leaders[currentIndex].image}
-                    alt={leaders[currentIndex].name}
-                    className="relative z-10 w-full h-full object-cover"
-                    loading="eager"
-                  />
-                  {/* Glow Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                </div>
-                
-                {/* Badge */}
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <div className="px-4 py-2 bg-gradient-to-r from-amber-600 to-red-600 rounded-full shadow-xl">
-                    <span className="text-white text-sm font-bold">
-                      Featured Leader
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Content Column */}
-              <div className="md:col-span-2 flex flex-col justify-center">
-                <div className="space-y-6">
-                  {/* Title & Name */}
-                  <div>
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-800/50 rounded-full mb-4">
-                      <Award className="w-4 h-4 text-amber-400" />
-                      <span className="text-amber-400 text-sm font-medium">
-                        {leaders[currentIndex].title}
-                      </span>
-                    </div>
-                    <h2 className="text-3xl lg:text-4xl font-bold text-white leading-tight">
-                      {leaders[currentIndex].name}
-                    </h2>
-                  </div>
-
-                  {/* Quote */}
-                  <div className="relative pl-8">
-                    <Quote className="absolute left-0 top-0 w-6 h-6 text-amber-500/50" />
-                    <p className="text-gray-300 text-lg leading-relaxed italic">
-                      "Architecting the future through innovative leadership and unwavering dedication to educational excellence."
-                    </p>
-                  </div>
-
-                  {/* Achievements Grid */}
-                  <div className="grid grid-cols-2 gap-4">
-                    {leaders[currentIndex].achievements.map((achievement, idx) => (
-                      <div key={idx} className="flex items-center gap-3 p-3 bg-gray-900/50 rounded-lg">
-                        <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${leaders[currentIndex].gradient}`}></div>
-                        <span className="text-gray-300 text-sm">{achievement}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Stats */}
-                  <div className="grid grid-cols-3 gap-4 pt-6 border-t border-gray-800">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">
-                        15+
-                      </div>
-                      <div className="text-gray-400 text-sm">Years Experience</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">
-                        100+
-                      </div>
-                      <div className="text-gray-400 text-sm">Initiatives</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-400">
-                        ∞
-                      </div>
-                      <div className="text-gray-400 text-sm">Impact Scale</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Desktop Thumbnail Navigation */}
-          <div className="hidden md:flex justify-center gap-3 lg:gap-4 mt-6 overflow-x-auto">
+        {/* MAIN CONTENT GRID */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          {/* LEFT: INTERACTIVE LIST */}
+          <div className="lg:col-span-4 order-2 lg:order-1 flex flex-col gap-3 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
             {leaders.map((leader, index) => (
               <button
                 key={leader.id}
-                onClick={() => setCurrentIndex(index)}
-                className={`flex-shrink-0 transition-all duration-300 ${currentIndex === index ? 'scale-110' : 'opacity-60 hover:opacity-100 hover:scale-105'}`}
+                onClick={() => handleManualChange(index)}
+                className={`group relative w-full text-left p-4 rounded-xl transition-all duration-300 border-l-2 ${
+                  activeIndex === index 
+                    ? 'bg-gradient-to-r from-amber-500/10 to-transparent border-amber-500' 
+                    : 'bg-transparent border-gray-800 hover:bg-white/5 hover:border-gray-600'
+                }`}
               >
-                <div className={`w-14 h-14 lg:w-16 lg:h-16 rounded-full overflow-hidden border-2 transition-all duration-300 ${
-                  currentIndex === index 
-                    ? 'border-amber-500 ring-2 ring-amber-500/30 shadow-lg' 
-                    : 'border-gray-700 hover:border-gray-600'
-                }`}>
-                  <div className="relative w-full h-full">
-                    <img
-                      src={leader.image}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                    {currentIndex === index && (
-                      <div className="absolute inset-0 bg-amber-500/10"></div>
-                    )}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-10 h-10 rounded-full overflow-hidden border-2 ${activeIndex === index ? 'border-amber-500' : 'border-gray-700 grayscale group-hover:grayscale-0'}`}>
+                      <img src={leader.image} alt={leader.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div>
+                      <p className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 ${
+                        activeIndex === index ? 'text-amber-500' : 'text-gray-500'
+                      }`}>
+                        {leader.role}
+                      </p>
+                      <h3 className={`text-sm md:text-base font-bold transition-colors ${
+                        activeIndex === index ? 'text-white' : 'text-gray-400 group-hover:text-white'
+                      }`}>
+                        {leader.name}
+                      </h3>
+                    </div>
                   </div>
+                  {activeIndex === index && (
+                    <Sparkles className="text-amber-500 w-4 h-4" />
+                  )}
                 </div>
               </button>
             ))}
           </div>
 
-          {/* Mobile Thumbnail Navigation */}
-          <MobileThumbnailNav />
-        </div>
-
-        {/* Navigation Controls */}
-        <div className="mt-6 md:mt-8">
-          {/* Mobile Navigation */}
-          {isMobile && (
-            <div className="flex justify-between items-center">
-              <button
-                onClick={prevSlide}
-                className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-gray-900/80 to-black/80 backdrop-blur-sm rounded-xl border border-gray-700 hover:border-amber-500/50 transition-all duration-300 active:scale-95"
+          {/* RIGHT: CIRCULAR ORBIT SHOWCASE */}
+          <div className="lg:col-span-8 order-1 lg:order-2 min-h-[500px] flex items-center justify-center relative">
+            
+            <AnimatePresence mode='wait'>
+              <motion.div 
+                key={activeIndex}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.1 }}
+                transition={{ duration: 0.5, ease: "circOut" }}
+                className="relative w-full flex flex-col items-center justify-center text-center"
               >
-                <ChevronLeft size={20} className="text-amber-400" />
-                <span className="text-gray-300 text-sm">Prev</span>
-              </button>
-              
-              <div className="flex items-center gap-2">
-                <div className="flex gap-1">
-                  {[1, 2, 3].map((i) => (
-                    <div 
-                      key={i}
-                      className={`w-1 h-1 rounded-full transition-all duration-300 ${
-                        currentIndex % 3 === i - 1 ? 'bg-amber-500 scale-125' : 'bg-gray-700'
-                      }`}
-                    ></div>
-                  ))}
-                </div>
-              </div>
+                
+                {/* --- ORBITAL SYSTEM --- */}
+                <div className="relative w-[280px] h-[280px] md:w-[400px] md:h-[400px] mb-8 flex items-center justify-center">
+                  
+                  {/* Rotating Dashed Ring */}
+                  <div className="absolute inset-[-20px] rounded-full border border-dashed border-gray-700 w-full h-full animate-[spin_20s_linear_infinite] opacity-50 scale-110"></div>
+                  
+                  {/* Glowing Static Ring */}
+                  <div className="absolute inset-[-4px] rounded-full border-2 border-amber-500/30 w-full h-full shadow-[0_0_50px_rgba(245,158,11,0.2)]"></div>
 
-              <button
-                onClick={nextSlide}
-                className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-gray-900/80 to-black/80 backdrop-blur-sm rounded-xl border border-gray-700 hover:border-amber-500/50 transition-all duration-300 active:scale-95"
-              >
-                <span className="text-gray-300 text-sm">Next</span>
-                <ChevronRight size={20} className="text-amber-400" />
-              </button>
-            </div>
-          )}
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex justify-between items-center">
-            <button
-              onClick={prevSlide}
-              className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-gray-900/80 to-black/80 backdrop-blur-sm rounded-xl border border-gray-700 hover:border-amber-500/50 hover:bg-gray-900 transition-all duration-300 group"
-            >
-              <ChevronLeft size={20} className="text-gray-300 group-hover:text-amber-400" />
-              <span className="text-gray-300 group-hover:text-amber-400 text-sm font-medium">
-                Previous
-              </span>
-            </button>
-
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Target className="w-4 h-4 text-amber-400" />
-                <span className="text-gray-400 text-sm">
-                  Leader {currentIndex + 1} of {leaders.length}
-                </span>
-              </div>
-              <div className="flex gap-2">
-                {leaders.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentIndex(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      currentIndex === index 
-                        ? 'w-8 bg-gradient-to-r from-amber-500 to-red-500' 
-                        : 'bg-gray-700 hover:bg-gray-600'
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <button
-              onClick={nextSlide}
-              className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-gray-900/80 to-black/80 backdrop-blur-sm rounded-xl border border-gray-700 hover:border-amber-500/50 hover:bg-gray-900 transition-all duration-300 group"
-            >
-              <span className="text-gray-300 group-hover:text-amber-400 text-sm font-medium">
-                Next
-              </span>
-              <ChevronRight size={20} className="text-gray-300 group-hover:text-amber-400" />
-            </button>
-          </div>
-        </div>
-
-        {/* Footer Quote */}
-        <div className="mt-8 md:mt-12 lg:mt-16">
-          <div className="max-w-3xl mx-auto">
-            <div className="relative">
-              {/* Quote Card */}
-              <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm rounded-xl p-6 border border-gray-800">
-                <div className="flex flex-col md:flex-row md:items-start gap-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-amber-600/20 to-red-600/20 flex items-center justify-center">
-                      <Heart className="w-6 h-6 text-amber-400" />
-                    </div>
+                  {/* The Circular Image */}
+                  <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-black bg-gray-900 shadow-2xl z-10 group">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/20 to-transparent z-20 mix-blend-overlay"></div>
+                    <img 
+                      src={leaders[activeIndex].image} 
+                      alt={leaders[activeIndex].name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-gray-300 text-lg italic leading-relaxed">
-                      "In the theatre of innovation, our leaders are the directors, writers, and producers of tomorrow's success stories."
+
+                  {/* Decorative Satellite Dots */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[24px] w-3 h-3 bg-amber-500 rounded-full shadow-[0_0_15px_rgba(245,158,11,1)] z-20"></div>
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[24px] w-2 h-2 bg-red-500 rounded-full z-20"></div>
+
+                </div>
+
+                {/* --- CONTENT INFO --- */}
+                <div className="relative z-30 max-w-2xl">
+                  {/* Honorific */}
+                  {leaders[activeIndex].honorific && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-amber-500 font-serif italic text-lg md:text-xl mb-2"
+                    >
+                      {leaders[activeIndex].honorific}
+                    </motion.div>
+                  )}
+
+                  {/* Name */}
+                  <motion.h2 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="text-3xl md:text-5xl font-black uppercase text-white mb-2 tracking-tight"
+                  >
+                    {leaders[activeIndex].name}
+                  </motion.h2>
+
+                  {/* Role Tag */}
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="inline-block px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-xs md:text-sm font-bold uppercase tracking-widest text-gray-300 mb-6 backdrop-blur-md"
+                  >
+                    {leaders[activeIndex].role}
+                  </motion.div>
+
+                  {/* Quote Box */}
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="relative bg-gradient-to-b from-gray-900 to-black border border-gray-800 p-6 md:p-8 rounded-2xl shadow-xl mx-4 md:mx-0"
+                  >
+                    <Quote className="absolute -top-4 -left-2 text-amber-500 bg-black p-1 rounded-full border border-gray-800" size={32} />
+                    <p className="text-gray-300 font-light text-base md:text-lg leading-relaxed italic">
+                      "{leaders[activeIndex].quote}"
                     </p>
-                    <div className="mt-4 flex items-center justify-end gap-2">
-                      <div className="h-px w-12 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent"></div>
-                      <span className="text-amber-400 text-sm font-bold tracking-wider">
-                        LEADING EXCELLENCE
-                      </span>
-                      <div className="h-px w-12 bg-gradient-to-r from-transparent via-red-500/50 to-transparent"></div>
+                    
+                    {/* Tags */}
+                    <div className="flex justify-center gap-3 mt-4 pt-4 border-t border-gray-800">
+                       {leaders[activeIndex].tags.map((tag, i) => (
+                         <div key={i} className="flex items-center gap-1 text-xs text-gray-500 uppercase font-bold">
+                           <Target size={12} className="text-amber-500" /> {tag}
+                         </div>
+                       ))}
                     </div>
-                  </div>
+                  </motion.div>
+
                 </div>
-              </div>
-            </div>
+
+              </motion.div>
+            </AnimatePresence>
+            
           </div>
         </div>
-      </div>
 
-      {/* Auto-Slide Indicator */}
-      <div className="mt-8 text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-black/30 backdrop-blur-sm rounded-full border border-gray-800">
-          <div className="flex gap-1">
-            <div className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></div>
-            <div className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
-            <div className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
-          </div>
-          <span className="text-gray-400 text-xs">
-            Auto-advancing in 6s
-          </span>
+        {/* MOBILE CONTROLS */}
+        <div className="flex md:hidden justify-center items-center gap-6 mt-8">
+            <button 
+                onClick={() => handleManualChange((activeIndex - 1 + leaders.length) % leaders.length)}
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-white/10 border border-white/10 active:bg-amber-500 active:text-black transition-all"
+            >
+                <ChevronRight className="rotate-180" />
+            </button>
+            <span className="text-sm font-mono text-amber-500 font-bold">
+                {activeIndex + 1} / {leaders.length}
+            </span>
+            <button 
+                onClick={() => handleManualChange((activeIndex + 1) % leaders.length)}
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-white/10 border border-white/10 active:bg-amber-500 active:text-black transition-all"
+            >
+                <ChevronRight />
+            </button>
         </div>
+
       </div>
 
-      {/* Custom CSS for Animations */}
       <style jsx>{`
-        /* Smooth animations */
-        .transition-smooth {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .stroke-white { -webkit-text-stroke: 1px white; }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
         }
-        
-        /* Optimize images */
-        img {
-          -webkit-tap-highlight-color: transparent;
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
         }
-        
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-          button {
-            min-height: 44px;
-            min-width: 44px;
-          }
-          
-          /* Better touch scrolling */
-          .scroll-touch {
-            -webkit-overflow-scrolling: touch;
-          }
-        }
-        
-        /* Gradient text animation */
-        .gradient-text {
-          background: linear-gradient(90deg, #f59e0b, #dc2626, #f59e0b);
-          background-size: 200% auto;
-          background-clip: text;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: gradient 3s linear infinite;
-        }
-        
-        @keyframes gradient {
-          0% { background-position: 0% center; }
-          50% { background-position: 100% center; }
-          100% { background-position: 0% center; }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(245, 158, 11, 0.3);
+            border-radius: 4px;
         }
       `}</style>
     </section>

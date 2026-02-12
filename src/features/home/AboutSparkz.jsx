@@ -243,12 +243,6 @@ const AboutSparkz = () => {
                    Watch Trailer
                  </h3>
               </div>
-              
-              {/* Bottom Tag */}
-              <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 z-20">
-                <p className="text-xs md:text-sm font-bold bg-red-600 text-white px-3 py-1 rounded inline-block mb-2">NOW STREAMING</p>
-                <p className="text-gray-300 text-xs md:text-sm font-mono">SPARKZ_TEASER_FINAL_CUT.mp4</p>
-              </div>
             </div>
           ) : (
             /* --- 2. YOUTUBE PLAYER MODE --- */
